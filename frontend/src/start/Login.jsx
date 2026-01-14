@@ -19,6 +19,33 @@ function Login() {
  
 
 
+// const handleLogin = async (e) => {
+//   e.preventDefault();
+//   setLoading(true);
+
+//   try {
+//     const res = await api.post("/api/user/login", {
+//       email,
+//       password,
+//     });
+
+//     alert(res.data.message);
+
+//     localStorage.setItem("userId", res.data.user._id);
+//     localStorage.setItem("username", res.data.user.name);
+//     localStorage.setItem("photo", res.data.user.photo || "/profile.png");
+//     localStorage.setItem("isFirstLogin", String(res.data.isFirstLogin));
+
+//     navigate("/maindashboard");
+//   } catch (error) {
+//     alert(error.response?.data?.message || "Login failed");
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+
+
 const handleLogin = async (e) => {
   e.preventDefault();
   setLoading(true);
@@ -29,20 +56,19 @@ const handleLogin = async (e) => {
       password,
     });
 
-    alert(res.data.message);
-
     localStorage.setItem("userId", res.data.user._id);
     localStorage.setItem("username", res.data.user.name);
     localStorage.setItem("photo", res.data.user.photo || "/profile.png");
     localStorage.setItem("isFirstLogin", String(res.data.isFirstLogin));
 
-    navigate("/maindashboard");
+    navigate("/maindashboard"); // 🚀 direct redirect
   } catch (error) {
     alert(error.response?.data?.message || "Login failed");
   } finally {
     setLoading(false);
   }
 };
+
 
 
 
