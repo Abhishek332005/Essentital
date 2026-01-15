@@ -139,7 +139,7 @@ function AdminLogin() {
             </div>
           </div>
 
-          <div className="form-options">
+          {/* <div className="form-options">
             <div className="remember-me">
               <input
                 type="checkbox"
@@ -148,13 +148,13 @@ function AdminLogin() {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 disabled={isLoading}
               />
-              {/* <label htmlFor="rememberAdmin">Remember me</label> */}
+              <label htmlFor="rememberAdmin">Remember me</label>
             </div>
             
-            {/* <a href="/admin/forgot-password" className="forgot-password">
+            <a href="/admin/forgot-password" className="forgot-password">
               Forgot Password?
-            </a> */}
-          </div>
+            </a>
+          </div> */}
 
           <button 
             type="submit" 
