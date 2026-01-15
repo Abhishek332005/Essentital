@@ -49,7 +49,7 @@ const DealerOrders = ({ dealerId, refreshTrigger }) => {
     </div>
   );
 };
-const [addingId, setAddingId] = useState(null);
+
 
 
 const DealerShop = () => {
@@ -57,6 +57,7 @@ const DealerShop = () => {
   const [cart, setCart] = useState([]);
   const [showFullDesc, setShowFullDesc] = useState({});
   const [ordersRefresh, setOrdersRefresh] = useState(0);
+  const [addingId, setAddingId] = useState(null);
 
   // const addToCart = (p) => {
   //   const found = cart.find(i => i.id === p.id);
