@@ -1030,7 +1030,7 @@ function Agent() {
           </div>
           
           <div className="agent-header-right">
-            <div className="notification-icon-container">
+            {/* <div className="notification-icon-container">
               <button 
                 className="notification-icon"
                 onClick={() => setOpenNotifications(!openNotifications)}
@@ -1041,7 +1041,7 @@ function Agent() {
                 )}
               </button>
             </div>
-            
+             */}
             {openNotifications && (
               <div className="notifications-dropdown">
                 <div className="notifications-header">
