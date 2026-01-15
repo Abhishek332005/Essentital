@@ -441,75 +441,149 @@ function Profile() {
     localStorage.setItem("lang", lang);
   };
 
-  const handlePhotoChange = async () => {
-    if (!newPhoto) return alert(t("fillAllFields"));
+  // const handlePhotoChange = async () => {
+  //   if (!newPhoto) return alert(t("fillAllFields"));
 
-    setIsUpdatingPhoto(true);
-    const formData = new FormData();
-    formData.append("photo", newPhoto);
+  //   setIsUpdatingPhoto(true);
+  //   const formData = new FormData();
+  //   formData.append("photo", newPhoto);
 
-    try {
-      const res = await api.put(
-        `/api/user/photo/${userId}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      setPhoto(getImageUrl(res.data.photo));
-      localStorage.setItem("photo", res.data.photo);
-      alert(t("changePhoto") + " " + t("success"));
-      setNewPhoto(null);
-    } catch (err) {
-      console.log(err);
-      alert(t("error"));
-    } finally {
-      setIsUpdatingPhoto(false);
-    }
-  };
+  //   try {
+  //     const res = await api.put(
+  //       `/api/user/photo/${userId}`,
+  //       formData,
+  //       {
+  //         headers: { "Content-Type": "multipart/form-data" },
+  //       }
+  //     );
+  //     setPhoto(getImageUrl(res.data.photo));
+  //     localStorage.setItem("photo", res.data.photo);
+  //     alert(t("changePhoto") + " " + t("success"));
+  //     setNewPhoto(null);
+  //   } catch (err) {
+  //     console.log(err);
+  //     alert(t("error"));
+  //   } finally {
+  //     setIsUpdatingPhoto(false);
+  //   }
+  // };
 
-  const handleProfileUpdate = async () => {
-    if (!username.trim()) return alert(t("fillAllFields"));
+
+
+const handlePhotoChange = async () => {
+  if (!newPhoto) return;
+
+  setIsUpdatingPhoto(true);
+  const formData = new FormData();
+  formData.append("photo", newPhoto);
+
+  try {
+    const res = await api.put(
+      `/api/user/photo/${userId}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    setPhoto(getImageUrl(res.data.photo));
+    localStorage.setItem("photo", res.data.photo);
+    setNewPhoto(null);
+  } catch (err) {
+    console.log("Photo update failed", err);
+  } finally {
+    setIsUpdatingPhoto(false);
+  }
+};
+
+
+
+  // const handleProfileUpdate = async () => {
+  //   if (!username.trim()) return alert(t("fillAllFields"));
     
-    setIsUpdatingUsername(true);
-    try {
-      const res = await api.put(
-        `/api/user/${userId}`,
-        { name: username }
-      );
-      setUsername(res.data.name);
-      localStorage.setItem("username", res.data.name);
-      alert(t("updateUsername") + " " + t("success"));
-    } catch (err) {
-      console.log(err);
-      alert(t("error"));
-    } finally {
-      setIsUpdatingUsername(false);
-    }
-  };
+  //   setIsUpdatingUsername(true);
+  //   try {
+  //     const res = await api.put(
+  //       `/api/user/${userId}`,
+  //       { name: username }
+  //     );
+  //     setUsername(res.data.name);
+  //     localStorage.setItem("username", res.data.name);
+  //     alert(t("updateUsername") + " " + t("success"));
+  //   } catch (err) {
+  //     console.log(err);
+  //     alert(t("error"));
+  //   } finally {
+  //     setIsUpdatingUsername(false);
+  //   }
+  // };
 
-  const handlePasswordChange = async () => {
-    if (!currentPassword || !newPassword) return alert(t("fillAllFields"));
+
+const handleProfileUpdate = async () => {
+  if (!username.trim()) return;
+
+  setIsUpdatingUsername(true);
+  try {
+    const res = await api.put(
+      `/api/user/${userId}`,
+      { name: username }
+    );
+
+    setUsername(res.data.name);
+    localStorage.setItem("username", res.data.name);
+  } catch (err) {
+    console.log("Username update failed", err);
+  } finally {
+    setIsUpdatingUsername(false);
+  }
+};
+
+
+
+
+  // const handlePasswordChange = async () => {
+  //   if (!currentPassword || !newPassword) return alert(t("fillAllFields"));
     
-    setIsUpdatingPassword(true);
-    try {
-      await api.put(
-        `/api/user/password/${userId}`,
-        {
-          currentPassword,
-          newPassword,
-        }
-      );
-      alert(t("updatePassword") + " " + t("success"));
-      setCurrentPassword("");
-      setNewPassword("");
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data?.error || t("error"));
-    } finally {
-      setIsUpdatingPassword(false);
-    }
-  };
+  //   setIsUpdatingPassword(true);
+  //   try {
+  //     await api.put(
+  //       `/api/user/password/${userId}`,
+  //       {
+  //         currentPassword,
+  //         newPassword,
+  //       }
+  //     );
+  //     alert(t("updatePassword") + " " + t("success"));
+  //     setCurrentPassword("");
+  //     setNewPassword("");
+  //   } catch (err) {
+  //     console.log(err);
+  //     alert(err.response?.data?.error || t("error"));
+  //   } finally {
+  //     setIsUpdatingPassword(false);
+  //   }
+  // };
+
+
+const handlePasswordChange = async () => {
+  if (!currentPassword || !newPassword) return;
+
+  setIsUpdatingPassword(true);
+  try {
+    await api.put(
+      `/api/user/password/${userId}`,
+      { currentPassword, newPassword }
+    );
+
+    setCurrentPassword("");
+    setNewPassword("");
+  } catch (err) {
+    console.log("Password update failed", err);
+  } finally {
+    setIsUpdatingPassword(false);
+  }
+};
+
+
+
 
   return (
     <div className="profile-page-container">
