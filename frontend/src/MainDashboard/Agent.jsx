@@ -1296,12 +1296,12 @@ function Agent() {
                         <div className="farmer-pending-request">
                           <span>⏳</span>
                           <p>Your request is pending admin approval</p>
-                          <button 
+                          {/* <button 
                             className="refresh-btn"
                             onClick={() => checkFarmerAccess(f._id)}
                           >
                             ⟳ Check Status
-                          </button>
+                          </button> */}
                         </div>
                       )}
 
