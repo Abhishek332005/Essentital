@@ -1379,8 +1379,6 @@ textarea:valid {
   align-items: center;
   justify-content: space-between;
   height: 60px;
-  padding-left: 90px;
-
 }
 
 .mobile-menu-toggle {
@@ -1408,6 +1406,7 @@ textarea:valid {
   font-size: 1.2rem;
   margin: 0;
   font-weight: 600;
+  padding-left: 65px;
 }
 
 .mobile-profile-pic {
