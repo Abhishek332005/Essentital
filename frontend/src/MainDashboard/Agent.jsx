@@ -1,6 +1,7 @@
 
 
 
+
 // import React, { useEffect, useState, useRef } from "react";
 // import { Link } from "react-router-dom";
 // import { useTranslation } from "react-i18next";
@@ -10,64 +11,61 @@
 
 // function Agent() {
 //   const { t, i18n } = useTranslation();
+
 //   const [users, setUsers] = useState([]);
 //   const [username, setUsername] = useState("Guest");
 //   const [photo, setPhoto] = useState("/default-profile.png");
+
 //   const [notifications, setNotifications] = useState([]);
 //   const [unseenCount, setUnseenCount] = useState(0);
 //   const [openNotifications, setOpenNotifications] = useState(false);
+
 //   const [sharedFarmers, setSharedFarmers] = useState([]);
-  
-//   // Mobile state
+
 //   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 //   const [isMobile, setIsMobile] = useState(false);
-  
-//   // Agent-level states
+
 //   const [selectedAgent, setSelectedAgent] = useState(null);
 //   const [selectedAgentName, setSelectedAgentName] = useState("");
 //   const [farmers, setFarmers] = useState([]);
 //   const [hasAnyAccess, setHasAnyAccess] = useState(false);
 
-//   // NEW STATE: Per-farmer access control
 //   const [farmerAccess, setFarmerAccess] = useState({});
 
 //   const userId = localStorage.getItem("userId");
 //   const agentId = localStorage.getItem("agentId") || userId;
+
 //   const pollRef = useRef(null);
 //   const displayedRef = useRef(new Set());
 
-//   // Check if mobile view
+//   // ================= MOBILE CHECK =================
 //   useEffect(() => {
-//     const checkMobile = () => {
-//       setIsMobile(window.innerWidth <= 991);
-//     };
-    
+//     const checkMobile = () => setIsMobile(window.innerWidth <= 991);
 //     checkMobile();
-//     window.addEventListener('resize', checkMobile);
-    
-//     return () => window.removeEventListener('resize', checkMobile);
+//     window.addEventListener("resize", checkMobile);
+//     return () => window.removeEventListener("resize", checkMobile);
 //   }, []);
 
-//   // Close sidebar when clicking outside on mobile
+//   // ================= CLOSE SIDEBAR ON OUTSIDE CLICK =================
 //   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (isMobile && isSidebarOpen && 
-//           !event.target.closest('.agent-left-sidebar') && 
-//           !event.target.closest('.mobile-menu-toggle')) {
+//     const handleClickOutside = (e) => {
+//       if (
+//         isMobile &&
+//         isSidebarOpen &&
+//         !e.target.closest(".agent-left-sidebar") &&
+//         !e.target.closest(".mobile-menu-toggle")
+//       ) {
 //         setIsSidebarOpen(false);
 //       }
 //     };
-
-//     document.addEventListener('click', handleClickOutside);
-//     return () => document.removeEventListener('click', handleClickOutside);
+//     document.addEventListener("click", handleClickOutside);
+//     return () => document.removeEventListener("click", handleClickOutside);
 //   }, [isMobile, isSidebarOpen]);
 
-//   // Close sidebar when route changes
 //   useEffect(() => {
 //     setIsSidebarOpen(false);
 //   }, [window.location.pathname]);
 
-//   // ❗ Refresh par access delete
 //   useEffect(() => {
 //     localStorage.removeItem("accessApproved");
 //   }, []);
@@ -77,16 +75,15 @@
 //     localStorage.setItem("lang", lang);
 //   };
 
-//   // Fetch logged-in user
+//   // ================= USER FETCH =================
 //   useEffect(() => {
 //     if (!userId) return;
 
 //     api
 //       .get(`/api/user/${userId}`)
 //       .then((res) => {
-//         const data = res.data;
-//         setUsername(data.name || "Guest");
-//         setPhoto(data.photo ? getImageUrl(data.photo) : "/default-profile.png");
+//         setUsername(res.data.name || "Guest");
+//         setPhoto(res.data.photo ? getImageUrl(res.data.photo) : "/default-profile.png");
 //       })
 //       .catch(() => {
 //         setUsername(localStorage.getItem("username") || "Guest");
@@ -94,151 +91,100 @@
 //       });
 //   }, [userId]);
 
-//   // Fetch all agents
+//   // ================= ALL USERS =================
 //   useEffect(() => {
 //     api
 //       .get("/api/user")
 //       .then((res) => {
-//         // Filter out current user from the list
-//         const filteredUsers = res.data
-//           .filter(u => u._id !== userId)
+//         const filtered = res.data
+//           .filter((u) => u._id !== userId)
 //           .map((u) => ({
 //             ...u,
 //             photo: u.photo ? getImageUrl(u.photo) : "/default-profile.png",
 //           }));
-//         setUsers(filteredUsers);
+//         setUsers(filtered);
 //       })
-//       .catch((err) => console.log("Error fetching users:", err));
+//       .catch(() => {});
 //   }, [userId]);
 
-//   // Fetch shared farmers only if access approved - UPDATED
+//   // ================= APPROVED FARMERS =================
 //   useEffect(() => {
 //     if (!agentId) return;
 
-//     // Get only approved farmers
-//     api.get(`/api/access/approved-farmers/${agentId}`)
-//       .then((res) => {
-//         setSharedFarmers(res.data || []);
-//       })
-//       .catch(() => {
-//         setSharedFarmers([]);
-//       });
+//     api
+//       .get(`/api/access/approved-farmers/${agentId}`)
+//       .then((res) => setSharedFarmers(res.data || []))
+//       .catch(() => setSharedFarmers([]));
 //   }, [agentId]);
 
-//   // ✅ USER CARD CLICK HANDLER - UPDATED
+//   // ================= OPEN AGENT =================
 //   const openAgent = async (agentId, agentName) => {
 //     setSelectedAgent(agentId);
 //     setSelectedAgentName(agentName);
-//     setFarmerAccess({}); // Reset farmer access when switching agents
-    
+//     setFarmerAccess({});
+
 //     try {
 //       const res = await api.get(
 //         `/api/farmers/by-agent?agentId=${agentId}&viewerId=${userId}`
 //       );
-
-//       setFarmers(res.data.farmers);
+//       setFarmers(res.data.farmers || []);
 //       setHasAnyAccess(res.data.approved);
-      
-//       // Scroll to farmer section
-//       const farmerSection = document.querySelector('.agent-farmer-section');
-//       if (farmerSection) {
-//         farmerSection.scrollIntoView({ behavior: 'smooth' });
-//       }
-//     } catch (error) {
-//       console.error("Error fetching agent farmers:", error);
+//     } catch {
 //       setFarmers([]);
 //       setHasAnyAccess(false);
-//       alert("Failed to load agent's data");
 //     }
 //   };
 
-//   // ✅ Request access for SINGLE farmer - UPDATED
+//   // ================= REQUEST FARMER ACCESS =================
 //   const requestFarmerAccess = async (farmerId) => {
-//     if (!userId || !farmerId) {
-//       alert("Cannot request access: missing userId or farmerId");
-//       return;
-//     }
-
 //     try {
 //       const res = await api.post("/api/access/request-farmer", {
 //         requesterId: userId,
-//         farmerId
+//         farmerId,
 //       });
-      
 //       alert(res.data.message);
-      
-//       // Update access status for this specific farmer
-//       setFarmerAccess(prev => ({ 
-//         ...prev, 
-//         [farmerId]: { approved: false, pending: true } 
+//       setFarmerAccess((p) => ({
+//         ...p,
+//         [farmerId]: { approved: false, pending: true },
 //       }));
-      
-//     } catch (error) {
-//       console.error("Error requesting farmer access:", error.response || error);
-//       alert(error.response?.data?.message || "Failed to send access request");
+//     } catch (err) {
+//       alert(err.response?.data?.message || "Request failed");
 //     }
 //   };
 
-//   // ✅ Check individual farmer access - UPDATED
+//   // ================= CHECK FARMER ACCESS =================
 //   const checkFarmerAccess = async (farmerId) => {
 //     try {
 //       const res = await api.get(
 //         `/api/access/check-farmer?requesterId=${userId}&farmerId=${farmerId}`
 //       );
 
-//       setFarmerAccess(prev => ({
-//         ...prev,
-//         [farmerId]: { 
-//           approved: res.data.approved,
-//           pending: false 
-//         }
+//       setFarmerAccess((p) => ({
+//         ...p,
+//         [farmerId]: { approved: res.data.approved, pending: false },
 //       }));
-      
-//       // If access is newly approved, add ONLY this farmer to shared farmers
+
 //       if (res.data.approved) {
 //         const farmerRes = await api.get(`/api/farmers/${farmerId}`);
-//         const approvedFarmer = farmerRes.data;
-        
-//         // Add ONLY this farmer to shared farmers
-//         setSharedFarmers(prev => {
-//           const exists = prev.some(f => f._id === approvedFarmer._id);
-//           if (!exists) {
-//             return [...prev, approvedFarmer];
-//           }
-//           return prev;
-//         });
+//         setSharedFarmers((prev) =>
+//           prev.some((f) => f._id === farmerId)
+//             ? prev
+//             : [...prev, farmerRes.data]
+//         );
 //       }
-//     } catch (error) {
-//       console.error(`Error checking access for farmer ${farmerId}:`, error);
-//       setFarmerAccess(prev => ({
-//         ...prev,
-//         [farmerId]: { approved: false, pending: false }
-//       }));
-//     }
+//     } catch {}
 //   };
 
-//   // Load notifications
+//   // ================= NOTIFICATIONS (FIXED axios ISSUE HERE) =================
 //   const loadNotifications = () => {
 //     if (!agentId) return;
 
-//     axios
+//     api
 //       .get(`/api/notification/${agentId}`)
 //       .then((res) => {
 //         const list = res.data || [];
 //         setNotifications(list);
-
-//         const unseen = list.filter((n) => !n.seen).length;
-//         setUnseenCount(unseen);
-
-//         if (Notification && Notification.permission === "granted") {
-//           list.slice(0, 5).forEach((n) => {
-//             if (!n.seen && !displayedRef.current.has(n._id)) {
-//               const notif = new Notification("New Notification", { body: n.message });
-//               displayedRef.current.add(n._id);
-//               notif.onclick = () => window.focus();
-//             }
-//           });
-//         }
+//         setUnseenCount(list.filter((n) => !n.seen).length);
 //       })
 //       .catch(() => {});
 //   };
@@ -255,20 +201,18 @@
 //   }, [agentId]);
 
 //   const markSeen = async (id) => {
-//     try {
-//       await api.post("/api/notification/seen", { notiId: id });
-//       setNotifications((prev) =>
-//         prev.map((n) => (n._id === id ? { ...n, seen: true } : n))
-//       );
-//       setUnseenCount((c) => Math.max(0, c - 1));
-//     } catch (err) {
-//       console.log("Mark seen error:", err);
-//     }
+//     await api.post("/api/notification/seen", { notiId: id });
+//     setNotifications((p) => p.map((n) => (n._id === id ? { ...n, seen: true } : n)));
+//     setUnseenCount((c) => Math.max(0, c - 1));
 //   };
 
+//   // ================= JSX =================
 //   return (
 //     <div className="agent-page-container">
-//       {/* ================= MOBILE NAVBAR ================= */}
+//       {/* PAGE UI SAME AS YOUR CODE – NO LOGIC CHANGED */}
+//       {/* Sidebar, Header, Users, Farmers sections untouched */}
+
+//   {/* ================= MOBILE NAVBAR ================= */}
 //       {isMobile && (
 //         <div className="mobile-navbar">
 //           <button 
@@ -622,12 +566,7 @@
 //                         <div className="farmer-pending-request">
 //                           <span>⏳</span>
 //                           <p>Your request is pending admin approval</p>
-//                           <button 
-//                             className="refresh-btn"
-//                             onClick={() => checkFarmerAccess(f._id)}
-//                           >
-//                             ⟳ Check Status
-//                           </button>
+                          
 //                         </div>
 //                       )}
 
@@ -712,6 +651,7 @@
 //           </div>
 //         )}
 //       </div>
+
 //     </div>
 //   );
 // }
@@ -728,22 +668,18 @@
 
 
 
-
-
-
-
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api, { getImageUrl } from "../utils/api";
-import { Menu, X, User, Home, Users, HelpCircle, ShoppingBag } from "lucide-react";
+import { Menu, X, User, Home, Users, HelpCircle, ShoppingBag, Bell } from "lucide-react";
 import "./Agent.css";
 
 function Agent() {
   const { t, i18n } = useTranslation();
 
   const [users, setUsers] = useState([]);
-  const [username, setUsername] = useState("Guest");
+  const [username, setUsername] = useState(t("guest") || "Guest");
   const [photo, setPhoto] = useState("/default-profile.png");
 
   const [notifications, setNotifications] = useState([]);
@@ -761,6 +697,7 @@ function Agent() {
   const [hasAnyAccess, setHasAnyAccess] = useState(false);
 
   const [farmerAccess, setFarmerAccess] = useState({});
+  const [loadingAccess, setLoadingAccess] = useState({});
 
   const userId = localStorage.getItem("userId");
   const agentId = localStorage.getItem("agentId") || userId;
@@ -812,14 +749,14 @@ function Agent() {
     api
       .get(`/api/user/${userId}`)
       .then((res) => {
-        setUsername(res.data.name || "Guest");
+        setUsername(res.data.name || t("guest"));
         setPhoto(res.data.photo ? getImageUrl(res.data.photo) : "/default-profile.png");
       })
       .catch(() => {
-        setUsername(localStorage.getItem("username") || "Guest");
+        setUsername(localStorage.getItem("username") || t("guest"));
         setPhoto(localStorage.getItem("photo") || "/default-profile.png");
       });
-  }, [userId]);
+  }, [userId, t]);
 
   // ================= ALL USERS =================
   useEffect(() => {
@@ -867,23 +804,27 @@ function Agent() {
 
   // ================= REQUEST FARMER ACCESS =================
   const requestFarmerAccess = async (farmerId) => {
+    setLoadingAccess(prev => ({ ...prev, [farmerId]: true }));
     try {
       const res = await api.post("/api/access/request-farmer", {
         requesterId: userId,
         farmerId,
       });
-      alert(res.data.message);
+      alert(res.data.message || t("requestSent"));
       setFarmerAccess((p) => ({
         ...p,
         [farmerId]: { approved: false, pending: true },
       }));
     } catch (err) {
-      alert(err.response?.data?.message || "Request failed");
+      alert(err.response?.data?.message || t("requestFailed"));
+    } finally {
+      setLoadingAccess(prev => ({ ...prev, [farmerId]: false }));
     }
   };
 
   // ================= CHECK FARMER ACCESS =================
   const checkFarmerAccess = async (farmerId) => {
+    setLoadingAccess(prev => ({ ...prev, [farmerId]: true }));
     try {
       const res = await api.get(
         `/api/access/check-farmer?requesterId=${userId}&farmerId=${farmerId}`
@@ -902,10 +843,14 @@ function Agent() {
             : [...prev, farmerRes.data]
         );
       }
-    } catch {}
+    } catch {
+      alert(t("errorCheckingAccess"));
+    } finally {
+      setLoadingAccess(prev => ({ ...prev, [farmerId]: false }));
+    }
   };
 
-  // ================= NOTIFICATIONS (FIXED axios ISSUE HERE) =================
+  // ================= NOTIFICATIONS =================
   const loadNotifications = () => {
     if (!agentId) return;
 
@@ -936,31 +881,27 @@ function Agent() {
     setUnseenCount((c) => Math.max(0, c - 1));
   };
 
-  // ================= JSX =================
   return (
     <div className="agent-page-container">
-      {/* PAGE UI SAME AS YOUR CODE – NO LOGIC CHANGED */}
-      {/* Sidebar, Header, Users, Farmers sections untouched */}
-
-  {/* ================= MOBILE NAVBAR ================= */}
+      {/* ================= MOBILE NAVBAR ================= */}
       {isMobile && (
         <div className="mobile-navbar">
           <button 
             className="mobile-menu-toggle"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            aria-label="Toggle menu"
+            aria-label={t("toggleMenu")}
           >
             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
           
           <div className="mobile-logo">
-            <h3>Agents</h3>
+            <h3>{t("agents")}</h3>
           </div>
           
           <div className="mobile-profile">
             <img
               src={getImageUrl(`/api/images/${userId}/profile`)}
-              alt="User"
+              alt={username}
               className="mobile-profile-pic"
               onError={(e) => {
                 e.target.src = "/profile.png";
@@ -976,21 +917,20 @@ function Agent() {
           <div className="agent-left-profile-section">
             <img
               src={getImageUrl(`/api/images/${userId}/profile`)}
-              alt="User"
+              alt={username}
               className="agent-left-profile-pic"
               onError={(e) => {
                 e.target.src = "/profile.png";
               }}
             />
             <h5 className="agent-left-username">{username}</h5>
-            {/* <p className="agent-left-role">Agent</p> */}
           </div>
 
           {isMobile && (
             <button 
               className="sidebar-close-btn"
               onClick={() => setIsSidebarOpen(false)}
-              aria-label="Close menu"
+              aria-label={t("closeMenu")}
             >
               <X size={20} />
             </button>
@@ -1000,24 +940,8 @@ function Agent() {
         {/* Stats Section */}
         <div className="agent-left-stats">
           <div className="agent-stat-item">
-            {/* <div className="stat-icon">
-              <Users size={20} />
-            </div> */}
-            {/* <div className="stat-content">
-              <h4>{users.length}</h4>
-              <p>Other Agents</p>
-            </div> */}
+            {/* You can add stats here if needed */}
           </div>
-          
-          {/* <div className="agent-stat-item">
-            <div className="stat-icon">
-              <Users size={20} />
-            </div>
-            <div className="stat-content">
-              <h4>{sharedFarmers.length}</h4>
-              <p>Approved Farmers</p>
-            </div>
-          </div> */}
         </div>
 
         <ul className="agent-left-menu">
@@ -1106,7 +1030,7 @@ function Agent() {
           </div>
           
           <div className="agent-header-right">
-            {/* <div className="notification-icon-container">
+            <div className="notification-icon-container">
               <button 
                 className="notification-icon"
                 onClick={() => setOpenNotifications(!openNotifications)}
@@ -1116,19 +1040,19 @@ function Agent() {
                   <span className="notification-count">{unseenCount}</span>
                 )}
               </button>
-            </div> */}
+            </div>
             
             {openNotifications && (
               <div className="notifications-dropdown">
                 <div className="notifications-header">
-                  <h5>Notifications</h5>
+                  <h5>{t("notifications")}</h5>
                   <button onClick={() => setOpenNotifications(false)} className="close-notifications">
                     <X size={18} />
                   </button>
                 </div>
                 <div className="notifications-list">
                   {notifications.length === 0 ? (
-                    <p className="no-notifications">No notifications</p>
+                    <p className="no-notifications">{t("noNotifications")}</p>
                   ) : (
                     notifications.slice(0, 5).map((n) => (
                       <div 
@@ -1145,47 +1069,29 @@ function Agent() {
                   )}
                 </div>
                 <div className="notifications-footer">
-                  <Link to="/notifications">View All</Link>
+                  <Link to="/notifications">{t("viewAll")}</Link>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Stats Section - Moved to Right */}
+        {/* Stats Section */}
         <div className="agent-stats-section">
-          <h3 className="agent-stats-title">Agent Dashboard</h3>
+          <h3 className="agent-stats-title">{t("agentDashboard")}</h3>
           <div className="agent-stats-grid">
-            {/* <div className="agent-stat-card">
-              <div className="stat-icon">
-                <Users size={24} />
-              </div>
-              <div className="stat-content">
-                <h4>{users.length}</h4>
-                <p>Other Agents</p>
-              </div>
-            </div> */}
-            
-            {/* <div className="agent-stat-card">
-              <div className="stat-icon">
-                <Users size={24} />
-              </div>
-              <div className="stat-content">
-                <h4>{sharedFarmers.length}</h4>
-                <p>Approved Farmers</p>
-              </div>
-            </div> */}
+            {/* Stats can be added here */}
           </div>
         </div>
 
         {/* Users Section */}
         <div className="agent-user-section">
           <div className="agent-user-header">
-            <h4 className="agent-user-title">All Registered Users</h4>
-            <span className="agent-user-count">{users.length} Users</span>
+            <h4 className="agent-user-title">{t("allRegisteredUsers")}</h4>
+            <span className="agent-user-count">{users.length} {t("users")}</span>
           </div>
           
-          {/* USER LIST (CLICKABLE) */}
+          {/* USER LIST */}
           <div className="agent-list-grid">
             {users.map((u) => (
               <div
@@ -1205,26 +1111,26 @@ function Agent() {
                 <div className="agent-user-info">
                   <h6 className="agent-user-name">{u.name}</h6>
                   <p className="agent-user-email">{u.email || "-"}</p>
-                  <p className="agent-user-role">{u.role || "User"}</p>
+                  <p className="agent-user-role">{u.role || t("user")}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ✅ SELECTED AGENT'S FARMERS SECTION - UPDATED */}
+        {/* SELECTED AGENT'S FARMERS SECTION */}
         {selectedAgent && (
           <div className="agent-farmer-section">
             <div className="agent-farmer-header">
               <h4 className="agent-farmer-title">
-                {selectedAgentName}'s Farmers
-                <span className="agent-farmer-count">{farmers.length} Farmers</span>
+                {selectedAgentName}'s {t("farmers")}
+                <span className="agent-farmer-count">{farmers.length} {t("farmers")}</span>
               </h4>
               <div className="access-controls">
                 <div className="access-status-badge">
                   <span className={`status-dot ${hasAnyAccess ? 'approved' : 'pending'}`}></span>
                   <span className="status-text">
-                    {hasAnyAccess ? 'Some Access Granted' : 'No Access Granted'}
+                    {hasAnyAccess ? t("someAccessGranted") : t("noAccessGranted")}
                   </span>
                 </div>
               </div>
@@ -1234,7 +1140,7 @@ function Agent() {
               <div className="agent-empty-state">
                 <div className="agent-empty-icon">👨‍🌾</div>
                 <p className="agent-empty-text">
-                  {selectedAgentName} has no farmers registered
+                  {selectedAgentName} {t("noFarmersRegistered")}
                 </p>
               </div>
             ) : (
@@ -1249,44 +1155,50 @@ function Agent() {
                       <div className="farmer-card-header">
                         <div className="farmer-basic-info">
                           <h5>{f.name}</h5>
-                          <p><b>Mobile:</b> {f.contact || "N/A"}</p>
-                          {f.village && <p><b>Village:</b> {f.village}</p>}
+                          <p><b>{t("contactNumber")}:</b> {f.contact || t("na")}</p>
+                          {f.village && <p><b>{t("village")}:</b> {f.village}</p>}
                         </div>
                         
                         <div className="farmer-access-status">
                           {hasAccess ? (
                             <span className="access-badge approved">
-                              ✓ Access Granted
+                              ✓ {t("accessGranted")}
                             </span>
                           ) : isPending ? (
                             <span className="access-badge pending">
-                              ⏱️ Pending Approval
+                              ⏱️ {t("pendingApproval")}
                             </span>
                           ) : (
                             <span className="access-badge no-access">
-                              🔒 No Access
+                              🔒 {t("noAccess")}
                             </span>
                           )}
                         </div>
                       </div>
 
-                      {/* BASIC INFO - Always visible */}
+                      {/* BASIC INFO */}
                       <div className="farmer-details">
-                        {f.area && <p><b>Total Area:</b> {f.area}</p>}
-                        {f.species && <p><b>Species:</b> {f.species}</p>}
+                        {f.area && <p><b>{t("totalArea")}:</b> {f.area}</p>}
+                        {f.species && <p><b>{t("species")}:</b> {f.species}</p>}
                       </div>
 
-                      {/* NO ACCESS - Show request button */}
+                      {/* NO ACCESS */}
                       {!hasAccess && !isPending && (
                         <div className="farmer-access-request">
                           <button
                             className="farmer-request-btn"
                             onClick={() => requestFarmerAccess(f._id)}
+                            disabled={loadingAccess[f._id]}
                           >
-                            🔑 Request Access to Pond Details
+                            {loadingAccess[f._id] ? (
+                              <span className="loading-spinner-small"></span>
+                            ) : (
+                              "🔑"
+                            )}
+                            {t("requestAccessToPondDetails")}
                           </button>
                           <p className="access-note">
-                            Request access to view detailed pond information for this farmer only
+                            {t("accessNote")}
                           </p>
                         </div>
                       )}
@@ -1295,36 +1207,35 @@ function Agent() {
                       {isPending && (
                         <div className="farmer-pending-request">
                           <span>⏳</span>
-                          <p>Your request is pending admin approval</p>
-                          {/* <button 
-                            className="refresh-btn"
-                            onClick={() => checkFarmerAccess(f._id)}
-                          >
-                            ⟳ Check Status
-                          </button> */}
+                          <p>{t("requestPendingApproval")}</p>
                         </div>
                       )}
 
-                      {/* ACCESS GRANTED - Show pond details */}
+                      {/* ACCESS GRANTED */}
                       {hasAccess && f.ponds && f.ponds.length > 0 && (
                         <div className="farmer-pond-info">
                           <div className="ponds-header">
-                            <b>Pond Details ({f.ponds.length} ponds)</b>
+                            <b>{t("pondDetails")} ({f.ponds.length} {t("ponds")})</b>
                             <button 
                               className="refresh-btn"
                               onClick={() => checkFarmerAccess(f._id)}
-                              title="Refresh access status"
+                              title={t("refreshAccessStatus")}
+                              disabled={loadingAccess[f._id]}
                             >
-                              ⟳
+                              {loadingAccess[f._id] ? (
+                                <span className="loading-spinner-small"></span>
+                              ) : (
+                                "⟳"
+                              )}
                             </button>
                           </div>
                           <div className="ponds-list">
                             {f.ponds.map((p) => (
                               <div key={p.pondId} className="pond-item">
-                                <p><b>Pond No:</b> {p.pondNo || p.pondNumber || "N/A"}</p>
-                                <p><b>ID:</b> {p.pondId}</p>
-                                {p.pondArea && <p><b>Area:</b> {p.pondArea}</p>}
-                                {p.pondDepth && <p><b>Depth:</b> {p.pondDepth}</p>}
+                                <p><b>{t("pondNumber")}:</b> {p.pondNo || p.pondNumber || t("na")}</p>
+                                <p><b>{t("id")}:</b> {p.pondId}</p>
+                                {p.pondArea && <p><b>{t("area")}:</b> {p.pondArea}</p>}
+                                {p.pondDepth && <p><b>{t("depth")}:</b> {p.pondDepth}</p>}
                               </div>
                             ))}
                           </div>
@@ -1334,7 +1245,7 @@ function Agent() {
                       {hasAccess && (!f.ponds || f.ponds.length === 0) && (
                         <div className="no-ponds-info">
                           <span>💧</span>
-                          <p>No pond information available for this farmer</p>
+                          <p>{t("noPondInformation")}</p>
                         </div>
                       )}
                     </div>
@@ -1345,13 +1256,13 @@ function Agent() {
           </div>
         )}
 
-        {/* ✅ SHARED FARMERS SECTION (Only approved farmers) */}
+        {/* SHARED FARMERS SECTION */}
         {sharedFarmers.length > 0 && (
           <div className="agent-farmer-section">
             <div className="agent-farmer-header">
               <h4 className="agent-farmer-title">
-                Your Approved Farmers
-                <span className="agent-farmer-count">{sharedFarmers.length} Farmers</span>
+                {t("yourApprovedFarmers")}
+                <span className="agent-farmer-count">{sharedFarmers.length} {t("farmers")}</span>
               </h4>
             </div>
             
@@ -1359,34 +1270,33 @@ function Agent() {
               {sharedFarmers.map((farmer) => (
                 <div key={farmer._id} className="agent-farmer-card shared-farmer-card">
                   <h4>{farmer.name}</h4>
-                  <p><b>Village:</b> {farmer.village || "N/A"}</p>
-                  <p><b>Contact:</b> {farmer.contact || "N/A"}</p>
+                  <p><b>{t("village")}:</b> {farmer.village || t("na")}</p>
+                  <p><b>{t("contactNumber")}:</b> {farmer.contact || t("na")}</p>
                   
                   {farmer.ponds && farmer.ponds.length > 0 && (
                     <div className="farmer-pond-info">
-                      <h5>Ponds ({farmer.ponds.length}):</h5>
+                      <h5>{t("ponds")} ({farmer.ponds.length}):</h5>
                       <div className="ponds-list">
                         {farmer.ponds.map((pond) => (
                           <div key={pond.pondId} className="pond-item">
-                            <p><b>Pond No:</b> {pond.pondNo || pond.pondNumber || "N/A"}</p>
-                            <p><b>ID:</b> {pond.pondId}</p>
-                            {pond.pondArea && <p><b>Area:</b> {pond.pondArea}</p>}
-                            {pond.pondDepth && <p><b>Depth:</b> {pond.pondDepth}</p>}
+                            <p><b>{t("pondNumber")}:</b> {pond.pondNo || pond.pondNumber || t("na")}</p>
+                            <p><b>{t("id")}:</b> {pond.pondId}</p>
+                            {pond.pondArea && <p><b>{t("area")}:</b> {pond.pondArea}</p>}
+                            {pond.pondDepth && <p><b>{t("depth")}:</b> {pond.pondDepth}</p>}
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
                   
-                  {farmer.area && <p><b>Total Area:</b> {farmer.area}</p>}
-                  {farmer.species && <p><b>Species:</b> {farmer.species}</p>}
+                  {farmer.area && <p><b>{t("totalArea")}:</b> {farmer.area}</p>}
+                  {farmer.species && <p><b>{t("species")}:</b> {farmer.species}</p>}
                 </div>
               ))}
             </div>
           </div>
         )}
       </div>
-
     </div>
   );
 }
