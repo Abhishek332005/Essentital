@@ -425,26 +425,7 @@ function MainPage() {
 
   const [searchId, setSearchId] = useState("");
 
-  // const handleSearch = async (id) => {
-  //   setSearchId(id);
-  //   if (!id) {
-  //     await fetchFarmers();
-  //     return;
-  //   }
-    
-  //   setLoading(prev => ({ ...prev, search: true }));
-  //   try {
-  //     const filtered = farmers.filter(f => f.farmerId.toLowerCase().includes(id.toLowerCase()));
-  //     if (filtered.length > 0) {
-  //       const remaining = farmers.filter(f => !filtered.includes(f));
-  //       setFarmers([...filtered, ...remaining]);
-  //     } else {
-  //       await fetchFarmers();
-  //     }
-  //   } finally {
-  //     setLoading(prev => ({ ...prev, search: false }));
-  //   }
-  // };
+
 
 
 const handleSearch = async () => {
@@ -628,21 +609,7 @@ const handleSearch = async () => {
             </div>
           </div>
 
-          {/* <div className="search-section">
-            <input
-              type="text"
-              placeholder={t('farmerSearchById')}
-              className="form-control"
-              value={searchId}
-              onChange={(e) => handleSearch(e.target.value)}
-              disabled={loading.search}
-            />
-            {loading.search && (
-              <div className="search-loader">
-                <ButtonLoader />
-              </div>
-            )}
-          </div> */}
+          
 
 <div className="search-section d-flex gap-2">
   <input
