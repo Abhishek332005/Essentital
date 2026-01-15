@@ -848,7 +848,12 @@ const resources = {
       nonRefundable: "Non-Refundable:",
       nonRefundableUsed: "Used/opened products",
       nonRefundableDigital: "Digital services already delivered",
-      nonRefundableCustom: "Custom or bulk processed orders"
+      nonRefundableCustom: "Custom or bulk processed orders",
+
+      updating: "Updating...",
+success: "successful"
+
+
     }
   },
   hi: {
