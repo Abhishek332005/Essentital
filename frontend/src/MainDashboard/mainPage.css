@@ -174,7 +174,7 @@ body {
   background-color: white;
   transition: var(--transition);
   width: 100%;
-  margin-bottom: 100px;
+  /* margin-bottom: 100px; */
 }
 
 .form-select:focus {
