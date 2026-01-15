@@ -1392,6 +1392,8 @@ textarea:valid {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 60px;
+  height: 50px;
 }
 
 .mobile-menu-toggle:hover {
