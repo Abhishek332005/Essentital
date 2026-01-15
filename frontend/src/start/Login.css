@@ -400,7 +400,7 @@
 }
 
 /* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .login-container-wrapper {
     background: rgba(26, 32, 44, 0.95);
     border-color: rgba(74, 85, 104, 0.3);
@@ -409,7 +409,7 @@
   
   .login-company-name {
     background: linear-gradient(135deg, #9f7aea 0%, #667eea 100%);
-    /* -webkit-background-clip: text; */
+  
     -webkit-text-fill-color: transparent;
   }
   
@@ -464,7 +464,7 @@
   .login-bottom-text {
     color: #a0aec0;
   }
-}
+} */
 
 /* Animation for Page Load */
 @keyframes loginFadeIn {
