@@ -689,3 +689,83 @@
     border: 1px solid #ccc;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Loader Styles */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Language Select Wrapper */
+.dealers-language-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.language-spinner {
+  position: absolute;
+  right: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Button with loader */
+.dealers-add-btn,
+.dealers-submit-btn,
+.dealers-cancel-btn,
+.mobile-menu-toggle,
+.sidebar-close-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dealers-add-btn:disabled,
+.dealers-submit-btn:disabled,
+.dealers-cancel-btn:disabled,
+.mobile-menu-toggle:disabled,
+.sidebar-close-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Card loader */
+.card-loader-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+/* Language select disabled style */
+.dealers-language-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
