@@ -70,7 +70,7 @@ function Cancellation() {
             <p className="cancel-contact-text">
               {t('contactForQueries')}
               <strong className="cancel-email">
-                24x7@essentiapaquatech.com
+                24x7@essentialaquatech.com
               </strong>
             </p>
 

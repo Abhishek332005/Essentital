@@ -291,7 +291,7 @@ function Privacy() {
   <p className="privacy-contact-text">
     {t("contactForQueries")}
     <strong className="privacy-email">
-      24x7@essentiapaquatech.com
+      24x7@essentialaquatech.com
     </strong>
   </p>
 

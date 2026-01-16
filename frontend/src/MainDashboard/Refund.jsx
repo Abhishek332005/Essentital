@@ -96,7 +96,7 @@ function Refund() {
   <p className="refund-contact-text">
     {t("contactForQueries")}
     <strong className="refund-email">
-      24x7@essentiapaquatech.com
+      24x7@essentialaquatech.com
     </strong>
   </p>
 

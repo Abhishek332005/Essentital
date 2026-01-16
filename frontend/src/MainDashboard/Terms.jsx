@@ -226,7 +226,7 @@ function Terms() {
   <p className="terms-contact-text">
     {t('contactForQueries')} 
     <strong className="terms-email">
-      24x7@essentiapaquatech.com
+      24x7@essentialaquatech.com
     </strong>
   </p>
   <p className="terms-copyright">
