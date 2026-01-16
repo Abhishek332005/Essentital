@@ -712,11 +712,19 @@ const DealerShop = () => {
   const [addedId, setAddedId] = useState(null);
 
   // Weight options with multipliers
-  const weightOptions = [
-    { label: "1kg", multiplier: 1 },
-    { label: "10kg", multiplier: 9.5 },
-    { label: "20kg", multiplier: 18 }
-  ];
+  // const weightOptions = [
+  //   { label: "1kg", multiplier: 1 },
+  //   { label: "10kg", multiplier: 9.5 },
+  //   { label: "20kg", multiplier: 18 }
+  // ];
+
+const weightOptions = [
+  { label: "1kg", kg: 1 },
+  { label: "10kg", kg: 10 },
+  { label: "20kg", kg: 20 }
+];
+
+
 
   // Extract base price from price string (e.g., "195.50 - 2660.50")
   const getBasePrice = (priceString) => {
@@ -725,13 +733,21 @@ const DealerShop = () => {
   };
 
   // Calculate price based on weight and base price
+  // const calculatePrice = (basePrice, weight) => {
+  //   const weightOption = weightOptions.find(w => w.label === weight);
+  //   if (weightOption) {
+  //     return basePrice * weightOption.multiplier;
+  //   }
+  //   return basePrice;
+  // };
+
+
   const calculatePrice = (basePrice, weight) => {
-    const weightOption = weightOptions.find(w => w.label === weight);
-    if (weightOption) {
-      return basePrice * weightOption.multiplier;
-    }
-    return basePrice;
-  };
+  const weightOption = weightOptions.find(w => w.label === weight);
+  if (!weightOption) return basePrice;
+  return basePrice * weightOption.kg;
+};
+
 
   // Add to cart
   const addToCart = (product) => {
