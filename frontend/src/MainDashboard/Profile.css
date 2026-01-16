@@ -738,3 +738,32 @@ body {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.password-eye:hover {
+  color: #111827;
+}
