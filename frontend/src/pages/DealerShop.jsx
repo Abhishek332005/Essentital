@@ -307,7 +307,6 @@ const DealerShop = () => {
   const { dealerId } = useParams();
   const [cart, setCart] = useState([]);
   const [ordersRefresh, setOrdersRefresh] = useState(0);
-  const [addingId, setAddingId] = useState(null);
   const [selectedWeight, setSelectedWeight] = useState({});
 
   // Weight options
@@ -324,37 +323,29 @@ const DealerShop = () => {
     return basePrice;
   };
 
-  // Add to cart
+  // Add to cart - NO DELAY
   const addToCart = (product) => {
     const weight = selectedWeight[product.id] || "1kg";
+    const price = getPriceForWeight(product, weight);
     
-    setAddingId(product.id);
+    const existingItem = cart.find(item => 
+      item.id === product.id && item.weight === weight
+    );
     
-    setTimeout(() => {
-      const price = getPriceForWeight(product, weight);
-      
-      const existingItem = cart.find(item => 
+    if (existingItem) {
+      setCart(cart.map(item =>
         item.id === product.id && item.weight === weight
-      );
-      
-      if (existingItem) {
-        setCart(cart.map(item =>
-          item.id === product.id && item.weight === weight
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        ));
-      } else {
-        setCart([...cart, {
-          ...product,
-          quantity: 1,
-          weight: weight,
-          price: price,
-          unitPrice: basePrice
-        }]);
-      }
-      
-      setAddingId(null);
-    }, 300);
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+    } else {
+      setCart([...cart, {
+        ...product,
+        quantity: 1,
+        weight: weight,
+        price: price
+      }]);
+    }
   };
 
   // Remove from cart
@@ -457,15 +448,8 @@ const DealerShop = () => {
                 <button
                   className="add-to-cart-btn"
                   onClick={() => addToCart(product)}
-                  disabled={addingId === product.id}
                 >
-                  {addingId === product.id ? (
-                    <>
-                      <span className="loader"></span> Adding...
-                    </>
-                  ) : (
-                    "Add to Cart"
-                  )}
+                  Add to Cart
                 </button>
               </div>
             );
