@@ -31,10 +31,7 @@
 
 
 
-
-
-
-// Cancellation.jsx - Simple Version
+// Cancellation.jsx - Internationalized Version
 import React from "react";
 import { useTranslation } from "react-i18next";
 import "./Cancellation.css";
@@ -47,55 +44,40 @@ function Cancellation() {
       <div className="cancel-cancel-card">
         {/* Header */}
         <header className="cancel-cancel-header">
-          <h1 className="cancel-cancel-title">{t('cancellationPolicy') || "Cancellation Policy"}</h1>
-          <p className="cancel-update-date">Effective Date: January 2024</p>
+          <h1 className="cancel-cancel-title">{t('cancellationPolicy')}</h1>
+          <p className="cancel-update-date">{t('cancelEffectiveDate', { date: "January 2024" })}</p>
         </header>
 
         {/* Main Policy Section */}
         <section className="cancel-cancel-section">
           <ul className="cancel-cancel-list">
             <li>
-              <strong>Order Cancellation:</strong> 
-              Orders can be cancelled within 24 hours of placement, provided they have not been processed or shipped.
+              <strong>{t('cancelOrderCancellation')}:</strong> 
+              {t('cancelOrderCancellationDesc')}
             </li>
             <li>
-              <strong>How to Cancel:</strong> 
-              To cancel an order, customer must contact our support team via customer support, email and phone.
+              <strong>{t('cancelHowToCancel')}:</strong> 
+              {t('cancelHowToCancelDesc')}
             </li>
             <li>
-              <strong>Shipped Orders:</strong> 
-              Once an order has been shipped it cannot be canceled.
+              <strong>{t('cancelShippedOrders')}:</strong> 
+              {t('cancelShippedOrdersDesc')}
             </li>
           </ul>
 
           {/* Contact Information */}
-          {/* <div className="cancel-contact-info">
+          <div className="cancel-contact-info">
             <p className="cancel-contact-text">
-              For cancellation requests, contact us at:
+              {t('contactForQueries')}
+              <strong className="cancel-email">
+                24x7@essentiapaquatech.com
+              </strong>
             </p>
-            <a href="mailto:24x7@essentiapaquatech.com" className="cancel-email">
-              24x7@essentiapaquatech.com
-            </a>
+
             <p className="cancel-copyright">
-              © 2024 Company Name. All rights reserved.
+              {t('cancelCopyright', { year: "2024", company: "Essential Aquatech P.V.T L.T.D" })}
             </p>
-          </div> */}
-
-{/* Contact Information */}
-<div className="cancel-contact-info">
-  <p className="cancel-contact-text">
-    {t("contactForQueries")}
-    <strong className="cancel-email">
-      24x7@essentiapaquatech.com
-    </strong>
-  </p>
-
-  <p className="cancel-copyright">
-    Copyright © 2024 Essential Aquatech P.V.T L.T.D
-  </p>
-</div>
-
-
+          </div>
         </section>
       </div>
     </div>
