@@ -62,7 +62,7 @@ function Refund() {
         {/* Header */}
         <header className="refund-refund-header">
           <h1 className="refund-refund-title">{t('refundPolicy') || "Refund Policy"}</h1>
-          <p className="refund-update-date">Effective Date: January 2024</p>
+          {/* <p className="refund-update-date">Effective Date: January 2024</p> */}
         </header>
 
         {/* Refund Available Section */}

@@ -118,7 +118,7 @@ function Terms() {
           {/* Header */}
           <header className="terms-main-header">
             <h1 className="terms-main-title">{t('termsAndConditions')}</h1>
-            <p className="terms-update-date">Last Updated: January 2024</p>
+            {/* <p className="terms-update-date">Last Updated: January 2024</p> */}
           </header>
 
           {/* Definitions Section */}

@@ -45,7 +45,7 @@ function Cancellation() {
         {/* Header */}
         <header className="cancel-cancel-header">
           <h1 className="cancel-cancel-title">{t('cancellationPolicy')}</h1>
-          <p className="cancel-update-date">{t('cancelEffectiveDate', { date: "January 2024" })}</p>
+          {/* <p className="cancel-update-date">{t('cancelEffectiveDate', { date: "January 2024" })}</p> */}
         </header>
 
         {/* Main Policy Section */}

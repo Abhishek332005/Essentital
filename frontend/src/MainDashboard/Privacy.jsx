@@ -174,7 +174,7 @@ function Privacy() {
         {/* Header */}
         <header className="privacy-privacy-header">
           <h1 className="privacy-privacy-title">{t('privacyPolicy')}</h1>
-          <p className="privacy-update-date">Last Updated: January 2024</p>
+          {/* <p className="privacy-update-date">Last Updated: January 2024</p> */}
         </header>
 
         {/* Information We Collect */}
