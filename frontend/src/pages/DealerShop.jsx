@@ -259,6 +259,10 @@
 
 
 
+
+
+
+
 // import React, { useState, useEffect } from "react";
 // import { useParams } from "react-router-dom";
 // import products from "../data/products";
@@ -312,43 +316,74 @@
 //   const [cart, setCart] = useState([]);
 //   const [ordersRefresh, setOrdersRefresh] = useState(0);
 //   const [showFullDesc, setShowFullDesc] = useState({});
+//   const [addingId, setAddingId] = useState(null);
+//   const [addedId, setAddedId] = useState(null);
 
-//   // Weight options
-//   const weightOptions = ["1kg", "10kg", "20kg"];
+//   // Weight options with multipliers
+//   const weightOptions = [
+//     { label: "1kg", multiplier: 1 },
+//     { label: "10kg", multiplier: 9.5 },
+//     { label: "20kg", multiplier: 18 }
+//   ];
 
-//   // Calculate price based on weight
-//   const getPriceForWeight = (product, weight) => {
-//     const basePrice = parseFloat(product.price.split('-')[0].trim());
-    
-//     if (weight === "1kg") return basePrice;
-//     if (weight === "10kg") return basePrice * 9.5;
-//     if (weight === "20kg") return basePrice * 18;
-    
+//   // Extract base price from price string (e.g., "195.50 - 2660.50")
+//   const getBasePrice = (priceString) => {
+//     if (!priceString) return 0;
+//     return parseFloat(priceString.split('-')[0].trim());
+//   };
+
+//   // Calculate price based on weight and base price
+//   const calculatePrice = (basePrice, weight) => {
+//     const weightOption = weightOptions.find(w => w.label === weight);
+//     if (weightOption) {
+//       return basePrice * weightOption.multiplier;
+//     }
 //     return basePrice;
 //   };
 
-//   // Add to cart - with default 1kg
+//   // Add to cart
 //   const addToCart = (product) => {
-//     const price = getPriceForWeight(product, "1kg");
+//     setAddingId(product.id);
     
-//     const existingItem = cart.find(item => 
-//       item.id === product.id && item.weight === "1kg"
-//     );
-    
-//     if (existingItem) {
-//       setCart(cart.map(item =>
+//     setTimeout(() => {
+//       const basePrice = getBasePrice(product.price);
+//       const price = calculatePrice(basePrice, "1kg");
+      
+//       // Find existing item
+//       const existingItem = cart.find(item => 
 //         item.id === product.id && item.weight === "1kg"
-//           ? { ...item, quantity: item.quantity + 1 }
-//           : item
-//       ));
-//     } else {
-//       setCart([...cart, {
-//         ...product,
-//         quantity: 1,
-//         weight: "1kg",
-//         price: price
-//       }]);
-//     }
+//       );
+      
+//       if (existingItem) {
+//         setCart(cart.map(item =>
+//           item.id === product.id && item.weight === "1kg"
+//             ? { 
+//                 ...item, 
+//                 quantity: item.quantity + 1,
+//                 totalPrice: calculatePrice(item.basePrice, item.weight) * (item.quantity + 1)
+//               }
+//             : item
+//         ));
+//       } else {
+//         setCart([...cart, {
+//           id: product.id,
+//           name: product.name,
+//           basePrice: basePrice, // Store base price
+//           price: price, // Current price per unit
+//           quantity: 1,
+//           weight: "1kg",
+//           totalPrice: price // Total price for this item
+//         }]);
+//       }
+      
+//       setAddingId(null);
+//       setAddedId(product.id);
+      
+//       setTimeout(() => {
+//         setAddedId(null);
+//       }, 2000);
+      
+//     }, 300);
 //   };
 
 //   // Remove from cart
@@ -356,23 +391,20 @@
 //     setCart(cart.filter((_, i) => i !== index));
 //   };
 
-//   // Update quantity in cart
-//   const updateQuantity = (index, newQty) => {
-//     const updatedCart = [...cart];
-//     updatedCart[index].quantity = Math.max(newQty, 1);
-//     setCart(updatedCart);
-//   };
-
-//   // Update weight in cart
+//   // Update weight in cart - FIXED FUNCTION
 //   const updateWeight = (index, newWeight) => {
 //     const updatedCart = [...cart];
-//     const product = updatedCart[index];
-//     const price = getPriceForWeight(product, newWeight);
+//     const item = updatedCart[index];
+    
+//     // Calculate new price based on base price
+//     const newPrice = calculatePrice(item.basePrice, newWeight);
+//     const newTotalPrice = newPrice * item.quantity;
     
 //     updatedCart[index] = {
-//       ...product,
+//       ...item,
 //       weight: newWeight,
-//       price: price
+//       price: newPrice,
+//       totalPrice: newTotalPrice
 //     };
     
 //     setCart(updatedCart);
@@ -387,33 +419,64 @@
 //   }, 0);
 
 //   // Place order
-//   const placeOrder = async () => {
-//     if (cart.length === 0) return alert("Cart empty");
+//   // const placeOrder = async () => {
+//   //   if (cart.length === 0) return alert("Cart empty");
     
-//     try {
-//       const orderItems = cart.map(item => ({
-//         productId: item.id,
-//         name: item.name,
-//         price: item.price,
-//         quantity: item.quantity,
-//         weight: item.weight
-//       }));
+//   //   try {
+//   //     const orderItems = cart.map(item => ({
+//   //       productId: item.id,
+//   //       name: item.name,
+//   //       price: item.price,
+//   //       quantity: item.quantity,
+//   //       weight: item.weight
+//   //     }));
 
-//       await api.post("/api/orders", {
-//         dealerId: dealerId,
-//         items: orderItems,
-//         totalAmount: total.toFixed(2)
-//       });
+//   //     await api.post("/api/orders", {
+//   //       dealerId: dealerId,
+//   //       items: orderItems,
+//   //       totalAmount: total.toFixed(2)
+//   //     });
 
-//       alert("Order placed successfully!");
-//       setCart([]);
-//       setOrdersRefresh(prev => prev + 1);
+//   //     alert("Order placed successfully!");
+//   //     setCart([]);
+//   //     setOrdersRefresh(prev => prev + 1);
       
-//     } catch (error) {
-//       alert("Order placement failed!");
-//       console.error(error);
-//     }
-//   };
+//   //   } catch (error) {
+//   //     alert("Order placement failed!");
+//   //     console.error(error);
+//   //   }
+//   // };
+
+// const placeOrder = async () => {
+//   if (cart.length === 0) return alert("Cart empty");
+
+//   try {
+//     const orderItems = cart.map(item => ({
+//       productId: item.id,
+//       name: item.name,
+//       price: item.price,
+//       qty: item.quantity,      // ✅ BACKEND COMPATIBLE
+//       weight: item.weight      // optional, backend ignore karega
+//     }));
+
+//     await api.post("/api/orders", {
+//       dealerId: dealerId,
+//       items: orderItems,
+//       totalAmount: Number(total.toFixed(2)) // ✅ number
+//     });
+
+//     alert("Order placed successfully!");
+//     setCart([]);
+//     setOrdersRefresh(prev => prev + 1);
+
+//   } catch (error) {
+//     console.error("Order error:", error);
+//     alert("Order placement failed");
+//   }
+// };
+
+
+  
 
 //   return (
 //     <div className="dealer-shop-container">
@@ -422,13 +485,32 @@
 //         <h2>🛒 Dealer Shopping</h2>
 //         <div className="products-grid">
 //           {products.map(product => {
-//             const basePrice = parseFloat(product.price.split('-')[0].trim());
+//             const basePrice = getBasePrice(product.price);
+//             const price1kg = calculatePrice(basePrice, "1kg");
+//             const price10kg = calculatePrice(basePrice, "10kg");
+//             const price20kg = calculatePrice(basePrice, "20kg");
             
 //             return (
 //               <div key={product.id} className="product-card">
 //                 <img src={product.image} alt={product.name} className="product-image" />
 //                 <h6 className="product-name">{product.name}</h6>
 //                 <p className="product-price">₹ {product.price}</p>
+                
+//                 {/* Price breakdown */}
+//                 <div className="price-breakdown">
+//                   <div className="price-option">
+//                     <span>1kg:</span>
+//                     <span className="price-value">₹ {price1kg.toFixed(2)}</span>
+//                   </div>
+//                   <div className="price-option">
+//                     <span>10kg:</span>
+//                     <span className="price-value">₹ {price10kg.toFixed(2)}</span>
+//                   </div>
+//                   <div className="price-option">
+//                     <span>20kg:</span>
+//                     <span className="price-value">₹ {price20kg.toFixed(2)}</span>
+//                   </div>
+//                 </div>
                 
 //                 {/* Product Description */}
 //                 <p className="product-description">
@@ -445,8 +527,17 @@
 //                 <button
 //                   className="add-to-cart-btn"
 //                   onClick={() => addToCart(product)}
+//                   disabled={addingId === product.id}
 //                 >
-//                   Add to Cart
+//                   {addingId === product.id ? (
+//                     <>
+//                       <span className="loader"></span> Adding...
+//                     </>
+//                   ) : addedId === product.id ? (
+//                     "✅ Added"
+//                   ) : (
+//                     "Add to Cart"
+//                   )}
 //                 </button>
 //               </div>
 //             );
@@ -483,44 +574,24 @@
 //                     <div className="cart-weight-selector">
 //                       <label>Select Weight:</label>
 //                       <div className="weight-buttons">
-//                         {weightOptions.map(weight => (
+//                         {weightOptions.map(weightObj => (
 //                           <button
-//                             key={weight}
+//                             key={weightObj.label}
 //                             className={`cart-weight-btn ${
-//                               item.weight === weight ? 'active' : ''
+//                               item.weight === weightObj.label ? 'active' : ''
 //                             }`}
-//                             onClick={() => updateWeight(index, weight)}
+//                             onClick={() => updateWeight(index, weightObj.label)}
 //                           >
-//                             {weight}
+//                             {weightObj.label}
 //                           </button>
 //                         ))}
 //                       </div>
 //                     </div>
                     
-//                     {/* Quantity in Cart */}
-//                     <div className="quantity-control">
-//                       <label>Quantity:</label>
-//                       <div className="quantity-input-group">
-//                         <button 
-//                           className="qty-btn minus"
-//                           onClick={() => updateQuantity(index, item.quantity - 1)}
-//                         >
-//                           −
-//                         </button>
-//                         <input
-//                           type="number"
-//                           min="1"
-//                           value={item.quantity}
-//                           onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
-//                           className="quantity-input"
-//                         />
-//                         <button 
-//                           className="qty-btn plus"
-//                           onClick={() => updateQuantity(index, item.quantity + 1)}
-//                         >
-//                           +
-//                         </button>
-//                       </div>
+//                     {/* Quantity Display */}
+//                     <div className="quantity-display">
+//                       <span className="qty-label">Quantity:</span>
+//                       <span className="qty-value">{item.quantity}</span>
 //                     </div>
                     
 //                     {/* Price Display */}
@@ -577,6 +648,11 @@
 
 
 
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import products from "../data/products";
@@ -615,7 +691,9 @@ const DealerOrders = ({ dealerId, refreshTrigger }) => {
             <p className="order-amount"><b>Total:</b> ₹ {o.totalAmount}</p>
             <ul className="order-items">
               {o.items.map((i, idx) => (
-                <li key={idx}>{i.name} × {i.quantity} ({i.weight}) - ₹ {i.price}</li>
+                <li key={idx}>
+                  {i.name} × {i.qty} ({i.weight}) - ₹ {i.price * i.qty}
+                </li>
               ))}
             </ul>
           </div>
@@ -735,29 +813,29 @@ const DealerShop = () => {
   // Place order
   const placeOrder = async () => {
     if (cart.length === 0) return alert("Cart empty");
-    
+
     try {
       const orderItems = cart.map(item => ({
         productId: item.id,
         name: item.name,
         price: item.price,
-        quantity: item.quantity,
-        weight: item.weight
+        qty: item.quantity,      // ✅ BACKEND COMPATIBLE
+        weight: item.weight      // optional, backend ignore karega
       }));
 
       await api.post("/api/orders", {
         dealerId: dealerId,
         items: orderItems,
-        totalAmount: total.toFixed(2)
+        totalAmount: Number(total.toFixed(2)) // ✅ number
       });
 
       alert("Order placed successfully!");
       setCart([]);
       setOrdersRefresh(prev => prev + 1);
-      
+
     } catch (error) {
-      alert("Order placement failed!");
-      console.error(error);
+      console.error("Order error:", error);
+      alert("Order placement failed");
     }
   };
 
