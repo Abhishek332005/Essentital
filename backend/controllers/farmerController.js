@@ -211,28 +211,70 @@ export const deleteFarmer = async (req, res) => {
 // ----------------------------------------------------
 // 6️⃣ UPDATE FARMER (SAFE)
 // ----------------------------------------------------
+// export const updateFarmer = async (req, res) => {
+//   try {
+//     console.log("🔥 UPDATE FARMER BODY:", req.body);
+
+//     const farmer = await Farmer.findById(req.params.id);
+//     if (!farmer) return res.status(404).json({ error: "Farmer not found" });
+
+//     Object.keys(req.body).forEach(key => {
+//       if (!["userId", "ponds", "farmerId"].includes(key)) {
+//         farmer[key] = req.body[key];
+//       }
+//     });
+
+// if (req.files?.photo) {
+//   farmer.photo = `uploads/${req.files.photo[0].filename}`;
+// }
+
+
+//     // if (req.files?.photo) farmer.photo = req.files.photo[0].filename;
+//     if (req.files?.pondImage) farmer.pondImage = req.files.pondImage[0].filename;
+//     if (req.files?.pondFiles)
+//       farmer.pondFiles.push(...req.files.pondFiles.map(f => f.filename));
+//     if (req.files?.fishFiles)
+//       farmer.fishFiles.push(...req.files.fishFiles.map(f => f.filename));
+
+//     await farmer.save();
+//     res.status(200).json(farmer);
+
+//   } catch (err) {
+//     console.error("🔥 UPDATE FARMER ERROR:", err);
+//     res.status(500).json({ error: err.message });
+//   }
+// };
+
+
 export const updateFarmer = async (req, res) => {
   try {
-    console.log("🔥 UPDATE FARMER BODY:", req.body);
-
     const farmer = await Farmer.findById(req.params.id);
-    if (!farmer) return res.status(404).json({ error: "Farmer not found" });
+    if (!farmer) {
+      return res.status(404).json({ error: "Farmer not found" });
+    }
 
+    // 🔒 SAFE BODY UPDATE
     Object.keys(req.body).forEach(key => {
-      if (!["userId", "ponds", "farmerId"].includes(key)) {
+      if (
+        !["userId", "ponds", "farmerId", "photo"].includes(key) &&
+        req.body[key] !== ""
+      ) {
         farmer[key] = req.body[key];
       }
     });
 
-if (req.files?.photo) {
-  farmer.photo = `uploads/${req.files.photo[0].filename}`;
-}
+    // 🔒 SAFE PHOTO UPDATE
+    if (req.files?.photo?.[0]) {
+      farmer.photo = `uploads/${req.files.photo[0].filename}`;
+    }
 
+    // Other files
+    if (req.files?.pondImage)
+      farmer.pondImage = req.files.pondImage[0].filename;
 
-    // if (req.files?.photo) farmer.photo = req.files.photo[0].filename;
-    if (req.files?.pondImage) farmer.pondImage = req.files.pondImage[0].filename;
     if (req.files?.pondFiles)
       farmer.pondFiles.push(...req.files.pondFiles.map(f => f.filename));
+
     if (req.files?.fishFiles)
       farmer.fishFiles.push(...req.files.fishFiles.map(f => f.filename));
 
