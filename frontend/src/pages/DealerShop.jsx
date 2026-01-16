@@ -253,6 +253,8 @@
 
 
 
+
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import products from "../data/products";
@@ -304,88 +306,62 @@ const DealerOrders = ({ dealerId, refreshTrigger }) => {
 const DealerShop = () => {
   const { dealerId } = useParams();
   const [cart, setCart] = useState([]);
-  const [showFullDesc, setShowFullDesc] = useState({});
   const [ordersRefresh, setOrdersRefresh] = useState(0);
-  const [addingId, setAddingId] = useState(null);
 
-  // Weight options for selection
-  const weightOptions = ["1kg", "5kg", "10kg", "20kg", "25kg", "50kg"];
+  // Weight options with price multipliers
+  const weightOptions = [
+    { label: "1kg", multiplier: 1 },
+    { label: "5kg", multiplier: 4.8 },
+    { label: "10kg", multiplier: 9.5 },
+    { label: "20kg", multiplier: 18 },
+    { label: "25kg", multiplier: 22 },
+    { label: "50kg", multiplier: 40 }
+  ];
 
-  // Get price based on weight selection
-  const getPriceForWeight = (product, selectedWeight) => {
-    if (!product.price.includes('-')) return parseFloat(product.price);
-    
-    const priceRange = product.price.split('-');
-    const basePrice = parseFloat(priceRange[0].trim());
-    
-    // Calculate price based on weight
-    const weightValue = parseFloat(selectedWeight.replace('kg', ''));
-    
-    // Simple multiplier logic - you can adjust this as needed
-    if (selectedWeight === "1kg") return basePrice;
-    if (selectedWeight === "5kg") return basePrice * 4.8; // Slight discount for bulk
-    if (selectedWeight === "10kg") return basePrice * 9.5;
-    if (selectedWeight === "20kg") return basePrice * 18;
-    if (selectedWeight === "25kg") return basePrice * 22;
-    if (selectedWeight === "50kg") return basePrice * 40;
-    
-    return basePrice;
+  // Calculate price based on weight
+  const calculatePrice = (product, weightLabel) => {
+    const basePrice = parseFloat(product.price.split('-')[0].trim());
+    const weight = weightOptions.find(w => w.label === weightLabel);
+    return basePrice * weight.multiplier;
   };
 
-  // Add to cart with weight selection
-  const addToCart = (product) => {
-    // Show weight selection modal
-    const selectedWeight = prompt(
-      `Select weight for ${product.name}:\n1kg, 5kg, 10kg, 20kg, 25kg, 50kg\n\nEnter weight (e.g., 10kg):`,
-      "1kg"
+  // Add item with specific weight
+  const addToCartWithWeight = (product, weightLabel) => {
+    const price = calculatePrice(product, weightLabel);
+    
+    // Check if same product with same weight already in cart
+    const existingItem = cart.find(item => 
+      item.id === product.id && item.weight === weightLabel
     );
     
-    if (!selectedWeight || !weightOptions.includes(selectedWeight.toLowerCase())) {
-      alert("Please select a valid weight: 1kg, 5kg, 10kg, 20kg, 25kg, or 50kg");
-      return;
+    if (existingItem) {
+      setCart(cart.map(item =>
+        item.id === product.id && item.weight === weightLabel
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+    } else {
+      setCart([...cart, {
+        id: product.id,
+        name: product.name,
+        price: price,
+        quantity: 1,
+        weight: weightLabel
+      }]);
     }
-
-    setAddingId(product.id);
-    
-    setTimeout(() => {
-      const price = getPriceForWeight(product, selectedWeight);
-      
-      const found = cart.find(item => 
-        item.id === product.id && item.weight === selectedWeight
-      );
-
-      if (found) {
-        setCart(cart.map(item =>
-          item.id === product.id && item.weight === selectedWeight
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        ));
-      } else {
-        setCart([...cart, { 
-          ...product, 
-          quantity: 1,
-          weight: selectedWeight,
-          price: price
-        }]);
-      }
-
-      setAddingId(null);
-    }, 300);
   };
 
-  // Remove from cart
-  const removeFromCart = (id) => setCart(cart.filter(item => item.id !== id));
+  // Remove item from cart
+  const removeFromCart = (id) => {
+    setCart(cart.filter(item => item.id !== id));
+  };
 
-  // Change quantity
-  const changeQuantity = (id, weight, delta) => 
-    setCart(cart.map(item => 
-      item.id === id && item.weight === weight 
-        ? { ...item, quantity: Math.max(item.quantity + delta, 1) } 
-        : item
+  // Update quantity
+  const updateQuantity = (id, newQty) => {
+    setCart(cart.map(item =>
+      item.id === id ? { ...item, quantity: Math.max(newQty, 1) } : item
     ));
-
-  // Toggle description
-  const toggleDesc = (id) => setShowFullDesc(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   // Calculate total
   const total = cart.reduce((sum, item) => {
@@ -402,11 +378,10 @@ const DealerShop = () => {
         name: item.name,
         price: item.price,
         quantity: item.quantity,
-        weight: item.weight,
-        unitPrice: getPriceForWeight(item, item.weight) / item.quantity
+        weight: item.weight
       }));
 
-      const response = await api.post("/api/orders", {
+      await api.post("/api/orders", {
         dealerId: dealerId,
         items: orderItems,
         totalAmount: total.toFixed(2)
@@ -417,8 +392,8 @@ const DealerShop = () => {
       setOrdersRefresh(prev => prev + 1);
       
     } catch (error) {
-      console.error("Error placing order:", error);
-      alert("Order placement failed: " + (error.response?.data?.message || error.message));
+      alert("Order placement failed!");
+      console.error(error);
     }
   };
 
@@ -433,46 +408,34 @@ const DealerShop = () => {
               <img src={product.image} alt={product.name} className="product-image" />
               <h6 className="product-name">{product.name}</h6>
               <p className="product-price">₹ {product.price}</p>
-              <p className="product-unit">Starting from 1kg</p>
-              <p className="product-description">
-                {showFullDesc[product.id] 
-                  ? product.description 
-                  : product.description.slice(0, 50) + (product.description.length > 50 ? "..." : "")}
-                {product.description.length > 50 && (
-                  <button className="read-more-btn" onClick={() => toggleDesc(product.id)}>
-                    {showFullDesc[product.id] ? " Show less" : " Read more"}
-                  </button>
-                )}
-              </p>
               
-              {/* Available Weight Options */}
-              <div className="weight-options">
-                <small>Available: </small>
+              {/* Weight Selection Buttons */}
+              <div className="weight-buttons">
                 {weightOptions.map(weight => (
-                  <span key={weight} className="weight-tag">{weight}</span>
+                  <button
+                    key={weight.label}
+                    className="weight-btn"
+                    onClick={() => addToCartWithWeight(product, weight.label)}
+                    title={`Add ${weight.label}`}
+                  >
+                    {weight.label}
+                  </button>
                 ))}
               </div>
-              
-              <button
-                className="add-to-cart-btn"
-                onClick={() => addToCart(product)}
-                disabled={addingId === product.id}
-              >
-                {addingId === product.id ? "Adding..." : "📦 Select Weight & Add"}
-              </button>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Cart + Orders Sidebar */}
+      {/* Cart Section */}
       <div className="sidebar-container">
         <div className="cart-section">
           <h4>🧺 Cart ({cart.length} items)</h4>
+          
           {cart.length === 0 ? (
             <div className="empty-cart">
               <p>Your cart is empty</p>
-              <p className="cart-empty-sub">Select products and choose weight (1kg, 10kg, etc.)</p>
+              <p className="cart-empty-sub">Click on weight buttons (1kg, 10kg, etc.) to add items</p>
             </div>
           ) : (
             <>
@@ -481,41 +444,29 @@ const DealerShop = () => {
                   <div key={`${item.id}-${item.weight}`} className="cart-item">
                     <div className="cart-item-info">
                       <p className="cart-item-name">{item.name}</p>
-                      <div className="cart-item-details">
+                      <div className="item-details">
                         <span className="weight-badge">{item.weight}</span>
                         <span className="item-price">₹ {item.price.toFixed(2)}</span>
                       </div>
-                      <p className="item-total">
-                        ₹ {item.price} × {item.quantity} = ₹ {(item.price * item.quantity).toFixed(2)}
-                      </p>
-                      
-                      {/* Quantity Controls - Removed +/- buttons */}
-                      <div className="quantity-section">
-                        <label>Quantity: </label>
+                      <div className="quantity-control">
+                        <label>Quantity:</label>
                         <input
                           type="number"
                           min="1"
                           value={item.quantity}
-                          onChange={(e) => {
-                            const newQty = parseInt(e.target.value) || 1;
-                            setCart(cart.map(i =>
-                              i.id === item.id && i.weight === item.weight
-                                ? { ...i, quantity: Math.max(newQty, 1) }
-                                : i
-                            ));
-                          }}
+                          onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
                           className="quantity-input"
                         />
-                        <div className="quick-actions">
-                          <button 
-                            className="action-btn remove"
-                            onClick={() => removeFromCart(item.id)}
-                            title="Remove item"
-                          >
-                            🗑️
-                          </button>
-                        </div>
+                        <button 
+                          className="remove-btn"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          🗑️
+                        </button>
                       </div>
+                      <p className="item-total">
+                        Total: ₹ {(item.price * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -523,33 +474,29 @@ const DealerShop = () => {
               
               <div className="cart-summary">
                 <div className="summary-row">
-                  <span>Subtotal:</span>
-                  <span>₹ {total.toFixed(2)}</span>
-                </div>
-                <div className="summary-row">
-                  <span>Items:</span>
-                  <span>{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+                  <span>Total Amount:</span>
+                  <span className="total-amount">₹ {total.toFixed(2)}</span>
                 </div>
                 
                 <button 
                   className="place-order-btn" 
                   onClick={placeOrder}
                 >
-                  ✅ Place Order (₹ {total.toFixed(2)})
+                  Place Order
                 </button>
                 
                 <button 
                   className="clear-cart-btn"
                   onClick={() => setCart([])}
                 >
-                  🗑️ Clear Cart
+                  Clear Cart
                 </button>
               </div>
             </>
           )}
         </div>
 
-        {/* Dealer Orders */}
+        {/* Orders History */}
         <DealerOrders dealerId={dealerId} refreshTrigger={ordersRefresh} />
       </div>
     </div>
