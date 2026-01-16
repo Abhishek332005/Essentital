@@ -274,7 +274,7 @@ function Privacy() {
         </section>
 
         {/* Footer */}
-        <footer className="privacy-footer-note">
+        {/* <footer className="privacy-footer-note">
           <p className="privacy-contact-text">
             {t('contactForQueries') || "For privacy-related questions, contact us at:"}
             <br />
@@ -285,7 +285,23 @@ function Privacy() {
           <p className="privacy-copyright">
             © 2024 Your Company Name. All rights reserved.
           </p>
-        </footer>
+        </footer> */}
+
+<footer className="privacy-footer-note">
+  <p className="privacy-contact-text">
+    {t("contactForQueries")}
+    <strong className="privacy-email">
+      24x7@essentiapaquatech.com
+    </strong>
+  </p>
+
+  <p className="privacy-copyright">
+    Copyright © 2024 Essential Aquatech P.V.T L.T.D
+  </p>
+</footer>
+
+
+
       </div>
     </div>
   );

@@ -230,7 +230,7 @@ function Terms() {
     </strong>
   </p>
   <p className="terms-copyright">
-    © 2024 Essentia Paquatech. All rights reserved.
+   Copyright © 2024 Essential Aquatech P.V.T L.T.D 
   </p>
 </footer>
 

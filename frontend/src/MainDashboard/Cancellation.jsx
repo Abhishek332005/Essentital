@@ -69,7 +69,7 @@ function Cancellation() {
           </ul>
 
           {/* Contact Information */}
-          <div className="cancel-contact-info">
+          {/* <div className="cancel-contact-info">
             <p className="cancel-contact-text">
               For cancellation requests, contact us at:
             </p>
@@ -79,7 +79,23 @@ function Cancellation() {
             <p className="cancel-copyright">
               © 2024 Company Name. All rights reserved.
             </p>
-          </div>
+          </div> */}
+
+{/* Contact Information */}
+<div className="cancel-contact-info">
+  <p className="cancel-contact-text">
+    {t("contactForQueries")}
+    <strong className="cancel-email">
+      24x7@essentiapaquatech.com
+    </strong>
+  </p>
+
+  <p className="cancel-copyright">
+    Copyright © 2024 Essential Aquatech P.V.T L.T.D
+  </p>
+</div>
+
+
         </section>
       </div>
     </div>

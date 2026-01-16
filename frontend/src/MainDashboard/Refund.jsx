@@ -87,10 +87,25 @@ function Refund() {
         </section>
 
         {/* Footer */}
-        <footer className="refund-footer">
+        {/* <footer className="refund-footer">
           <p>For refund requests, contact:24x7@essentiapaquatech.com</p>
           <p>© 2024 Company Name. All rights reserved.</p>
-        </footer>
+        </footer> */}
+
+<footer className="refund-footer">
+  <p className="refund-contact-text">
+    {t("contactForQueries")}
+    <strong className="refund-email">
+      24x7@essentiapaquatech.com
+    </strong>
+  </p>
+
+  <p className="refund-copyright">
+    Copyright © 2024 Essential Aquatech P.V.T L.T.D
+  </p>
+</footer>
+
+
       </div>
     </div>
   );
