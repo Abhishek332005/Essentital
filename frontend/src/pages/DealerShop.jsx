@@ -255,6 +255,334 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import { useParams } from "react-router-dom";
+// import products from "../data/products";
+// import api from "../utils/api";
+// import "./DealerShop.css";
+
+// const DealerOrders = ({ dealerId, refreshTrigger }) => {
+//   const [orders, setOrders] = useState([]);
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     if (!dealerId) return;
+    
+//     setLoading(true);
+//     api.get(`/api/orders/dealer/${dealerId}`)
+//       .then(res => {
+//         setOrders(res.data);
+//         setLoading(false);
+//       })
+//       .catch(err => {
+//         console.log("No orders found or error:", err);
+//         setLoading(false);
+//       });
+//   }, [dealerId, refreshTrigger]);
+
+//   if (loading) return <div className="loading">Loading orders...</div>;
+//   if (orders.length === 0) return <div className="no-orders">No orders yet.</div>;
+
+//   return (
+//     <div className="orders-section">
+//       <h4>📜 Previous Orders</h4>
+//       <div className="orders-list">
+//         {orders.map(o => (
+//           <div key={o._id} className="order-card">
+//             <p className="order-date"><b>Date:</b> {new Date(o.createdAt).toLocaleString()}</p>
+//             <p className="order-amount"><b>Total:</b> ₹ {o.totalAmount}</p>
+//             <ul className="order-items">
+//               {o.items.map((i, idx) => (
+//                 <li key={idx}>{i.name} × {i.quantity} ({i.weight}) - ₹ {i.price}</li>
+//               ))}
+//             </ul>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// const DealerShop = () => {
+//   const { dealerId } = useParams();
+//   const [cart, setCart] = useState([]);
+//   const [ordersRefresh, setOrdersRefresh] = useState(0);
+//   const [selectedWeight, setSelectedWeight] = useState({});
+
+//   // Weight options
+//   const weightOptions = ["1kg", "10kg", "20kg"];
+
+//   // Calculate price based on weight
+//   const getPriceForWeight = (product, weight) => {
+//     const basePrice = parseFloat(product.price.split('-')[0].trim());
+    
+//     if (weight === "1kg") return basePrice;
+//     if (weight === "10kg") return basePrice * 9.5;
+//     if (weight === "20kg") return basePrice * 18;
+    
+//     return basePrice;
+//   };
+
+//   // Add to cart - NO DELAY
+//   const addToCart = (product) => {
+//     const weight = selectedWeight[product.id] || "1kg";
+//     const price = getPriceForWeight(product, weight);
+    
+//     const existingItem = cart.find(item => 
+//       item.id === product.id && item.weight === weight
+//     );
+    
+//     if (existingItem) {
+//       setCart(cart.map(item =>
+//         item.id === product.id && item.weight === weight
+//           ? { ...item, quantity: item.quantity + 1 }
+//           : item
+//       ));
+//     } else {
+//       setCart([...cart, {
+//         ...product,
+//         quantity: 1,
+//         weight: weight,
+//         price: price
+//       }]);
+//     }
+//   };
+
+//   // Remove from cart
+//   const removeFromCart = (index) => {
+//     setCart(cart.filter((_, i) => i !== index));
+//   };
+
+//   // Update quantity in cart
+//   const updateQuantity = (index, newQty) => {
+//     const updatedCart = [...cart];
+//     updatedCart[index].quantity = Math.max(newQty, 1);
+//     setCart(updatedCart);
+//   };
+
+//   // Update weight in cart
+//   const updateWeight = (index, newWeight) => {
+//     const updatedCart = [...cart];
+//     const product = updatedCart[index];
+//     const price = getPriceForWeight(product, newWeight);
+    
+//     updatedCart[index] = {
+//       ...product,
+//       weight: newWeight,
+//       price: price
+//     };
+    
+//     setCart(updatedCart);
+//   };
+
+//   // Calculate total
+//   const total = cart.reduce((sum, item) => {
+//     return sum + (item.price * item.quantity);
+//   }, 0);
+
+//   // Place order
+//   const placeOrder = async () => {
+//     if (cart.length === 0) return alert("Cart empty");
+    
+//     try {
+//       const orderItems = cart.map(item => ({
+//         productId: item.id,
+//         name: item.name,
+//         price: item.price,
+//         quantity: item.quantity,
+//         weight: item.weight
+//       }));
+
+//       await api.post("/api/orders", {
+//         dealerId: dealerId,
+//         items: orderItems,
+//         totalAmount: total.toFixed(2)
+//       });
+
+//       alert("Order placed successfully!");
+//       setCart([]);
+//       setOrdersRefresh(prev => prev + 1);
+      
+//     } catch (error) {
+//       alert("Order placement failed!");
+//       console.error(error);
+//     }
+//   };
+
+//   return (
+//     <div className="dealer-shop-container">
+//       {/* Products Section */}
+//       <div className="products-container">
+//         <h2>🛒 Dealer Shopping</h2>
+//         <div className="products-grid">
+//           {products.map(product => {
+//             const basePrice = parseFloat(product.price.split('-')[0].trim());
+            
+//             return (
+//               <div key={product.id} className="product-card">
+//                 <img src={product.image} alt={product.name} className="product-image" />
+//                 <h6 className="product-name">{product.name}</h6>
+//                 <p className="product-price">₹ {product.price}</p>
+//                 <p className="product-unit">Starting from 1kg: ₹ {basePrice.toFixed(2)}</p>
+                
+//                 <div className="weight-selector">
+//                   <label>Select Weight:</label>
+//                   <div className="weight-options">
+//                     {weightOptions.map(weight => (
+//                       <button
+//                         key={weight}
+//                         className={`weight-option-btn ${
+//                           selectedWeight[product.id] === weight ? 'selected' : ''
+//                         }`}
+//                         onClick={() => setSelectedWeight({
+//                           ...selectedWeight,
+//                           [product.id]: weight
+//                         })}
+//                       >
+//                         {weight}
+//                       </button>
+//                     ))}
+//                   </div>
+//                 </div>
+                
+//                 <button
+//                   className="add-to-cart-btn"
+//                   onClick={() => addToCart(product)}
+//                 >
+//                   Add to Cart
+//                 </button>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       </div>
+
+//       {/* Cart Section */}
+//       <div className="sidebar-container">
+//         <div className="cart-section">
+//           <h4>🧺 Cart ({cart.length} items)</h4>
+          
+//           {cart.length === 0 ? (
+//             <div className="empty-cart">
+//               <p>Your cart is empty</p>
+//               <p className="cart-empty-sub">Add products from the list</p>
+//             </div>
+//           ) : (
+//             <>
+//               <div className="cart-items">
+//                 {cart.map((item, index) => (
+//                   <div key={`${item.id}-${index}`} className="cart-item">
+//                     <div className="cart-item-header">
+//                       <span className="item-name">{item.name}</span>
+//                       <button 
+//                         className="remove-btn"
+//                         onClick={() => removeFromCart(index)}
+//                       >
+//                         ✕
+//                       </button>
+//                     </div>
+                    
+//                     <div className="cart-item-body">
+//                       {/* Weight Selection */}
+//                       <div className="cart-weight-selector">
+//                         <label>Weight:</label>
+//                         <div className="weight-buttons">
+//                           {weightOptions.map(weight => (
+//                             <button
+//                               key={weight}
+//                               className={`cart-weight-btn ${
+//                                 item.weight === weight ? 'active' : ''
+//                               }`}
+//                               onClick={() => updateWeight(index, weight)}
+//                             >
+//                               {weight}
+//                             </button>
+//                           ))}
+//                         </div>
+//                       </div>
+                      
+//                       {/* Quantity */}
+//                       <div className="quantity-control">
+//                         <label>Quantity:</label>
+//                         <div className="quantity-input-group">
+//                           <button 
+//                             className="qty-btn minus"
+//                             onClick={() => updateQuantity(index, item.quantity - 1)}
+//                           >
+//                             −
+//                           </button>
+//                           <input
+//                             type="number"
+//                             min="1"
+//                             value={item.quantity}
+//                             onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
+//                             className="quantity-input"
+//                           />
+//                           <button 
+//                             className="qty-btn plus"
+//                             onClick={() => updateQuantity(index, item.quantity + 1)}
+//                           >
+//                             +
+//                           </button>
+//                         </div>
+//                       </div>
+                      
+//                       {/* Price */}
+//                       <div className="price-section">
+//                         <span className="price-label">Price:</span>
+//                         <span className="item-price">₹ {item.price.toFixed(2)}</span>
+//                         <span className="item-total">
+//                           Total: ₹ {(item.price * item.quantity).toFixed(2)}
+//                         </span>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 ))}
+//               </div>
+              
+//               <div className="cart-summary">
+//                 <div className="summary-row">
+//                   <span>Total Amount:</span>
+//                   <span className="total-amount">₹ {total.toFixed(2)}</span>
+//                 </div>
+                
+//                 <button 
+//                   className="place-order-btn" 
+//                   onClick={placeOrder}
+//                 >
+//                   Place Order
+//                 </button>
+                
+//                 <button 
+//                   className="clear-cart-btn"
+//                   onClick={() => setCart([])}
+//                 >
+//                   Clear Cart
+//                 </button>
+//               </div>
+//             </>
+//           )}
+//         </div>
+
+//         {/* Orders History */}
+//         <DealerOrders dealerId={dealerId} refreshTrigger={ordersRefresh} />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default DealerShop;
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import products from "../data/products";
@@ -307,7 +635,7 @@ const DealerShop = () => {
   const { dealerId } = useParams();
   const [cart, setCart] = useState([]);
   const [ordersRefresh, setOrdersRefresh] = useState(0);
-  const [selectedWeight, setSelectedWeight] = useState({});
+  const [showFullDesc, setShowFullDesc] = useState({});
 
   // Weight options
   const weightOptions = ["1kg", "10kg", "20kg"];
@@ -323,18 +651,17 @@ const DealerShop = () => {
     return basePrice;
   };
 
-  // Add to cart - NO DELAY
+  // Add to cart - with default 1kg
   const addToCart = (product) => {
-    const weight = selectedWeight[product.id] || "1kg";
-    const price = getPriceForWeight(product, weight);
+    const price = getPriceForWeight(product, "1kg");
     
     const existingItem = cart.find(item => 
-      item.id === product.id && item.weight === weight
+      item.id === product.id && item.weight === "1kg"
     );
     
     if (existingItem) {
       setCart(cart.map(item =>
-        item.id === product.id && item.weight === weight
+        item.id === product.id && item.weight === "1kg"
           ? { ...item, quantity: item.quantity + 1 }
           : item
       ));
@@ -342,7 +669,7 @@ const DealerShop = () => {
       setCart([...cart, {
         ...product,
         quantity: 1,
-        weight: weight,
+        weight: "1kg",
         price: price
       }]);
     }
@@ -374,6 +701,9 @@ const DealerShop = () => {
     
     setCart(updatedCart);
   };
+
+  // Toggle description
+  const toggleDesc = (id) => setShowFullDesc(prev => ({ ...prev, [id]: !prev[id] }));
 
   // Calculate total
   const total = cart.reduce((sum, item) => {
@@ -423,27 +753,18 @@ const DealerShop = () => {
                 <img src={product.image} alt={product.name} className="product-image" />
                 <h6 className="product-name">{product.name}</h6>
                 <p className="product-price">₹ {product.price}</p>
-                <p className="product-unit">Starting from 1kg: ₹ {basePrice.toFixed(2)}</p>
                 
-                <div className="weight-selector">
-                  <label>Select Weight:</label>
-                  <div className="weight-options">
-                    {weightOptions.map(weight => (
-                      <button
-                        key={weight}
-                        className={`weight-option-btn ${
-                          selectedWeight[product.id] === weight ? 'selected' : ''
-                        }`}
-                        onClick={() => setSelectedWeight({
-                          ...selectedWeight,
-                          [product.id]: weight
-                        })}
-                      >
-                        {weight}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {/* Product Description */}
+                <p className="product-description">
+                  {showFullDesc[product.id] 
+                    ? product.description 
+                    : product.description.slice(0, 80) + (product.description.length > 80 ? "..." : "")}
+                  {product.description.length > 80 && (
+                    <button className="read-more-btn" onClick={() => toggleDesc(product.id)}>
+                      {showFullDesc[product.id] ? " Show less" : " Read more"}
+                    </button>
+                  )}
+                </p>
                 
                 <button
                   className="add-to-cart-btn"
@@ -482,58 +803,59 @@ const DealerShop = () => {
                       </button>
                     </div>
                     
-                    <div className="cart-item-body">
-                      {/* Weight Selection */}
-                      <div className="cart-weight-selector">
-                        <label>Weight:</label>
-                        <div className="weight-buttons">
-                          {weightOptions.map(weight => (
-                            <button
-                              key={weight}
-                              className={`cart-weight-btn ${
-                                item.weight === weight ? 'active' : ''
-                              }`}
-                              onClick={() => updateWeight(index, weight)}
-                            >
-                              {weight}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Quantity */}
-                      <div className="quantity-control">
-                        <label>Quantity:</label>
-                        <div className="quantity-input-group">
-                          <button 
-                            className="qty-btn minus"
-                            onClick={() => updateQuantity(index, item.quantity - 1)}
+                    {/* Weight Selection in Cart */}
+                    <div className="cart-weight-selector">
+                      <label>Select Weight:</label>
+                      <div className="weight-buttons">
+                        {weightOptions.map(weight => (
+                          <button
+                            key={weight}
+                            className={`cart-weight-btn ${
+                              item.weight === weight ? 'active' : ''
+                            }`}
+                            onClick={() => updateWeight(index, weight)}
                           >
-                            −
+                            {weight}
                           </button>
-                          <input
-                            type="number"
-                            min="1"
-                            value={item.quantity}
-                            onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
-                            className="quantity-input"
-                          />
-                          <button 
-                            className="qty-btn plus"
-                            onClick={() => updateQuantity(index, item.quantity + 1)}
-                          >
-                            +
-                          </button>
-                        </div>
+                        ))}
                       </div>
-                      
-                      {/* Price */}
-                      <div className="price-section">
-                        <span className="price-label">Price:</span>
-                        <span className="item-price">₹ {item.price.toFixed(2)}</span>
-                        <span className="item-total">
-                          Total: ₹ {(item.price * item.quantity).toFixed(2)}
-                        </span>
+                    </div>
+                    
+                    {/* Quantity in Cart */}
+                    <div className="quantity-control">
+                      <label>Quantity:</label>
+                      <div className="quantity-input-group">
+                        <button 
+                          className="qty-btn minus"
+                          onClick={() => updateQuantity(index, item.quantity - 1)}
+                        >
+                          −
+                        </button>
+                        <input
+                          type="number"
+                          min="1"
+                          value={item.quantity}
+                          onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
+                          className="quantity-input"
+                        />
+                        <button 
+                          className="qty-btn plus"
+                          onClick={() => updateQuantity(index, item.quantity + 1)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Price Display */}
+                    <div className="price-display">
+                      <div className="price-row">
+                        <span>Price per {item.weight}:</span>
+                        <span className="price-value">₹ {item.price.toFixed(2)}</span>
+                      </div>
+                      <div className="price-row total-row">
+                        <span>Total:</span>
+                        <span className="total-value">₹ {(item.price * item.quantity).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
