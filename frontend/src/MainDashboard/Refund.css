@@ -115,6 +115,9 @@
   color: #475569;
   font-size: 0.9rem;
 }
+.refund-email{
+  color: #0ea5e9;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
