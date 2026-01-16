@@ -968,9 +968,9 @@ function Profile() {
 
   const userId = localStorage.getItem("userId");
 
-  // Eye button states - false by default means password hidden (dots)
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
+  // Eye button states - CHANGE THE DEFAULT TO true IF YOU WANT PASSWORD HIDDEN INITIALLY
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false); // false = password hidden
+  const [showNewPassword, setShowNewPassword] = useState(false); // false = password hidden
 
   // Check if mobile view
   useEffect(() => {
@@ -1311,7 +1311,8 @@ function Profile() {
                   disabled={isUpdatingPassword}
                   aria-label={showCurrentPassword ? "Hide password" : "Show password"}
                 >
-                  {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {/* INVERT THE ICON LOGIC */}
+                  {showCurrentPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
               </div>
 
@@ -1333,7 +1334,8 @@ function Profile() {
                   disabled={isUpdatingPassword}
                   aria-label={showNewPassword ? "Hide password" : "Show password"}
                 >
-                  {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {/* INVERT THE ICON LOGIC */}
+                  {showNewPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
               </div>
               
