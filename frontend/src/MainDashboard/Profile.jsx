@@ -149,25 +149,7 @@ const handlePhotoChange = async () => {
 
 
 
-  // const handleProfileUpdate = async () => {
-  //   if (!username.trim()) return alert(t("fillAllFields"));
-    
-  //   setIsUpdatingUsername(true);
-  //   try {
-  //     const res = await api.put(
-  //       `/api/user/${userId}`,
-  //       { name: username }
-  //     );
-  //     setUsername(res.data.name);
-  //     localStorage.setItem("username", res.data.name);
-  //     alert(t("updateUsername") + " " + t("success"));
-  //   } catch (err) {
-  //     console.log(err);
-  //     alert(t("error"));
-  //   } finally {
-  //     setIsUpdatingUsername(false);
-  //   }
-  // };
+ 
 
 
 const handleProfileUpdate = async () => {
@@ -192,29 +174,7 @@ const handleProfileUpdate = async () => {
 
 
 
-  // const handlePasswordChange = async () => {
-  //   if (!currentPassword || !newPassword) return alert(t("fillAllFields"));
-    
-  //   setIsUpdatingPassword(true);
-  //   try {
-  //     await api.put(
-  //       `/api/user/password/${userId}`,
-  //       {
-  //         currentPassword,
-  //         newPassword,
-  //       }
-  //     );
-  //     alert(t("updatePassword") + " " + t("success"));
-  //     setCurrentPassword("");
-  //     setNewPassword("");
-  //   } catch (err) {
-  //     console.log(err);
-  //     alert(err.response?.data?.error || t("error"));
-  //   } finally {
-  //     setIsUpdatingPassword(false);
-  //   }
-  // };
-
+ 
 
 const handlePasswordChange = async () => {
   if (!currentPassword || !newPassword) return;
