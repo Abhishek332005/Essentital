@@ -780,8 +780,13 @@
   
   .download-excel-btn,
   .weather-dashboard-btn {
-    width: 100%;
-    justify-content: center;
+    
+            width: 66%;
+        justify-content: center;
+        margin-left: 15px;
+        padding-left: 10px;
+        padding-top: 15px;
+        padding-bottom: 15px;
   }
   
   .notification-item {
@@ -795,8 +800,10 @@
   }
   
   .search-input {
-    width: 100%;
-    max-width: 100%;
+   
+            width: 65%;
+        max-width: 100%;
+        margin-left: 16px;
   }
 }
 
