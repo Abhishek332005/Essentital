@@ -664,11 +664,25 @@ const DealerShop = () => {
   const [showFullDesc, setShowFullDesc] = useState({});
   const [addingId, setAddingId] = useState(null);
   const [addedId, setAddedId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem(`dealerCart_${dealerId}`, JSON.stringify(cart));
   }, [cart, dealerId]);
+
+  // Filter products based on search term
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredProducts(products);
+    } else {
+      const filtered = products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchTerm]);
 
   // Weight options with multipliers
   const weightOptions = [
@@ -746,12 +760,48 @@ const DealerShop = () => {
     navigate(`/cart/${dealerId}`);
   };
 
+  // Handle search
+  const handleSearch = () => {
+    if (searchTerm.trim() === "") {
+      setFilteredProducts(products);
+    } else {
+      const filtered = products.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  };
+
+  // Handle Enter key press in search
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="dealer-shop-container">
-      {/* Products Section */}
-      <div className="products-container">
-        <div className="shop-header">
-          <h2>🛒 Dealer Shopping</h2>
+      {/* Fixed Header */}
+      <div className="fixed-header">
+        <h2>🛒 Dealer Shopping</h2>
+        
+        <div className="header-controls">
+          {/* Search Box */}
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search products by name..."
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            <button className="search-btn" onClick={handleSearch}>
+              🔍 Search
+            </button>
+          </div>
+          
+          {/* View Cart Button */}
           <button 
             className="view-cart-btn"
             onClick={viewCart}
@@ -759,66 +809,99 @@ const DealerShop = () => {
             🛍️ View Cart ({cart.length} items)
           </button>
         </div>
-        
-        <div className="products-grid">
-          {products.map(product => {
-            const basePrice = getBasePrice(product.price);
-            const price1kg = calculatePrice(basePrice, "1kg");
-            const price10kg = calculatePrice(basePrice, "10kg");
-            const price20kg = calculatePrice(basePrice, "20kg");
-            
-            return (
-              <div key={product.id} className="product-card">
-                <img src={product.image} alt={product.name} className="product-image" />
-                <h6 className="product-name">{product.name}</h6>
-                <p className="product-price">₹ {product.price}</p>
-                
-                {/* Price breakdown */}
-                <div className="price-breakdown">
-                  <div className="price-option">
-                    <span>1kg:</span>
-                    <span className="price-value">₹ {price1kg.toFixed(2)}</span>
-                  </div>
-                  <div className="price-option">
-                    <span>10kg:</span>
-                    <span className="price-value">₹ {price10kg.toFixed(2)}</span>
-                  </div>
-                  <div className="price-option">
-                    <span>20kg:</span>
-                    <span className="price-value">₹ {price20kg.toFixed(2)}</span>
-                  </div>
-                </div>
-                
-                {/* Product Description */}
-                <p className="product-description">
-                  {showFullDesc[product.id] 
-                    ? product.description 
-                    : product.description.slice(0, 80) + (product.description.length > 80 ? "..." : "")}
-                  {product.description.length > 80 && (
-                    <button className="read-more-btn" onClick={() => toggleDesc(product.id)}>
-                      {showFullDesc[product.id] ? " Show less" : " Read more"}
-                    </button>
-                  )}
-                </p>
-                
-                <button
-                  className="add-to-cart-btn"
-                  onClick={() => addToCart(product)}
-                  disabled={addingId === product.id}
+      </div>
+
+      {/* Products Section */}
+      <div className="products-container">
+        <div className="products-content">
+          {/* Search Results Info */}
+          <div className="search-info">
+            {searchTerm && (
+              <p className="search-results">
+                Showing {filteredProducts.length} results for "<strong>{searchTerm}</strong>"
+                <button 
+                  className="clear-search" 
+                  onClick={() => setSearchTerm("")}
                 >
-                  {addingId === product.id ? (
-                    <>
-                      <span className="loader"></span> Adding...
-                    </>
-                  ) : addedId === product.id ? (
-                    "✅ Added"
-                  ) : (
-                    "Add to Cart"
-                  )}
+                  Clear search
+                </button>
+              </p>
+            )}
+          </div>
+          
+          <div className="products-grid">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map(product => {
+                const basePrice = getBasePrice(product.price);
+                const price1kg = calculatePrice(basePrice, "1kg");
+                const price10kg = calculatePrice(basePrice, "10kg");
+                const price20kg = calculatePrice(basePrice, "20kg");
+                
+                return (
+                  <div key={product.id} className="product-card">
+                    <img src={product.image} alt={product.name} className="product-image" />
+                    <h6 className="product-name">{product.name}</h6>
+                    <p className="product-price">₹ {product.price}</p>
+                    
+                    {/* Price breakdown */}
+                    <div className="price-breakdown">
+                      <div className="price-option">
+                        <span>1kg:</span>
+                        <span className="price-value">₹ {price1kg.toFixed(2)}</span>
+                      </div>
+                      <div className="price-option">
+                        <span>10kg:</span>
+                        <span className="price-value">₹ {price10kg.toFixed(2)}</span>
+                      </div>
+                      <div className="price-option">
+                        <span>20kg:</span>
+                        <span className="price-value">₹ {price20kg.toFixed(2)}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Product Description */}
+                    <p className="product-description">
+                      {showFullDesc[product.id] 
+                        ? product.description 
+                        : product.description.slice(0, 80) + (product.description.length > 80 ? "..." : "")}
+                      {product.description.length > 80 && (
+                        <button className="read-more-btn" onClick={() => toggleDesc(product.id)}>
+                          {showFullDesc[product.id] ? " Show less" : " Read more"}
+                        </button>
+                      )}
+                    </p>
+                    
+                    <button
+                      className="add-to-cart-btn"
+                      onClick={() => addToCart(product)}
+                      disabled={addingId === product.id}
+                    >
+                      {addingId === product.id ? (
+                        <>
+                          <span className="loader"></span> Adding...
+                        </>
+                      ) : addedId === product.id ? (
+                        "✅ Added"
+                      ) : (
+                        "Add to Cart"
+                      )}
+                    </button>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="no-results">
+                <h3>No products found for "{searchTerm}"</h3>
+                <p>Try searching with different keywords</p>
+                <button 
+                  className="clear-search-btn"
+                  onClick={() => setSearchTerm("")}
+                >
+                  Clear Search
                 </button>
               </div>
-            );
-          })}
+            )}
+          </div>
         </div>
       </div>
     </div>
