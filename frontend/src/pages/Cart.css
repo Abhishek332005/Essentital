@@ -148,8 +148,9 @@
   box-shadow: 0 6px 18px rgba(74, 144, 226, 0.25);
 }
 
+/* Cart Items List - Height reduced */
 .cart-items-list {
-  max-height: 550px;
+  max-height: 450px; /* Reduced from 550px */
   overflow-y: auto;
   padding-right: 12px;
 }
@@ -434,7 +435,7 @@
 }
 
 .summary-items {
-  max-height: 280px;
+  max-height: 250px; /* Reduced from 280px */
   overflow-y: auto;
   margin-bottom: 22px;
   padding-right: 12px;
@@ -610,7 +611,7 @@
   }
   
   .cart-items-list {
-    max-height: none;
+    max-height: 400px; /* Further reduced for tablet */
   }
 }
 
@@ -657,12 +658,20 @@
     justify-content: center;
   }
   
+  /* Phone view में weight buttons horizontal रखेंगे */
   .weight-buttons {
-    flex-direction: column;
+    flex-direction: row; /* Changed from column to row */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Add horizontal scroll if needed */
+    padding-bottom: 5px;
   }
   
   .cart-weight-btn {
-    min-width: auto;
+    flex: 1;
+    min-width: 80px; /* Smaller min-width for mobile */
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    white-space: nowrap;
   }
   
   .quantity-controls {
@@ -709,5 +718,24 @@
   .shop-now-btn {
     padding: 14px;
     font-size: 1rem;
+  }
+  
+  /* Small mobile के लिए weight buttons और compact */
+  .weight-buttons {
+    gap: 8px;
+  }
+  
+  .cart-weight-btn {
+    min-width: 70px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .cart-items-list {
+    max-height: 350px; /* Even smaller for mobile */
+  }
+  
+  .summary-items {
+    max-height: 200px; /* Smaller for mobile */
   }
 }
