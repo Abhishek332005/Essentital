@@ -68,6 +68,7 @@
   width: 100%;
   gap: 10px;
   align-items: center;
+  margin-top: 20px;
 }
 
 .search-input {
@@ -106,6 +107,7 @@
   white-space: nowrap;
   height: 48px;
   box-sizing: border-box;
+  margin-bottom: 18px;
 }
 
 .search-btn:hover {
@@ -402,6 +404,7 @@
   /* Search container - 70:30 ratio */
   .search-container {
     gap: 8px;
+    margin-top: 10px;
   }
   
   .search-input {
