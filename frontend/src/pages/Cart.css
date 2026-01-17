@@ -85,7 +85,6 @@
   display: flex;
   gap: 25px;
   margin-top: 20px;
-  align-items: flex-start;
 }
 
 .cart-items-section {
@@ -95,9 +94,6 @@
   border-radius: 14px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid #f0f5ff;
-  height: 650px; /* Fixed height for cart section */
-  display: flex;
-  flex-direction: column;
 }
 
 .empty-cart-message {
@@ -106,11 +102,6 @@
   background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
   border-radius: 14px;
   border: 2px dashed #d1e3ff;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .empty-cart-icon {
@@ -157,11 +148,9 @@
   box-shadow: 0 6px 18px rgba(74, 144, 226, 0.25);
 }
 
-/* Cart Items List - Fixed height matching order summary */
+/* Cart Items List - Height reduced */
 .cart-items-list {
-  flex: 1;
-  max-height: none;
-  height: 480px; /* Same as order summary card content height */
+  max-height: 450px; /* Reduced from 550px */
   overflow-y: auto;
   padding-right: 12px;
 }
@@ -425,7 +414,7 @@
   flex: 1;
   position: sticky;
   top: 25px;
-  height: 650px; /* Same fixed height as cart section */
+  height: fit-content;
 }
 
 .order-summary-card {
@@ -434,9 +423,6 @@
   border-radius: 14px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   border: 1px solid #f0f5ff;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .order-summary-card h3 {
@@ -449,9 +435,7 @@
 }
 
 .summary-items {
-  flex: 1;
-  max-height: none;
-  height: 250px; /* 25% reduced from original */
+  max-height: 250px; /* Reduced from 280px */
   overflow-y: auto;
   margin-bottom: 22px;
   padding-right: 12px;
@@ -614,22 +598,6 @@
   .order-summary-card {
     padding: 20px;
   }
-  
-  .cart-items-section {
-    height: 600px;
-  }
-  
-  .order-summary-section {
-    height: 600px;
-  }
-  
-  .cart-items-list {
-    height: 430px;
-  }
-  
-  .summary-items {
-    height: 230px;
-  }
 }
 
 @media (max-width: 992px) {
@@ -640,20 +608,10 @@
   .order-summary-section {
     position: static;
     margin-top: 25px;
-    height: auto;
-  }
-  
-  .cart-items-section {
-    height: auto;
-    min-height: 500px;
   }
   
   .cart-items-list {
-    height: 400px;
-  }
-  
-  .summary-items {
-    height: 200px;
+    max-height: 400px; /* Further reduced for tablet */
   }
 }
 
@@ -702,15 +660,15 @@
   
   /* Phone view में weight buttons horizontal रखेंगे */
   .weight-buttons {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    flex-direction: row; /* Changed from column to row */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Add horizontal scroll if needed */
     padding-bottom: 5px;
   }
   
   .cart-weight-btn {
     flex: 1;
-    min-width: 80px;
+    min-width: 80px; /* Smaller min-width for mobile */
     font-size: 0.9rem;
     padding: 10px 12px;
     white-space: nowrap;
@@ -724,14 +682,6 @@
   .qty-buttons {
     width: 100%;
     justify-content: space-between;
-  }
-  
-  .cart-items-list {
-    height: 350px;
-  }
-  
-  .summary-items {
-    height: 180px;
   }
 }
 
@@ -782,10 +732,10 @@
   }
   
   .cart-items-list {
-    height: 300px;
+    max-height: 350px; /* Even smaller for mobile */
   }
   
   .summary-items {
-    height: 150px;
+    max-height: 200px; /* Smaller for mobile */
   }
 }
