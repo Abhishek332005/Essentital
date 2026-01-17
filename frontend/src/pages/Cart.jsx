@@ -587,12 +587,12 @@ const Cart = () => {
                         <span className="order-id">Order #{order.orderNumber || order._id?.slice(-6)}</span>
                         <span className="order-date">{formatDate(order.createdAt || order.orderDate)}</span>
                       </div>
-                      <div 
+                      {/* <div 
                         className="order-status"
                         style={{ backgroundColor: getStatusColor(order.status) }}
                       >
                         {order.status || 'Processing'}
-                      </div>
+                      </div> */}
                     </div>
                     
                     <div className="order-items-preview">
