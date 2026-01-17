@@ -42,6 +42,7 @@
   flex: 1;
   max-width: 600px;
   gap: 10px;
+  align-items: center; /* Added for vertical alignment */
 }
 
 .search-input {
@@ -52,6 +53,8 @@
   font-size: 16px;
   outline: none;
   transition: all 0.3s;
+  height: 48px; /* Fixed height */
+  box-sizing: border-box; /* Ensure padding doesn't affect height */
 }
 
 .search-input:focus {
@@ -59,9 +62,10 @@
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
 }
 
+/* Search Button - Updated with same height and color as add to cart */
 .search-btn {
-  padding: 12px 25px;
-  background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+  padding: 0 25px;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -70,20 +74,23 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   transition: all 0.3s;
   white-space: nowrap;
+  height: 48px; /* Same height as search input */
+  box-sizing: border-box;
 }
 
 .search-btn:hover {
-  background: linear-gradient(135deg, #0d47a1 0%, #08306b 100%);
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
-/* View Cart Button in Header */
+/* View Cart Button in Header - Updated with same color as add to cart */
 .view-cart-btn {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%); /* Changed to blue color */
   color: white;
   border: none;
   padding: 12px 25px;
@@ -93,16 +100,38 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
   white-space: nowrap;
+  height: 48px; /* Same height as search elements */
+  box-sizing: border-box;
 }
 
 .view-cart-btn:hover {
-  background: linear-gradient(135deg, #ee5a52 0%, #d64545 100%);
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+}
+
+/* Clear Search Button in Results - Updated with same color */
+.clear-search {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.clear-search:hover {
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
 /* Products Content */
@@ -129,23 +158,6 @@
   gap: 10px;
 }
 
-.clear-search {
-  background: none;
-  border: 1px solid #ff4444;
-  color: #ff4444;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.clear-search:hover {
-  background: #ff4444;
-  color: white;
-}
-
 /* No Results */
 .no-results {
   grid-column: 1 / -1;
@@ -168,8 +180,9 @@
   font-size: 16px;
 }
 
+/* Clear Search Button in No Results - Updated with same color */
 .clear-search-btn {
-  background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
   color: white;
   border: none;
   padding: 12px 30px;
@@ -181,7 +194,7 @@
 }
 
 .clear-search-btn:hover {
-  background: linear-gradient(135deg, #0d47a1 0%, #08306b 100%);
+  background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
@@ -264,7 +277,7 @@
   text-decoration: underline;
 }
 
-/* Add to Cart Button */
+/* Add to Cart Button - All buttons will have same color now */
 .add-to-cart-btn {
   width: 100%;
   padding: 12px;
@@ -373,6 +386,13 @@
   
   .search-container {
     flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-input,
+  .search-btn,
+  .view-cart-btn {
+    height: 45px; /* Slightly smaller on mobile */
   }
   
   .search-input {
@@ -424,5 +444,11 @@
   
   .clear-search {
     width: 100%;
+  }
+  
+  .search-input,
+  .search-btn,
+  .view-cart-btn {
+    height: 44px; /* Consistent height on small screens */
   }
 }
