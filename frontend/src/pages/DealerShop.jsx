@@ -646,7 +646,7 @@
 
 
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import products from "../data/products";
 import "./DealerShop.css";
@@ -654,10 +654,21 @@ import "./DealerShop.css";
 const DealerShop = () => {
   const { dealerId } = useParams();
   const navigate = useNavigate();
-  const [cart, setCart] = useState([]);
+  
+  // Initialize cart from localStorage
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem(`dealerCart_${dealerId}`);
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+  
   const [showFullDesc, setShowFullDesc] = useState({});
   const [addingId, setAddingId] = useState(null);
   const [addedId, setAddedId] = useState(null);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(`dealerCart_${dealerId}`, JSON.stringify(cart));
+  }, [cart, dealerId]);
 
   // Weight options with multipliers
   const weightOptions = [
@@ -691,26 +702,28 @@ const DealerShop = () => {
         item.id === product.id && item.weight === "1kg"
       );
       
+      let updatedCart;
       if (existingItem) {
-        setCart(cart.map(item =>
+        updatedCart = cart.map(item =>
           item.id === product.id && item.weight === "1kg"
             ? { 
                 ...item, 
                 quantity: item.quantity + 1
               }
             : item
-        ));
+        );
       } else {
-        setCart([...cart, {
+        updatedCart = [...cart, {
           id: product.id,
           name: product.name,
           basePrice: basePrice, // Store base price
           price: price, // Current price per unit
           quantity: 1,
           weight: "1kg"
-        }]);
+        }];
       }
       
+      setCart(updatedCart);
       setAddingId(null);
       setAddedId(product.id);
       
@@ -730,9 +743,7 @@ const DealerShop = () => {
       alert("Your cart is empty. Add some products first!");
       return;
     }
-    navigate(`/cart/${dealerId}`, { 
-      state: { cart: cart } 
-    });
+    navigate(`/cart/${dealerId}`);
   };
 
   return (
