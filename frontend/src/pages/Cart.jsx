@@ -1298,17 +1298,10 @@ const Cart = () => {
   const { dealerId } = useParams();
   const navigate = useNavigate();
   
-  // ✅ Step 2: Cart initialization FIXED
+  // Initialize cart from localStorage
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem(`dealerCart_${dealerId}`);
-    if (savedCart) {
-      return JSON.parse(savedCart).map(item => ({
-        ...item,
-        weight: item.weight || "1kg",
-        qty: item.qty || 1   // ✅ IMPORTANT - using qty instead of quantity
-      }));
-    }
-    return [];
+    return savedCart ? JSON.parse(savedCart) : [];
   });
   
   const [previousOrders, setPreviousOrders] = useState([]);
@@ -1352,41 +1345,44 @@ const Cart = () => {
     setCart(updatedCart);
   };
 
-  // Update weight in cart - FIXED
+  // Update weight in cart
   const updateWeight = (index, newWeight) => {
     const updatedCart = [...cart];
     const item = updatedCart[index];
     
-    // Find the selected weight option
     const weightOption = weightOptions.find(w => w.label === newWeight);
-    if (!weightOption) return;
-    
-    // Calculate new price based on base price
-    const newPrice = item.basePrice * weightOption.kg;
+    const newPrice = item.basePrice * (weightOption?.kg || 1);
     
     updatedCart[index] = {
       ...item,
-      weight: newWeight, // ✅ सही weight सेट हो रहा है
+      weight: newWeight,
       price: newPrice
     };
     
     setCart(updatedCart);
   };
 
-  // ✅ Step 3: Quantity update FIXED
+  // Update quantity in cart
   const updateQuantity = (index, delta) => {
     const updatedCart = [...cart];
-    updatedCart[index].qty = Math.max(1, updatedCart[index].qty + delta);
+    const item = updatedCart[index];
+    
+    const newQuantity = Math.max(1, item.quantity + delta);
+    
+    updatedCart[index] = {
+      ...item,
+      quantity: newQuantity
+    };
+    
     setCart(updatedCart);
   };
 
-  // ✅ Step 4: Total calculation FIXED
-  const total = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
+  // Calculate total
+  const total = cart.reduce((sum, item) => {
+    return sum + (item.price * item.quantity);
+  }, 0);
 
-  // Place order - IMPROVED WITH DEBUG
+  // Place order - FIXED WEIGHT ISSUE
   const placeOrder = async () => {
     if (cart.length === 0) return alert("Cart empty");
 
@@ -1394,14 +1390,20 @@ const Cart = () => {
       // ✅ DEBUG: Check what's in cart before sending
       console.log("Cart items before order:", cart);
       
-      // ✅ Step 5: placeOrder mapping CLEAN
-      const orderItems = cart.map(item => ({
-        productId: item.id,
-        name: item.name,
-        price: item.price,
-        qty: item.qty,          // ✅ SAME FIELD - using qty
-        weight: item.weight     // ✅ SAVED
-      }));
+      const orderItems = cart.map(item => {
+        // ✅ Ensure ALL fields are correctly included
+        const itemWeight = item.weight || "1kg";
+        console.log(`Sending item: ${item.name}, Weight: ${itemWeight}, Price: ${item.price}, Qty: ${item.quantity}`);
+        
+        return {
+          productId: item.id,
+          name: item.name,
+          price: item.price,
+          qty: item.quantity,
+          weight: itemWeight, // ✅ सही weight भेजा जा रहा है
+          basePrice: item.basePrice // Optional: agar frontend me hai to
+        };
+      });
 
       console.log("Order items being sent to backend:", orderItems);
 
@@ -1412,6 +1414,12 @@ const Cart = () => {
       });
 
       console.log("Backend response:", response.data);
+      
+      // ✅ DEBUG: Check if weight is saved in response
+      if (response.data.order && response.data.order.items) {
+        console.log("Saved order items with weight:", response.data.order.items);
+      }
+      
       alert("Order placed successfully!");
       
       // Clear cart after successful order
@@ -1509,9 +1517,6 @@ const Cart = () => {
                       <div className="item-info">
                         <h4 className="item-name">{item.name}</h4>
                         <p className="item-base-price">Base: ₹{item.basePrice}/kg</p>
-                        <p className="item-current-weight">
-                          Selected: <strong>{item.weight || "1kg"}</strong>
-                        </p>
                       </div>
                       <button 
                         className="remove-btn"
@@ -1549,7 +1554,7 @@ const Cart = () => {
                         >
                           −
                         </button>
-                        <span className="qty-value">{item.qty}</span>
+                        <span className="qty-value">{item.quantity}</span>
                         <button 
                           className="qty-btn plus"
                           onClick={() => updateQuantity(index, 1)}
@@ -1562,15 +1567,12 @@ const Cart = () => {
                     {/* Price Display */}
                     <div className="price-display">
                       <div className="price-row">
-                        <span>Price per {item.weight || "1kg"}:</span>
+                        <span>Price per {item.weight}:</span>
                         <span className="price-value">₹ {item.price.toFixed(2)}</span>
-                      </div>
-                      <div className="price-row">
-                        <span>Calculated as: ₹{item.basePrice}/kg × {item.weight || "1kg"}</span>
                       </div>
                       <div className="price-row total-row">
                         <span>Total for this item:</span>
-                        <span className="total-value">₹ {(item.price * item.qty).toFixed(2)}</span>
+                        <span className="total-value">₹ {(item.price * item.quantity).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
@@ -1592,7 +1594,7 @@ const Cart = () => {
             </>
           )}
           
-          {/* Previous Orders Section */}
+          {/* Previous Orders Section - UPDATED FOR WEIGHT DISPLAY */}
           <div className="previous-orders-section">
             <h3 className="previous-orders-title">📦 Previous Orders</h3>
             
@@ -1624,17 +1626,20 @@ const Cart = () => {
                       </div>
                       
                       <div className="order-items-preview">
+                        {/* Show all items if expanded, otherwise show first 3 */}
                         {(isExpanded ? allItems : allItems.slice(0, 3)).map((item, index) => (
                           <div key={index} className="order-item-preview">
                             <span className="preview-name">{item.name}</span>
                             <span className="preview-details">
-                              <span className="preview-weight">Weight: {item.weight || "Not specified"}</span>
+                              {/* ✅ Updated to show actual weight or default */}
+                              <span className="preview-weight">Weight: {item.weight || "1kg"}</span>
                               <span className="preview-qty">Qty: {item.qty}</span>
                             </span>
                             <span className="preview-price">₹{((item.price || 0) * (item.qty || 1)).toFixed(2)}</span>
                           </div>
                         ))}
                         
+                        {/* Show toggle button if there are more than 3 items */}
                         {allItems.length > 3 && (
                           <div className="more-items-toggle">
                             <button 
@@ -1676,11 +1681,11 @@ const Cart = () => {
                 {cart.map((item, index) => (
                   <div key={index} className="summary-item">
                     <div className="summary-item-name">
-                      {item.name} ({item.weight || "1kg"})
+                      {item.name} ({item.weight})
                     </div>
-                    <div className="summary-item-qty">× {item.qty}</div>
+                    <div className="summary-item-qty">× {item.quantity}</div>
                     <div className="summary-item-price">
-                      ₹ {(item.price * item.qty).toFixed(2)}
+                      ₹ {(item.price * item.quantity).toFixed(2)}
                     </div>
                   </div>
                 ))}
@@ -1719,7 +1724,7 @@ const Cart = () => {
         )}
       </div>
 
-      {/* Order Details Modal */}
+      {/* Order Details Modal - UPDATED FOR WEIGHT DISPLAY */}
       {showOrderModal && selectedOrder && (
         <div className="order-modal-overlay">
           <div className="order-modal">
@@ -1760,7 +1765,8 @@ const Cart = () => {
                   {selectedOrder.items && selectedOrder.items.map((item, index) => (
                     <div key={index} className="table-row">
                       <div className="table-col name">{item.name}</div>
-                      <div className="table-col weight">{item.weight || "Not specified"}</div>
+                      {/* ✅ Updated to show actual weight or default */}
+                      <div className="table-col weight">{item.weight || "1kg"}</div>
                       <div className="table-col qty">{item.qty}</div>
                       <div className="table-col price">₹{(item.price || 0).toFixed(2)}</div>
                       <div className="table-col total">
