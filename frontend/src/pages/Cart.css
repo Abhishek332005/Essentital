@@ -557,14 +557,49 @@
   font-size: 0.9rem;
 }
 
-.more-items {
+/* More Items Toggle Button */
+.more-items-toggle {
   text-align: center;
-  padding: 8px;
-  color: #718096;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #d1e3ff;
+}
+
+.toggle-items-btn {
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
   font-size: 0.85rem;
-  background: #f0f7ff;
-  border-radius: 6px;
-  margin-top: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 3px 10px rgba(74, 144, 226, 0.15);
+}
+
+.toggle-items-btn:hover {
+  background: linear-gradient(135deg, #357abd 0%, #2c6da4 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.25);
+}
+
+.toggle-items-btn:active {
+  transform: translateY(0);
+}
+
+/* Show More/Show Less icon animation */
+.toggle-items-btn::after {
+  content: '↕';
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.toggle-items-btn:hover::after {
+  transform: translateY(2px);
 }
 
 .order-footer {
@@ -929,6 +964,14 @@
   .view-order-btn {
     width: 100%;
   }
+  
+  /* Show More/Show Less button mobile adjustments */
+  .toggle-items-btn {
+    padding: 7px 18px;
+    font-size: 0.82rem;
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 576px) {
@@ -992,5 +1035,11 @@
   
   .previous-orders-list {
     max-height: 350px;
+  }
+  
+  /* Show More/Show Less button smaller mobile */
+  .toggle-items-btn {
+    padding: 6px 16px;
+    font-size: 0.8rem;
   }
 }
