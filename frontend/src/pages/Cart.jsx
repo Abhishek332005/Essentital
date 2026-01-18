@@ -788,8 +788,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
@@ -1112,8 +1110,11 @@ const Cart = () => {
                         {(isExpanded ? allItems : allItems.slice(0, 3)).map((item, index) => (
                           <div key={index} className="order-item-preview">
                             <span className="preview-name">{item.name}</span>
-                            <span className="preview-qty">{item.qty} × {item.weight}</span>
-                            <span className="preview-price">₹{(item.price * item.qty).toFixed(2)}</span>
+                            <span className="preview-details">
+                              <span className="preview-weight">Weight: {item.weight || "N/A"}</span>
+                              <span className="preview-qty">Qty: {item.qty}</span>
+                            </span>
+                            <span className="preview-price">₹{((item.price || 0) * (item.qty || 1)).toFixed(2)}</span>
                           </div>
                         ))}
                         
@@ -1134,11 +1135,7 @@ const Cart = () => {
                         <div className="order-total">
                           Total: <span className="total-amount">₹{order.totalAmount?.toFixed(2)}</span>
                         </div>
-                        <div className="order-status">
-                          <span className={`status-badge ${order.status || 'pending'}`}>
-                            {order.status || 'Pending'}
-                          </span>
-                        </div>
+                        {/* Status removed as per requirement */}
                       </div>
                     </div>
                   );
@@ -1232,12 +1229,6 @@ const Cart = () => {
                     {formatDateTime(selectedOrder.createdAt || selectedOrder.orderDate)}
                   </span>
                 </div>
-                <div className="info-row">
-                  <span className="info-label">Status:</span>
-                  <span className={`status-badge ${selectedOrder.status || 'pending'}`}>
-                    {selectedOrder.status || 'Pending'}
-                  </span>
-                </div>
               </div>
               
               <div className="order-items-section">
@@ -1254,9 +1245,9 @@ const Cart = () => {
                   {selectedOrder.items && selectedOrder.items.map((item, index) => (
                     <div key={index} className="table-row">
                       <div className="table-col name">{item.name}</div>
-                      <div className="table-col weight">{item.weight}</div>
+                      <div className="table-col weight">{item.weight || "N/A"}</div>
                       <div className="table-col qty">{item.qty}</div>
-                      <div className="table-col price">₹{item.price?.toFixed(2)}</div>
+                      <div className="table-col price">₹{(item.price || 0).toFixed(2)}</div>
                       <div className="table-col total">
                         ₹{((item.price || 0) * (item.qty || 1)).toFixed(2)}
                       </div>
