@@ -963,6 +963,19 @@ function Agent() {
               <Home size={18} /> {t("dashboard")}
             </Link>
           </li>
+
+
+  <li>
+            <Link 
+              to="/helpcenter" 
+              className="agent-left-menu-btn" 
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <HelpCircle size={18} /> {t("helpCenter")}
+            </Link>
+          </li>
+
+
           <li>
             <Link 
               to="/dealers" 
@@ -981,15 +994,7 @@ function Agent() {
               <Users size={18} /> {t("agents")}
             </Link>
           </li>
-          <li>
-            <Link 
-              to="/helpcenter" 
-              className="agent-left-menu-btn" 
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <HelpCircle size={18} /> {t("helpCenter")}
-            </Link>
-          </li>
+        
         </ul>
 
         {/* Language Section */}

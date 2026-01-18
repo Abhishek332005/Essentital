@@ -479,10 +479,10 @@
 
 
 
-// OrdersDashboard.jsx - RESPONSIVE VERSION
+// OrdersDashboard.jsx - PHONE VIEW FIXED
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api, { getImageUrl } from "../utils/api";
+import api from "../utils/api";
 import "./OrdersDashboard.css";
 
 const OrdersDashboard = () => {
@@ -497,6 +497,7 @@ const OrdersDashboard = () => {
   const [dealersList, setDealersList] = useState([]);
   const [viewMode, setViewMode] = useState("all");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -661,88 +662,144 @@ const OrdersDashboard = () => {
               className="ords-btn-back"
               onClick={() => navigate("/admindashboard")}
             >
-              <i className="ords-icon-back"></i> {!isMobile && "Back to Dashboard"}
+              <i className="ords-icon-back"></i> {!isMobile && "Back"}
             </button>
           </div>
         </div>
       </header>
 
       <div className="ords-dashboard-wrapper">
-        {/* Sidebar */}
-        <aside className={`ords-sidebar ${isMobile ? 'mobile-hidden' : ''}`}>
-          {/* Dealer Selector */}
-          <div className="ords-sidebar-card">
-            <h3 className="ords-sidebar-title">
-              <i className="ords-icon-filter"></i> Filter Orders
-            </h3>
-            <div className="ords-dealer-selector">
+        {/* Sidebar - Always visible on mobile as part of main flow */}
+        {!isMobile ? (
+          <aside className="ords-sidebar">
+            {/* Dealer Selector */}
+            <div className="ords-sidebar-card">
+              <h3 className="ords-sidebar-title">
+                <i className="ords-icon-filter"></i> Filter Orders
+              </h3>
+              <div className="ords-dealer-selector">
+                <button 
+                  className={`ords-dealer-filter-btn ${viewMode === "all" ? "active" : ""}`}
+                  onClick={() => handleDealerSelect(null)}
+                >
+                  <i className="ords-icon-all"></i> All Orders
+                </button>
+                
+                <div className="ords-dealer-list">
+                  <h4 className="ords-dealer-list-title">Select Dealer:</h4>
+                  {dealersList.map(dealer => (
+                    <button
+                      key={dealer._id}
+                      className={`ords-dealer-item ${selectedDealer?._id === dealer._id ? "active" : ""}`}
+                      onClick={() => handleDealerSelect(dealer)}
+                    >
+                      <i className="ords-icon-dealer-small"></i>
+                      <span className="ords-dealer-item-name">{dealer.name}</span>
+                      <span className="ords-dealer-item-address">{dealer.shopAddress}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Stats Card */}
+            <div className="ords-stats-card">
+              <h3 className="ords-sidebar-title">
+                <i className="ords-icon-stats"></i> Order Statistics
+              </h3>
+              <div className="ords-stats-grid">
+                <div className="ords-stat-item">
+                  <div className="ords-stat-value">{totalOrders}</div>
+                  <div className="ords-stat-label">Total Orders</div>
+                </div>
+                <div className="ords-stat-item">
+                  <div className="ords-stat-value">{totalItems}</div>
+                  <div className="ords-stat-label">Items Sold</div>
+                </div>
+                <div className="ords-stat-item">
+                  <div className="ords-stat-value">₹{totalRevenue.toFixed(2)}</div>
+                  <div className="ords-stat-label">Revenue</div>
+                </div>
+              </div>
+              {selectedDealer && (
+                <div className="ords-current-dealer">
+                  <h4>Current Dealer:</h4>
+                  <p className="ords-current-dealer-name">{selectedDealer.name}</p>
+                  <p className="ords-current-dealer-address">{selectedDealer.shopAddress}</p>
+                  <p className="ords-current-dealer-contact">{selectedDealer.contact}</p>
+                </div>
+              )}
+            </div>
+          </aside>
+        ) : (
+          /* Mobile Filters Section - Always visible */
+          <div className="ords-mobile-filters">
+            <div className="ords-mobile-filters-header">
+              <h3 className="ords-mobile-filters-title">
+                <i className="ords-icon-filter"></i> Filter & Stats
+              </h3>
+            </div>
+            
+            {/* Mobile Stats */}
+            <div className="ords-mobile-stats">
+              <div className="ords-mobile-stat">
+                <div className="ords-mobile-stat-value">{totalOrders}</div>
+                <div className="ords-mobile-stat-label">Orders</div>
+              </div>
+              <div className="ords-mobile-stat">
+                <div className="ords-mobile-stat-value">{totalItems}</div>
+                <div className="ords-mobile-stat-label">Items</div>
+              </div>
+              <div className="ords-mobile-stat">
+                <div className="ords-mobile-stat-value">₹{totalRevenue.toFixed(2)}</div>
+                <div className="ords-mobile-stat-label">Revenue</div>
+              </div>
+            </div>
+            
+            {/* Mobile Filter Buttons */}
+            <div className="ords-mobile-filter-buttons">
               <button 
-                className={`ords-dealer-filter-btn ${viewMode === "all" ? "active" : ""}`}
+                className={`ords-mobile-filter-btn ${viewMode === "all" ? "active" : ""}`}
                 onClick={() => handleDealerSelect(null)}
               >
                 <i className="ords-icon-all"></i> All Orders
               </button>
               
-              <div className="ords-dealer-list">
-                <h4 className="ords-dealer-list-title">Select Dealer:</h4>
+              <div className="ords-mobile-dealers-scroll">
                 {dealersList.map(dealer => (
                   <button
                     key={dealer._id}
-                    className={`ords-dealer-item ${selectedDealer?._id === dealer._id ? "active" : ""}`}
+                    className={`ords-mobile-dealer-btn ${selectedDealer?._id === dealer._id ? "active" : ""}`}
                     onClick={() => handleDealerSelect(dealer)}
                   >
                     <i className="ords-icon-dealer-small"></i>
-                    <span className="ords-dealer-item-name">{dealer.name}</span>
-                    <span className="ords-dealer-item-address">{dealer.shopAddress}</span>
+                    <span className="ords-mobile-dealer-name">{dealer.name}</span>
                   </button>
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Stats Card */}
-          <div className="ords-stats-card">
-            <h3 className="ords-sidebar-title">
-              <i className="ords-icon-stats"></i> Order Statistics
-            </h3>
-            <div className="ords-stats-grid">
-              <div className="ords-stat-item">
-                <div className="ords-stat-value">{totalOrders}</div>
-                <div className="ords-stat-label">Total Orders</div>
-              </div>
-              <div className="ords-stat-item">
-                <div className="ords-stat-value">{totalItems}</div>
-                <div className="ords-stat-label">Items Sold</div>
-              </div>
-              <div className="ords-stat-item">
-                <div className="ords-stat-value">₹{totalRevenue.toFixed(2)}</div>
-                <div className="ords-stat-label">Revenue</div>
-              </div>
-            </div>
+            
             {selectedDealer && (
-              <div className="ords-current-dealer">
-                <h4>Current Dealer:</h4>
-                <p className="ords-current-dealer-name">{selectedDealer.name}</p>
-                <p className="ords-current-dealer-address">{selectedDealer.shopAddress}</p>
-                <p className="ords-current-dealer-contact">{selectedDealer.contact}</p>
+              <div className="ords-mobile-selected-dealer">
+                <div className="ords-mobile-dealer-info">
+                  <h4>Selected Dealer:</h4>
+                  <p className="ords-mobile-dealer-name">{selectedDealer.name}</p>
+                  <p className="ords-mobile-dealer-address">{selectedDealer.shopAddress}</p>
+                </div>
+                <button 
+                  className="ords-mobile-clear-filter"
+                  onClick={() => handleDealerSelect(null)}
+                >
+                  Clear Filter
+                </button>
               </div>
             )}
           </div>
-        </aside>
-
-        {/* Mobile Menu Toggle */}
-        {isMobile && (
-          <button 
-            className="ords-mobile-menu-toggle"
-            onClick={() => document.querySelector('.ords-sidebar').classList.toggle('mobile-visible')}
-          >
-            <i className="ords-icon-menu"></i>
-          </button>
         )}
 
         {/* Main Content */}
         <main className="ords-main-content">
-          {/* Search and Filters */}
+          {/* Search Section */}
           <div className="ords-search-section">
             <div className="ords-search-box">
               <i className="ords-icon-search"></i>
@@ -816,11 +873,11 @@ const OrdersDashboard = () => {
                       <div className="ords-order-info">
                         <div className="ords-order-id">
                           <i className="ords-icon-order"></i>
-                          <span className="ords-order-id-text">Order #{order._id?.substring(0, 8)}...</span>
+                          <span className="ords-order-id-text">Order #{order._id?.substring(0, isMobile ? 6 : 8)}...</span>
                           {viewMode === "all" && order.dealerId && (
                             <span className="ords-dealer-badge-mini">
                               <i className="ords-icon-dealer-small"></i>
-                              {order.dealerId.name || "Dealer"}
+                              {isMobile ? "Dealer" : order.dealerId.name || "Dealer"}
                             </span>
                           )}
                         </div>
@@ -872,8 +929,8 @@ const OrdersDashboard = () => {
                             <thead>
                               <tr>
                                 <th>Product</th>
-                                <th className="ords-text-center">Quantity</th>
-                                <th className="ords-text-right">Unit Price</th>
+                                <th className="ords-text-center">Qty</th>
+                                <th className="ords-text-right">Price</th>
                                 <th className="ords-text-right">Total</th>
                               </tr>
                             </thead>
@@ -942,33 +999,6 @@ const OrdersDashboard = () => {
           </div>
         </main>
       </div>
-
-      {/* Mobile Bottom Navigation */}
-      {isMobile && (
-        <div className="ords-mobile-bottom-nav">
-          <button 
-            className="ords-mobile-nav-btn"
-            onClick={() => document.querySelector('.ords-sidebar').classList.toggle('mobile-visible')}
-          >
-            <i className="ords-icon-menu"></i>
-            <span>Menu</span>
-          </button>
-          <button 
-            className="ords-mobile-nav-btn"
-            onClick={viewMode === "all" ? fetchAllOrders : () => fetchDealerOrders(selectedDealer?._id)}
-          >
-            <i className="ords-icon-refresh"></i>
-            <span>Refresh</span>
-          </button>
-          <button 
-            className="ords-mobile-nav-btn"
-            onClick={() => navigate("/admindashboard")}
-          >
-            <i className="ords-icon-back"></i>
-            <span>Back</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 };
