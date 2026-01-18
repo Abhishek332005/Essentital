@@ -384,6 +384,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   min-width: 60px;
+  white-space: nowrap;
 }
 
 .clear-search-button:hover {
@@ -683,16 +684,20 @@
 }
 
 /* ===============================
-   MOBILE SPECIFIC STYLES (70:30 Ratio for Search)
+   MOBILE SPECIFIC STYLES FOR SEARCH (70:30 Ratio)
 ================================ */
+
+/* Tablet and Mobile (≤ 992px) */
 @media (max-width: 992px) {
   .search-wrapper {
     gap: 8px;
+    flex-wrap: wrap;
   }
   
   .dealers-search-input {
     flex: 0 0 70%; /* 70% width */
     width: 70%;
+    min-width: 0;
   }
   
   .search-button {
@@ -700,14 +705,74 @@
     width: 30%;
     padding: 0 10px;
     min-width: auto;
+    height: 52px;
   }
   
   .clear-search-button {
-    flex: 0 0 auto;
-    width: auto;
-    padding: 0 10px;
-    min-width: auto;
+    flex: 0 0 100%;
+    width: 100%;
+    margin-top: 8px;
+    height: 44px;
+    font-size: 0.9rem;
+    padding: 0 15px;
+    order: 3;
+  }
+}
+
+/* Small Mobile (≤ 480px) - Extra Small Screens */
+@media (max-width: 480px) {
+  .search-wrapper {
+    gap: 6px;
+  }
+  
+  .dealers-search-input {
+    flex: 0 0 68%; /* Slightly adjust for better fit */
+    width: 68%;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+  
+  .search-button {
+    flex: 0 0 30%; /* 30% width */
+    width: 30%;
+    padding: 0 8px;
+    height: 48px;
+    font-size: 0.9rem;
+  }
+  
+  .search-button svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .clear-search-button {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 42px;
+    font-size: 0.85rem;
+    padding: 0 12px;
+  }
+}
+
+/* Very Small Mobile (≤ 360px) */
+@media (max-width: 360px) {
+  .dealers-search-input {
+    flex: 0 0 65%;
+    width: 65%;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .search-button {
+    flex: 0 0 33%;
+    width: 33%;
+    padding: 0 6px;
+    font-size: 0.85rem;
+  }
+  
+  .clear-search-button {
     font-size: 0.8rem;
+    padding: 0 10px;
   }
 }
 
