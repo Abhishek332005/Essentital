@@ -1289,8 +1289,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
@@ -1300,15 +1298,14 @@ const Cart = () => {
   const { dealerId } = useParams();
   const navigate = useNavigate();
   
-  // Initialize cart from localStorage
+  // ✅ Step 2: Cart initialization FIXED
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem(`dealerCart_${dealerId}`);
     if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      // ✅ Ensure each item has a default weight if missing
-      return parsedCart.map(item => ({
+      return JSON.parse(savedCart).map(item => ({
         ...item,
-        weight: item.weight || "1kg" // Default weight
+        weight: item.weight || "1kg",
+        qty: item.qty || 1   // ✅ IMPORTANT - using qty instead of quantity
       }));
     }
     return [];
@@ -1376,25 +1373,18 @@ const Cart = () => {
     setCart(updatedCart);
   };
 
-  // Update quantity in cart
+  // ✅ Step 3: Quantity update FIXED
   const updateQuantity = (index, delta) => {
     const updatedCart = [...cart];
-    const item = updatedCart[index];
-    
-    const newQuantity = Math.max(1, item.quantity + delta);
-    
-    updatedCart[index] = {
-      ...item,
-      quantity: newQuantity
-    };
-    
+    updatedCart[index].qty = Math.max(1, updatedCart[index].qty + delta);
     setCart(updatedCart);
   };
 
-  // Calculate total
-  const total = cart.reduce((sum, item) => {
-    return sum + (item.price * item.quantity);
-  }, 0);
+  // ✅ Step 4: Total calculation FIXED
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
 
   // Place order - IMPROVED WITH DEBUG
   const placeOrder = async () => {
@@ -1404,19 +1394,14 @@ const Cart = () => {
       // ✅ DEBUG: Check what's in cart before sending
       console.log("Cart items before order:", cart);
       
-      const orderItems = cart.map(item => {
-        // ✅ Ensure weight is correctly included
-        const itemWeight = item.weight || "1kg";
-        console.log(`Sending item: ${item.name}, Weight: ${itemWeight}, Price: ${item.price}`);
-        
-        return {
-          productId: item.id,
-          name: item.name,
-          price: item.price,
-          qty: item.quantity,
-          weight: itemWeight // ✅ सही weight भेजा जा रहा है
-        };
-      });
+      // ✅ Step 5: placeOrder mapping CLEAN
+      const orderItems = cart.map(item => ({
+        productId: item.id,
+        name: item.name,
+        price: item.price,
+        qty: item.qty,          // ✅ SAME FIELD - using qty
+        weight: item.weight     // ✅ SAVED
+      }));
 
       console.log("Order items being sent to backend:", orderItems);
 
@@ -1564,7 +1549,7 @@ const Cart = () => {
                         >
                           −
                         </button>
-                        <span className="qty-value">{item.quantity}</span>
+                        <span className="qty-value">{item.qty}</span>
                         <button 
                           className="qty-btn plus"
                           onClick={() => updateQuantity(index, 1)}
@@ -1585,7 +1570,7 @@ const Cart = () => {
                       </div>
                       <div className="price-row total-row">
                         <span>Total for this item:</span>
-                        <span className="total-value">₹ {(item.price * item.quantity).toFixed(2)}</span>
+                        <span className="total-value">₹ {(item.price * item.qty).toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
@@ -1693,9 +1678,9 @@ const Cart = () => {
                     <div className="summary-item-name">
                       {item.name} ({item.weight || "1kg"})
                     </div>
-                    <div className="summary-item-qty">× {item.quantity}</div>
+                    <div className="summary-item-qty">× {item.qty}</div>
                     <div className="summary-item-price">
-                      ₹ {(item.price * item.quantity).toFixed(2)}
+                      ₹ {(item.price * item.qty).toFixed(2)}
                     </div>
                   </div>
                 ))}
