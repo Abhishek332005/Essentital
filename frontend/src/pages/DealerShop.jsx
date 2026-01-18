@@ -360,14 +360,7 @@ const DealerShop = () => {
   // Toggle description
   const toggleDesc = (id) => setShowFullDesc(prev => ({ ...prev, [id]: !prev[id] }));
 
-  // View Cart button function - Navigate to cart page
-  // const viewCart = () => {
-  //   if (cart.length === 0) {
-  //     alert("Your cart is empty. Add some products first!");
-  //     return;
-  //   }
-  //   navigate(`/cart/${dealerId}`);
-  // };
+
 
   const viewCart = () => {
   navigate(`/cart/${dealerId}`);
