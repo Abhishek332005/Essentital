@@ -569,36 +569,21 @@ body {
   }
 }
 
-
-
-
-
-
-/* WhatsApp Floating Button */
+/* WhatsApp Floating Button - HOVER EFFECT REMOVED */
 .whatsapp-float {
     position: fixed;
     bottom: 30px;
     right: 30px;
     width: 60px;
     height: 60px;
-    /* background-color: #25D366; */
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); */
     z-index: 1000;
-    transition: all 0.3s ease;
     cursor: pointer;
     border: none;
     text-decoration: none;
-   
-}
-
-.whatsapp-float:hover {
-    background-color: #128C7E;
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
 }
 
 .whatsapp-float:active {
@@ -608,14 +593,12 @@ body {
 .whatsapp-icon {
     width: 50px;
     height: 50px;
-    /* Remove filter if icon is already visible */
-    /* filter: brightness(0) invert(1); */
     border-radius: 50%;
     object-fit: cover;
 }
 
-/* WhatsApp Pulse Animation */
-@keyframes whatsapp-pulse {
+/* WhatsApp Pulse Animation - REMOVED */
+/* @keyframes whatsapp-pulse {
     0% {
         box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
     }
@@ -625,12 +608,12 @@ body {
     100% {
         box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
     }
-}
+} */
 
-/* If you want the pulse effect */
-.whatsapp-float.pulse {
+/* If you want the pulse effect - REMOVED */
+/* .whatsapp-float.pulse {
     animation: whatsapp-pulse 2s infinite;
-}
+} */
 
 /* Alternative: If your WhatsApp icon is white on transparent background */
 .whatsapp-icon.white-icon {
@@ -670,14 +653,6 @@ body {
         height: 28px;
     }
 }
-
-
-
-
-
-
-
-
 
 /* ===============================
    MOBILE NAVBAR STYLES
