@@ -6465,14 +6465,6 @@
 
 
 
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import api, { getImageUrl } from "../utils/api";
 import { Link } from "react-router-dom";
@@ -6552,14 +6544,13 @@ function MainPage() {
   const [farmerErrors, setFarmerErrors] = useState({});
   const [pondErrors, setPondErrors] = useState({});
 
-  // ✅ Farmer form empty state
+  // ✅ Farmer form empty state - REMOVED POND COUNT
   const emptyFarmer = {
     name: "", 
     contact: "", 
     age: "", 
     gender: "", 
     village: "",
-    pondCount: "", 
     adhar: "", 
     familyMembers: "", 
     familyOccupation: "",
@@ -6684,7 +6675,7 @@ function MainPage() {
     }
   };
 
-  // ✅ VALIDATE FARMER FORM
+  // ✅ VALIDATE FARMER FORM - REMOVED POND COUNT VALIDATION
   const validateFarmerForm = () => {
     const errors = {};
     
@@ -6696,8 +6687,8 @@ function MainPage() {
     if (!newFarmer.familyMembers) errors.familyMembers = "Family members count is required";
     if (!newFarmer.familyOccupation.trim()) errors.familyOccupation = "Family occupation is required";
     if (!newFarmer.village.trim()) errors.village = "Village is required";
-    if (!newFarmer.pondCount) errors.pondCount = "Pond count is required";
     
+    // Photo validation only for new farmer
     if (!editingFarmerId && !newFarmer.photo && !newFarmer.photoExisting) {
       errors.photo = "Photo is required";
     }
@@ -6706,10 +6697,11 @@ function MainPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // ✅ VALIDATE POND FORM
+  // ✅ VALIDATE POND FORM - WITHOUT ALERTS, ONLY FORM ERRORS
   const validatePondForm = () => {
     const errors = {};
     
+    // Pond Details
     if (!newPond.pondArea.trim()) errors.pondArea = "Pond area is required";
     if (!newPond.pondDepth.trim()) errors.pondDepth = "Pond depth is required";
     if (!newPond.overflow) errors.overflow = "Overflow info is required";
@@ -6718,18 +6710,21 @@ function MainPage() {
     if (!newPond.neighbourhood) errors.neighbourhood = "Neighbourhood is required";
     if (!newPond.wastewaterEnters) errors.wastewaterEnters = "Wastewater info is required";
     
+    // Species & Stocking
     if (!newPond.species.trim()) errors.species = "Species is required";
     if (!newPond.dateOfStocking) errors.dateOfStocking = "Date of stocking is required";
     if (!newPond.qtySeedInitially.trim()) errors.qtySeedInitially = "Initial quantity is required";
     if (!newPond.currentQty.trim()) errors.currentQty = "Current quantity is required";
     if (!newPond.avgSize) errors.avgSize = "Average size is required";
     
+    // Feed Details
     if (!newPond.feedType) errors.feedType = "Feed type is required";
     if (!newPond.feedFreq) errors.feedFreq = "Feed frequency is required";
     if (!newPond.feedQtyPerDay.trim()) errors.feedQtyPerDay = "Feed quantity is required";
     if (!newPond.feedTime) errors.feedTime = "Feed time is required";
     if (!newPond.reducedAppetite) errors.reducedAppetite = "Appetite info is required";
     
+    // Water Quality
     if (!newPond.waterTemperature.trim()) errors.waterTemperature = "Water temperature is required";
     if (!newPond.pH.trim()) errors.pH = "pH is required";
     if (!newPond.DO.trim()) errors.DO = "DO is required";
@@ -6740,6 +6735,7 @@ function MainPage() {
     if (!newPond.pondWaterColor) errors.pondWaterColor = "Water color is required";
     if (!newPond.sourceOfWater) errors.sourceOfWater = "Water source is required";
     
+    // Disease & Symptoms
     if (!newPond.diseaseSymptoms) errors.diseaseSymptoms = "Disease symptoms info is required";
     if (newPond.diseaseSymptoms === "Yes" && !newPond.symptomsObserved.trim()) {
       errors.symptomsObserved = "Symptoms details are required";
@@ -6747,6 +6743,7 @@ function MainPage() {
     if (!newPond.symptomsAffect) errors.symptomsAffect = "Symptoms affect info is required";
     if (!newPond.fishDeaths.trim()) errors.fishDeaths = "Fish deaths count is required";
     
+    // Observation & Misc
     if (!newPond.farmObservedDate) errors.farmObservedDate = "Observation date is required";
     if (!newPond.farmObservedTime) errors.farmObservedTime = "Observation time is required";
     if (!newPond.lastSpecies.trim()) errors.lastSpecies = "Last species is required";
@@ -6756,6 +6753,7 @@ function MainPage() {
     if (!newPond.constructionNear) errors.constructionNear = "Construction info is required";
     if (!newPond.suddenTempChange) errors.suddenTempChange = "Temperature change info is required";
     
+    // Pond image validation only for new pond
     if (!editingPondId && !newPond.pondImage && !newPond.pondImageExisting) {
       errors.pondImage = "Pond image is required";
     }
@@ -6764,10 +6762,10 @@ function MainPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // ✅ Add Farmer with validation
+  // ✅ Add Farmer - WITHOUT ALERT POPUP
   const addFarmer = async () => {
     if (!validateFarmerForm()) {
-      alert("Please fill all required fields");
+      // No alert, just return - errors are shown in form
       return;
     }
     
@@ -6801,16 +6799,16 @@ function MainPage() {
       setFarmerErrors({});
     } catch (err) {
       console.error("Add Farmer Error:", err);
-      alert("Server error. See console.");
+      // Show error in console only, no alert
     } finally {
       setLoading(prev => ({ ...prev, addFarmer: false }));
     }
   };
 
-  // ✅ Update Farmer with validation
+  // ✅ Update Farmer - WITHOUT ALERT POPUP
   const updateFarmer = async () => {
     if (!validateFarmerForm()) {
-      alert("Please fill all required fields");
+      // No alert, just return - errors are shown in form
       return;
     }
     
@@ -6853,20 +6851,20 @@ function MainPage() {
       setFarmerErrors({});
     } catch (err) {
       console.error("Update Farmer Error:", err);
-      alert("Server error. See console.");
+      // Show error in console only, no alert
     } finally {
       setLoading(prev => ({ ...prev, updateFarmer: false }));
     }
   };
 
-  // ✅ Add Pond with validation
+  // ✅ Add Pond - WITHOUT ALERT POPUP
   const addPond = async () => {
     if (!validatePondForm()) {
-      alert("Please fill all required fields");
+      // No alert, just return - errors are shown in form
       return;
     }
     
-    if (!currentFarmerId) return alert("Farmer ID missing");
+    if (!currentFarmerId) return;
     
     const formData = new FormData();
     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
@@ -6913,16 +6911,16 @@ function MainPage() {
       setPondErrors({});
     } catch (err) {
       console.error("Add Pond Error:", err);
-      alert("Server error. See console.");
+      // Show error in console only, no alert
     } finally {
       setLoading(prev => ({ ...prev, addPond: false }));
     }
   };
 
-  // ✅ Update Pond with validation
+  // ✅ Update Pond - WITHOUT ALERT POPUP
   const updatePond = async () => {
     if (!validatePondForm()) {
-      alert("Please fill all required fields");
+      // No alert, just return - errors are shown in form
       return;
     }
     
@@ -6974,7 +6972,7 @@ function MainPage() {
       setPondErrors({});
     } catch (err) {
       console.error("Update Pond Error:", err);
-      alert("Server error. See console.");
+      // Show error in console only, no alert
     } finally {
       setLoading(prev => ({ ...prev, updatePond: false }));
     }
@@ -7341,7 +7339,7 @@ function MainPage() {
                   <p><b>{t('farmerName')}:</b> {f.name || "N/A"}</p>
                   <p><b>{t('farmerId')}:</b> {f.farmerId || "N/A"}</p>
                   <p><b>{t('contactNumber')}:</b> {f.contact || "N/A"}</p>
-                  {/* <p><b>{t('pondCount')}:</b> {f.pondCount || 0}</p> */}
+                  <p><b>{t('pondCount')}:</b> {f.pondCount || 0}</p>
                   <p className="updated-text" style={{ fontSize: "0.85rem" }}>
                     <b>{t('updated')}:</b> {timeAgo(f.updatedAt || f.createdAt, t)}
                   </p>
@@ -7460,7 +7458,7 @@ function MainPage() {
         </div>
       </div>
 
-      {/* ✅ Farmer Modal Form - ALL FIELDS REQUIRED */}
+      {/* ✅ Farmer Modal Form - WITHOUT POND COUNT FIELD */}
       {showForm && (
         <div className="form-modal">
           <div className="form-box" style={{ width: "500px", maxHeight: "90vh", overflowY: "auto" }}>
@@ -7552,7 +7550,7 @@ function MainPage() {
                   <ErrorMessage message={farmerErrors.familyOccupation} />
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <input 
                     className={`form-control ${farmerErrors.village ? 'is-invalid' : ''}`}
                     placeholder="Village *" 
@@ -7561,18 +7559,6 @@ function MainPage() {
                     disabled={loading.addFarmer || loading.updateFarmer}
                   />
                   <ErrorMessage message={farmerErrors.village} />
-                </div>
-
-                <div className="col-md-6">
-                  <input 
-                    type="number"
-                    className={`form-control ${farmerErrors.pondCount ? 'is-invalid' : ''}`}
-                    placeholder="Pond Count *" 
-                    value={newFarmer.pondCount} 
-                    onChange={e => setNewFarmer({ ...newFarmer, pondCount: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                  />
-                  <ErrorMessage message={farmerErrors.pondCount} />
                 </div>
 
                 {/* ✅ Farmer Photo - Required for new farmer only */}
@@ -7659,7 +7645,7 @@ function MainPage() {
         </div>
       )}
 
-      {/* ✅ Pond Modal Form - ALL FIELDS REQUIRED */}
+      {/* ✅ Pond Modal Form - WITHOUT ALERT POPUPS */}
       {showPondForm && (
         <div className="form-modal">
           <div className="form-box" style={{ width: "850px", maxHeight: "90vh", overflowY: "auto" }}>
@@ -8394,3 +8380,10 @@ function MainPage() {
 }
 
 export default MainPage;
+
+
+
+
+
+
+
