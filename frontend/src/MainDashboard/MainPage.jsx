@@ -7341,7 +7341,7 @@ function MainPage() {
                   <p><b>{t('farmerName')}:</b> {f.name || "N/A"}</p>
                   <p><b>{t('farmerId')}:</b> {f.farmerId || "N/A"}</p>
                   <p><b>{t('contactNumber')}:</b> {f.contact || "N/A"}</p>
-                  <p><b>{t('pondCount')}:</b> {f.pondCount || 0}</p>
+                  {/* <p><b>{t('pondCount')}:</b> {f.pondCount || 0}</p> */}
                   <p className="updated-text" style={{ fontSize: "0.85rem" }}>
                     <b>{t('updated')}:</b> {timeAgo(f.updatedAt || f.createdAt, t)}
                   </p>
