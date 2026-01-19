@@ -1,4 +1,4 @@
-/* OrdersDashboard.css - FINAL VERSION */
+/* OrdersDashboard.css - FIXED VERSION */
 
 /* =============== BASE & RESET =============== */
 .ords-main-container {
@@ -194,6 +194,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(226, 232, 240, 0.8);
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .ords-sidebar-card::before {
@@ -362,7 +363,7 @@
   font-size: 0.9rem;
 }
 
-/* Stats Card - Bigger for laptop */
+/* Stats Card - Bigger for laptop - REVENUE WIDTH REDUCED */
 .ords-stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -372,11 +373,12 @@
 
 .ords-stat-item {
   text-align: center;
-  padding: 1.25rem 0.5rem; /* More padding */
+  padding: 1rem 0.5rem; /* Reduced padding */
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-radius: 12px;
   border: 2px solid #e2e8f0;
   transition: all 0.3s ease;
+  min-width: 90px; /* Reduced width */
 }
 
 .ords-stat-item:hover {
@@ -386,11 +388,22 @@
 }
 
 .ords-stat-value {
-  font-size: 1.75rem; /* Bigger numbers */
+  font-size: 1.5rem; /* Reduced font size */
   font-weight: 800;
   color: #3b82f6;
   margin-bottom: 0.25rem;
   font-family: 'Inter', sans-serif;
+  word-break: break-word;
+}
+
+/* Specific styling for revenue stat */
+.revenue-stat {
+  min-width: 100px; /* Even smaller for revenue */
+}
+
+.revenue-value {
+  font-size: 1.3rem; /* Smaller font for revenue */
+  color: #059669; /* Green color for revenue */
 }
 
 .ords-stat-label {
@@ -489,7 +502,7 @@
   font-size: 1rem;
 }
 
-/* Mobile Stats */
+/* Mobile Stats - REVENUE WIDTH REDUCED */
 .ords-mobile-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -501,18 +514,30 @@
 
 .ords-mobile-stat {
   text-align: center;
-  padding: 0.75rem 0.5rem;
+  padding: 0.75rem 0.25rem; /* Reduced padding */
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-radius: 10px;
   border: 2px solid #e2e8f0;
+  min-width: 70px; /* Reduced width */
 }
 
 .ords-mobile-stat-value {
-  font-size: 1.25rem;
+  font-size: 1rem; /* Reduced font size */
   font-weight: 800;
   color: #3b82f6;
   margin-bottom: 0.25rem;
   font-family: 'Inter', sans-serif;
+  word-break: break-word;
+}
+
+/* Specific styling for mobile revenue */
+.revenue-stat-mobile {
+  min-width: 80px; /* Smaller for mobile */
+}
+
+.revenue-value-mobile {
+  font-size: 0.9rem; /* Smaller font */
+  color: #059669;
 }
 
 .ords-mobile-stat-label {
@@ -891,6 +916,11 @@
   min-width: 60px;
 }
 
+/* Revenue summary - smaller width */
+.revenue-summary {
+  min-width: 80px; /* Reduced width for revenue */
+}
+
 .ords-summary-label {
   font-size: 0.75rem;
   color: #64748b;
@@ -913,6 +943,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-size: 1rem; /* Smaller font for revenue amount */
 }
 
 .ords-order-toggle {
@@ -1018,7 +1049,7 @@
   border: 1px solid #e2e8f0;
 }
 
-/* Items Table */
+/* Items Table - WITH WEIGHT COLUMN */
 .ords-items-table-container {
   overflow-x: auto;
   margin-bottom: 1.5rem;
@@ -1032,7 +1063,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
-  min-width: 500px;
+  min-width: 600px; /* Increased for weight column */
 }
 
 .ords-items-table thead {
@@ -1059,10 +1090,18 @@
   text-align: right;
 }
 
+/* Adjust column widths for weight column */
+.ords-items-table th:nth-child(1) { width: 30%; } /* Product */
+.ords-items-table th:nth-child(2) { width: 15%; } /* Weight */
+.ords-items-table th:nth-child(3) { width: 10%; } /* Qty */
+.ords-items-table th:nth-child(4) { width: 20%; } /* Price */
+.ords-items-table th:nth-child(5) { width: 25%; } /* Total */
+
 .ords-items-table td {
   padding: 1rem;
   border-bottom: 1px solid #e2e8f0;
   transition: background-color 0.2s ease;
+  vertical-align: middle;
 }
 
 .ords-items-table tr:hover td {
@@ -1091,6 +1130,21 @@
   font-weight: 600;
   color: #1e293b;
   font-size: 0.875rem;
+}
+
+/* Weight Badge */
+.ords-weight-badge {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  padding: 0.375rem 0.75rem;
+  border-radius: 50px;
+  font-weight: 700;
+  min-width: 2.5rem;
+  display: inline-block;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  border: 1px solid #fbbf24;
 }
 
 .ords-quantity-badge {
@@ -1205,6 +1259,17 @@
   .ords-main-content {
     padding: 1.25rem;
   }
+  
+  /* Adjust table for weight column */
+  .ords-items-table {
+    min-width: 550px;
+  }
+  
+  .ords-items-table th:nth-child(1) { width: 25%; }
+  .ords-items-table th:nth-child(2) { width: 15%; }
+  .ords-items-table th:nth-child(3) { width: 10%; }
+  .ords-items-table th:nth-child(4) { width: 20%; }
+  .ords-items-table th:nth-child(5) { width: 30%; }
 }
 
 /* Tablet (768px and below) */
@@ -1305,6 +1370,27 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
   }
+  
+  /* Adjust table for mobile with weight column */
+  .ords-items-table {
+    min-width: 500px;
+    font-size: 0.8rem;
+  }
+  
+  .ords-items-table th,
+  .ords-items-table td {
+    padding: 0.75rem;
+  }
+  
+  .ords-weight-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .ords-quantity-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
 }
 
 /* Small Mobile (480px and below) */
@@ -1320,10 +1406,19 @@
   
   .ords-mobile-stat {
     padding: 0.5rem 0.25rem;
+    min-width: 60px;
+  }
+  
+  .revenue-stat-mobile {
+    min-width: 70px;
   }
   
   .ords-mobile-stat-value {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .revenue-value-mobile {
+    font-size: 0.8rem;
   }
   
   .ords-mobile-stat-label {
@@ -1374,13 +1469,13 @@
   }
   
   .ords-items-table {
+    min-width: 450px;
     font-size: 0.75rem;
-    min-width: 400px;
   }
   
   .ords-items-table th,
   .ords-items-table td {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
   
   .ords-summary-value {
@@ -1417,6 +1512,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.375rem 0.5rem;
+    min-width: auto;
   }
   
   .ords-mobile-stat-value {
@@ -1456,12 +1552,20 @@
     gap: 0.5rem;
   }
   
+  .revenue-summary {
+    min-width: 70px;
+  }
+  
   .ords-summary-item {
     min-width: 50px;
   }
   
   .ords-summary-value {
     font-size: 0.875rem;
+  }
+  
+  .ords-summary-value.ords-amount {
+    font-size: 0.85rem;
   }
 }
 
