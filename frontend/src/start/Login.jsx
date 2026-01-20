@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../utils/api";
-import { googleLogin } from "../firebase";
+// import { googleLogin } from "../firebase";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
@@ -17,32 +17,6 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
  
-
-
-// const handleLogin = async (e) => {
-//   e.preventDefault();
-//   setLoading(true);
-
-//   try {
-//     const res = await api.post("/api/user/login", {
-//       email,
-//       password,
-//     });
-
-//     alert(res.data.message);
-
-//     localStorage.setItem("userId", res.data.user._id);
-//     localStorage.setItem("username", res.data.user.name);
-//     localStorage.setItem("photo", res.data.user.photo || "/profile.png");
-//     localStorage.setItem("isFirstLogin", String(res.data.isFirstLogin));
-
-//     navigate("/maindashboard");
-//   } catch (error) {
-//     alert(error.response?.data?.message || "Login failed");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
 
 
@@ -72,27 +46,27 @@ const handleLogin = async (e) => {
 
 
 
-  const handleGoogleLogin = async () => {
-    try {
-      const token = await googleLogin();
-      const res = await api.post("/api/user/google-login", {
-        token: token,
-      });
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     const token = await googleLogin();
+  //     const res = await api.post("/api/user/google-login", {
+  //       token: token,
+  //     });
 
-      const user = res.data.user;
-      localStorage.setItem("userId", user._id);
-      localStorage.setItem("username", user.name);
-      localStorage.setItem("email", user.email);
-      localStorage.setItem("photo", user.photo || "/profile.png");
+  //     const user = res.data.user;
+  //     localStorage.setItem("userId", user._id);
+  //     localStorage.setItem("username", user.name);
+  //     localStorage.setItem("email", user.email);
+  //     localStorage.setItem("photo", user.photo || "/profile.png");
 
-      console.log("Google Login Success:", user);
-      navigate("/maindashboard");
+  //     console.log("Google Login Success:", user);
+  //     navigate("/maindashboard");
 
-    } catch (err) {
-      console.error("Google Login Error:", err);
-      alert("Google login failed");
-    }
-  };
+  //   } catch (err) {
+  //     console.error("Google Login Error:", err);
+  //     alert("Google login failed");
+  //   }
+  // };
 
   return (
     <div className="login-page-body">
