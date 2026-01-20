@@ -2,7 +2,7 @@
   padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
-  padding-top: 160px;
+  padding-top: 120px;
 }
 
 /* Fixed Header */
@@ -27,33 +27,27 @@
   gap: 10px;
 }
 
-/* Header Controls */
+/* Header Controls - All in one line for laptop */
 .header-controls {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  flex-wrap: nowrap;
-}
-
-/* Search Section */
-.search-section {
-  flex: 1;
-  min-width: 0; /* Prevents overflow */
+  gap: 15px;
+  width: 100%;
 }
 
 /* Search Container */
 .search-container {
   display: flex;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 600px;
 }
 
-/* Search Input Wrapper with Clear Button */
+/* Search Input Wrapper */
 .search-input-wrapper {
   position: relative;
   flex: 1;
-  min-width: 200px;
 }
 
 .search-input {
@@ -74,7 +68,7 @@
 }
 
 /* Clear Search Button */
-.clear-search-btn {
+.clear-search {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -82,20 +76,20 @@
   background: transparent;
   border: none;
   color: #666;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 4px;
   border-radius: 50%;
   transition: all 0.3s;
-  line-height: 1;
   width: 24px;
   height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 }
 
-.clear-search-btn:hover {
+.clear-search:hover {
   background: rgba(0, 0, 0, 0.1);
   color: #333;
 }
@@ -118,6 +112,7 @@
   white-space: nowrap;
   height: 48px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .search-btn:hover {
@@ -126,12 +121,12 @@
   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
-/* Action Buttons */
-.action-buttons {
+/* Header Buttons Container */
+.header-buttons {
   display: flex;
-  gap: 10px;
   align-items: center;
-  flex-wrap: nowrap;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 /* History Button */
@@ -152,6 +147,7 @@
   white-space: nowrap;
   height: 48px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .history-btn:hover {
@@ -160,36 +156,10 @@
   box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
 }
 
-/* Clear Button */
-.clear-btn {
-  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.3s;
-  white-space: nowrap;
-  height: 48px;
-  box-sizing: border-box;
-}
-
-.clear-btn:hover {
-  background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-}
-
-/* View Cart Button - FIXED VISIBILITY */
+/* View Cart Button */
 .view-cart-btn {
   background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-  color: white !important; /* Force white text */
+  color: white !important;
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
@@ -205,18 +175,13 @@
   height: 48px;
   box-sizing: border-box;
   text-decoration: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  flex-shrink: 0;
 }
 
 .view-cart-btn:hover {
   background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-}
-
-.view-cart-btn:active {
-  transform: translateY(0);
 }
 
 /* Products Container */
@@ -334,37 +299,37 @@
 }
 
 /* Responsive Design */
-/* Tablet View - 769px to 1024px */
+
+/* Tablet View (768px to 1024px) */
 @media (max-width: 1024px) {
   .dealer-shop-container {
-    padding-top: 180px;
+    padding-top: 140px;
   }
   
   .header-controls {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 10px;
   }
   
-  .search-section {
-    min-width: 100%;
-    order: 1;
+  .search-container {
+    max-width: 500px;
   }
   
-  .action-buttons {
-    min-width: 100%;
-    order: 2;
-    justify-content: space-between;
+  .search-btn {
+    padding: 0 15px;
   }
   
-  .search-input-wrapper {
-    min-width: 0;
+  .history-btn,
+  .view-cart-btn {
+    padding: 12px 15px;
+    font-size: 15px;
   }
 }
 
-/* Mobile View - Below 768px */
-@media (max-width: 768px) {
+/* Mobile View (576px to 767px) */
+@media (max-width: 767px) {
   .dealer-shop-container {
-    padding: 15px;
-    padding-top: 220px;
+    padding-top: 160px;
   }
   
   .fixed-header {
@@ -377,34 +342,25 @@
   }
   
   .header-controls {
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-  }
-  
-  .search-section {
-    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
   }
   
   .search-container {
-    width: 100%;
+    max-width: 100%;
+    order: 1;
+    flex: 0 0 100%;
   }
   
-  .search-input-wrapper {
-    width: 100%;
+  .header-buttons {
+    order: 2;
+    flex: 0 0 100%;
+    justify-content: space-between;
   }
   
   .search-input {
     height: 44px;
     font-size: 14px;
-    padding-right: 36px;
-  }
-  
-  .clear-search-btn {
-    font-size: 16px;
-    width: 22px;
-    height: 22px;
-    right: 10px;
   }
   
   .search-btn {
@@ -413,33 +369,86 @@
     padding: 0 15px;
   }
   
-  .action-buttons {
+  .history-btn,
+  .view-cart-btn {
+    height: 44px;
+    font-size: 14px;
+    padding: 12px 15px;
+    flex: 1;
+  }
+  
+  .clear-search {
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+    right: 10px;
+  }
+}
+
+/* Small Mobile View (Below 576px) */
+@media (max-width: 576px) {
+  .dealer-shop-container {
+    padding: 15px;
+    padding-top: 180px;
+  }
+  
+  .fixed-header h2 {
+    font-size: 18px;
+  }
+  
+  .header-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .search-container {
     width: 100%;
+    order: 1;
+  }
+  
+  .search-input-wrapper {
+    width: 100%;
+  }
+  
+  .search-input {
+    height: 42px;
+    font-size: 14px;
+    padding: 10px 36px 10px 12px;
+  }
+  
+  .clear-search {
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
+  }
+  
+  .search-btn {
+    height: 42px;
+    font-size: 14px;
+    padding: 0 12px;
+  }
+  
+  .header-buttons {
+    width: 100%;
+    order: 2;
     justify-content: space-between;
-    flex-wrap: wrap;
     gap: 8px;
   }
   
   .history-btn,
-  .clear-btn,
   .view-cart-btn {
     flex: 1;
-    min-width: calc(33.33% - 8px);
-    height: 44px;
+    height: 42px;
     font-size: 13px;
-    padding: 0 10px;
+    padding: 10px;
     gap: 5px;
-  }
-  
-  .view-cart-btn {
-    font-size: 12px;
-    padding: 0 8px;
+    min-width: 0;
   }
   
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
-    margin-top: 10px;
   }
   
   .product-card {
@@ -449,82 +458,48 @@
   .product-card img {
     height: 140px;
   }
-}
-
-/* Small Mobile View - Below 480px */
-@media (max-width: 480px) {
-  .dealer-shop-container {
-    padding-top: 240px;
-  }
-  
-  .fixed-header h2 {
-    font-size: 18px;
-  }
-  
-  .history-btn,
-  .clear-btn,
-  .view-cart-btn {
-    min-width: calc(50% - 4px);
-    font-size: 12px;
-    padding: 0 5px;
-    height: 40px;
-  }
-  
-  .action-buttons {
-    gap: 5px;
-  }
-  
-  .search-input {
-    height: 40px;
-    font-size: 13px;
-    padding-right: 34px;
-  }
-  
-  .clear-search-btn {
-    font-size: 15px;
-    width: 20px;
-    height: 20px;
-  }
-  
-  .search-btn {
-    height: 40px;
-    font-size: 13px;
-    padding: 0 10px;
-  }
-  
-  .products-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  
-  .product-card img {
-    height: 120px;
-  }
   
   .product-card h6 {
     font-size: 16px;
   }
-  
-  .product-card p {
-    font-size: 16px;
-  }
 }
 
-/* Extra Small Mobile View - Below 360px */
-@media (max-width: 360px) {
-  .action-buttons {
+/* Extra Small Mobile View (Below 400px) */
+@media (max-width: 400px) {
+  .dealer-shop-container {
+    padding-top: 200px;
+  }
+  
+  .header-buttons {
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
   }
   
   .history-btn,
-  .clear-btn,
   .view-cart-btn {
-    min-width: 100%;
-    font-size: 12px;
+    width: 100%;
+    font-size: 14px;
+    padding: 12px;
   }
   
-  .dealer-shop-container {
-    padding-top: 280px;
+  .search-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .search-input-wrapper {
+    width: 100%;
+  }
+  
+  .search-btn {
+    width: 100%;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-card img {
+    height: 120px;
   }
 }

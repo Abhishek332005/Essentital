@@ -486,6 +486,12 @@
 
 
 
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import products from "../data/products";
@@ -578,7 +584,7 @@ const DealerShop = () => {
   const viewCart = () => navigate(`/cart/${dealerId}`);
   const viewHistory = () => navigate(`/history/${dealerId}`);
 
-  // 🔍 SEARCH LOGIC
+  // 🔍 SEARCH LOGIC (MAIN FIX)
   const handleSearch = () => {
     const trimmedSearch = searchTerm.trim().toLowerCase();
 
@@ -594,17 +600,17 @@ const DealerShop = () => {
     setFilteredProducts(filtered);
   };
 
-  // Clear search and show all items
-  const clearSearch = () => {
-    setSearchTerm("");
-    setFilteredProducts(products);
-  };
-
   // ⌨️ Enter key support
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  // NEW FUNCTION (clear search)
+  const clearSearch = () => {
+    setSearchTerm("");
+    setFilteredProducts(products);
   };
 
   return (
@@ -613,36 +619,36 @@ const DealerShop = () => {
         <h2>🛒 Dealer Shopping</h2>
 
         <div className="header-controls">
-          <div className="search-section">
-            <div className="search-container">
-              <div className="search-input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Search products by name..."
-                  className="search-input"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                />
-                {searchTerm && (
-                  <button className="clear-search-btn" onClick={clearSearch}>
-                    ✕
-                  </button>
-                )}
-              </div>
-              <button className="search-btn" onClick={handleSearch}>
-                🔍 Search
-              </button>
+          {/* REPLACED SEARCH JSX */}
+          <div className="search-container">
+            <div className="search-input-wrapper">
+              <input
+                type="text"
+                placeholder="Search products by name..."
+                className="search-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyPress}
+              />
+
+              {/* ❌ Clear button inside input */}
+              {searchTerm.trim() !== "" && (
+                <span className="clear-search" onClick={clearSearch}>
+                  ❌
+                </span>
+              )}
             </div>
+
+            <button className="search-btn" onClick={handleSearch}>
+              🔍 Search
+            </button>
           </div>
 
-          <div className="action-buttons">
+          <div className="header-buttons">
             <button className="history-btn" onClick={viewHistory}>
               📋 History
             </button>
-            <button className="clear-btn" onClick={clearSearch}>
-              🗑️ Clear
-            </button>
+
             <button className="view-cart-btn" onClick={viewCart}>
               🛍️ View Cart ({cart.length} items)
             </button>
@@ -678,7 +684,9 @@ const DealerShop = () => {
           ) : (
             <div className="no-results">
               <h3>No products found</h3>
-              <button onClick={clearSearch}>Show All Products</button>
+              <button onClick={clearSearch}>
+                Clear Search
+              </button>
             </div>
           )}
         </div>
@@ -688,3 +696,14 @@ const DealerShop = () => {
 };
 
 export default DealerShop;
+
+
+
+
+
+
+
+
+
+
+
