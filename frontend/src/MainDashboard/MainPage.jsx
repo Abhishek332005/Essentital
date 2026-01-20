@@ -6525,8 +6525,9 @@ const SYMPTOMS_LIST = [
 export function getFarmerImage(farmer) {
   if (!farmer.photo) return "/profile.png";
   const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
-  return `${BASE_URL}/${farmer.photo}`;
+  return `${BASE_URL}/uploads/${farmer.photo}`;
 }
+
 
 
 
