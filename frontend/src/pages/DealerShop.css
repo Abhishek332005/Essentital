@@ -358,57 +358,75 @@
     margin-bottom: 10px;
   }
   
-  .header-controls {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  /* Mobile me search and history ek line me */
+  /* MOBILE FIX 1: Search box and search button in one line */
   .search-history-line {
-    flex: 0 0 100%;
-    max-width: 100%;
-    order: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 10px;
+    width: 100%;
     margin-bottom: 10px;
+    flex-wrap: nowrap;
   }
   
+  /* Search container mein search box aur search button ek line me */
   .search-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     flex: 1;
-    max-width: calc(70% - 5px);
+    max-width: none;
+    margin-bottom: 0;
   }
   
-  .shop-history-btn {
-    flex: 0 0 30%;
-    margin-bottom: 20px;
-    min-width: 120px;
-  }
-  
-  .header-buttons {
-    order: 2;
-    flex: 0 0 100%;
-    justify-content: space-between;
+  .search-input-wrapper {
+    flex: 1;
+    margin-bottom: 0;
   }
   
   .search-input {
     height: 44px;
     font-size: 14px;
+    margin-bottom: 0;
   }
   
   .shop-search-btn {
     height: 44px;
     font-size: 14px;
     padding: 0 15px;
+    margin-bottom: 0;
+    flex-shrink: 0;
   }
   
-  .shop-history-btn,
+  .shop-history-btn {
+    height: 44px;
+    font-size: 14px;
+    padding: 12px 15px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    min-width: 100px;
+  }
+  
+  /* MOBILE FIX 2: History and View Cart buttons in one line */
+  .header-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+  
   .abc-view-cart-btn {
     height: 44px;
     font-size: 14px;
     padding: 12px 15px;
-  }
-  
-  .abc-view-cart-btn {
+    margin-bottom: 0;
     flex: 1;
+    min-width: 0;
   }
   
   .clear-search {
@@ -416,6 +434,11 @@
     height: 22px;
     font-size: 14px;
     right: 10px;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
   }
 }
 
@@ -430,61 +453,64 @@
     font-size: 18px;
   }
   
-  .header-controls {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  /* Small mobile me bhi search aur history ek line me */
+  /* SMALL MOBILE: Search box and search button in one line */
   .search-history-line {
-    width: 100%;
-    order: 1;
+    display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
     margin-bottom: 10px;
+    flex-wrap: nowrap;
   }
   
   .search-container {
-    width: 65%;
-    flex: 0 0 65%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    margin-bottom: 0;
   }
   
   .search-input-wrapper {
-    width: 100%;
+    flex: 1;
+    margin-bottom: 0;
   }
   
   .search-input {
     height: 42px;
     font-size: 14px;
     padding: 10px 36px 10px 12px;
-  }
-  
-  .shop-history-btn {
-    width: 35%;
-    flex: 0 0 35%;
-    min-width: 100px;
-    font-size: 13px;
-    padding: 10px 8px;
-  }
-  
-  .clear-search {
-    right: 8px;
-    width: 20px;
-    height: 20px;
-    font-size: 13px;
+    margin-bottom: 0;
   }
   
   .shop-search-btn {
     height: 42px;
     font-size: 14px;
     padding: 0 12px;
+    margin-bottom: 0;
+    min-width: 80px;
   }
   
+  .shop-history-btn {
+    height: 42px;
+    font-size: 13px;
+    padding: 10px 8px;
+    margin-bottom: 0;
+    min-width: 90px;
+  }
+  
+  /* SMALL MOBILE: History and View Cart buttons in one line */
   .header-buttons {
-    width: 100%;
-    order: 2;
-    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 8px;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
   }
   
   .abc-view-cart-btn {
@@ -492,8 +518,15 @@
     height: 42px;
     font-size: 13px;
     padding: 10px;
-    gap: 5px;
+    margin-bottom: 0;
     min-width: 0;
+  }
+  
+  .clear-search {
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
   }
   
   .products-grid {
@@ -520,32 +553,63 @@
     padding-top: 200px;
   }
   
+  /* EXTRA SMALL MOBILE: Search box and search button in one line */
   .search-history-line {
+    display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 10px;
     flex-wrap: nowrap;
   }
   
   .search-container {
-    width: 60%;
-    flex: 0 0 60%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .search-input {
+    height: 40px;
+    font-size: 13px;
+    padding: 8px 34px 8px 10px;
+  }
+  
+  .shop-search-btn {
+    height: 40px;
+    font-size: 12px;
+    padding: 0 8px;
+    min-width: 70px;
   }
   
   .shop-history-btn {
-    width: 40%;
-    flex: 0 0 40%;
+    height: 40px;
     font-size: 12px;
-    padding: 10px 6px;
+    padding: 8px 6px;
+    min-width: 80px;
   }
   
+  /* EXTRA SMALL MOBILE: History and View Cart buttons in one line */
   .header-buttons {
-    flex-direction: column;
-    gap: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
   }
   
   .abc-view-cart-btn {
-    width: 100%;
-    font-size: 14px;
-    padding: 12px;
+    height: 40px;
+    font-size: 12px;
+    padding: 8px;
+    flex: 1;
+    min-width: 0;
   }
   
   .products-grid {
