@@ -550,6 +550,8 @@
 .history-table-col {
   flex: 1;
   padding: 0 10px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .history-table-col.name {
@@ -630,7 +632,7 @@
   box-shadow: 0 6px 18px rgba(74, 144, 226, 0.25);
 }
 
-/* Responsive Design */
+/* Responsive Design for Modal */
 @media (max-width: 768px) {
   .history-page-container {
     padding: 15px 12px;
@@ -718,6 +720,122 @@
   .history-order-status {
     text-align: center;
   }
+  
+  /* Modal Responsive Styles */
+  .history-order-modal {
+    width: 95%;
+    margin: 0 auto;
+    max-height: 95vh;
+  }
+  
+  .history-modal-header {
+    padding: 15px 20px;
+  }
+  
+  .history-modal-header h3 {
+    font-size: 1.3rem;
+  }
+  
+  .history-modal-content {
+    padding: 15px;
+    overflow-x: hidden;
+  }
+  
+  .history-order-info-section {
+    padding: 15px;
+  }
+  
+  .history-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 8px 0;
+  }
+  
+  .history-table-header {
+    display: none;
+  }
+  
+  .history-table-row {
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 2px solid #f0f7ff;
+    gap: 8px;
+  }
+  
+  .history-table-row:last-child {
+    border-bottom: none;
+  }
+  
+  .history-table-col {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    text-align: left !important;
+  }
+  
+  .history-table-col::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 0.85rem;
+    min-width: 100px;
+  }
+  
+  .history-table-col.name {
+    order: 1;
+  }
+  
+  .history-table-col.weight {
+    order: 2;
+  }
+  
+  .history-table-col.qty {
+    order: 3;
+  }
+  
+  .history-table-col.price {
+    order: 4;
+  }
+  
+  .history-table-col.total {
+    order: 5;
+    font-size: 1rem;
+    padding-top: 8px;
+    border-top: 1px dashed #e1ecff;
+    margin-top: 8px;
+  }
+  
+  .history-table-col.total::before {
+    content: 'Item Total:';
+  }
+  
+  .history-order-summary-section {
+    padding: 15px;
+  }
+  
+  .history-summary-row {
+    font-size: 0.95rem;
+    padding: 8px 0;
+  }
+  
+  .history-summary-row.grand-total {
+    font-size: 1.1rem;
+  }
+  
+  .history-summary-row.grand-total .history-grand-total {
+    font-size: 1.2rem;
+  }
+  
+  .history-modal-footer {
+    padding: 15px 20px;
+  }
+  
+  .history-modal-close-button {
+    width: 100%;
+    padding: 12px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -736,5 +854,84 @@
   .shop-now-btn {
     padding: 12px 24px;
     font-size: 0.95rem;
+  }
+  
+  /* Modal Responsive Styles for Extra Small Screens */
+  .history-order-modal {
+    width: 98%;
+    border-radius: 12px;
+  }
+  
+  .history-modal-header {
+    padding: 12px 16px;
+  }
+  
+  .history-modal-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .history-modal-close-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+  
+  .history-modal-content {
+    padding: 12px 16px;
+  }
+  
+  .history-order-info-section {
+    padding: 12px;
+  }
+  
+  .history-info-label,
+  .history-info-value {
+    font-size: 0.9rem;
+  }
+  
+  .history-order-items-section h4 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+  
+  .history-table-col {
+    font-size: 0.9rem;
+  }
+  
+  .history-table-col::before {
+    font-size: 0.8rem;
+    min-width: 80px;
+  }
+  
+  .history-summary-row {
+    font-size: 0.9rem;
+  }
+  
+  .history-summary-row.grand-total {
+    font-size: 1rem;
+  }
+  
+  .history-summary-row.grand-total .history-grand-total {
+    font-size: 1.1rem;
+  }
+  
+  .history-modal-footer {
+    padding: 12px 16px;
+  }
+  
+  .history-modal-close-button {
+    font-size: 0.95rem;
+    padding: 10px 20px;
+  }
+}
+
+/* For landscape mode on mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+  .history-order-modal {
+    max-height: 85vh;
+  }
+  
+  .history-modal-content {
+    max-height: 60vh;
   }
 }
