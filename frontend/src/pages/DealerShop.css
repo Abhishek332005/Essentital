@@ -358,7 +358,7 @@
     margin-bottom: 10px;
   }
   
-  /* MOBILE FIX: Search box and search button in one line with 70:30 ratio */
+  /* MOBILE FIX 1: Search box and search button in one line */
   .search-history-line {
     display: flex;
     flex-direction: row;
@@ -369,7 +369,7 @@
     flex-wrap: nowrap;
   }
   
-  /* Search container with 70:30 ratio */
+  /* Search container mein search box aur search button ek line me */
   .search-container {
     display: flex;
     flex-direction: row;
@@ -378,13 +378,10 @@
     flex: 1;
     max-width: none;
     margin-bottom: 0;
-    width: 100%;
   }
   
-  /* Search input wrapper - 70% width */
   .search-input-wrapper {
-    flex: 0 0 70%;
-    width: 70%;
+    flex: 1;
     margin-bottom: 0;
   }
   
@@ -392,21 +389,14 @@
     height: 44px;
     font-size: 14px;
     margin-bottom: 0;
-    width: 100%;
   }
   
-  /* Search button - 30% width */
   .shop-search-btn {
     height: 44px;
     font-size: 14px;
-    padding: 0 12px;
+    padding: 0 15px;
     margin-bottom: 0;
-    flex: 0 0 30%;
-    width: 30%;
-    min-width: auto;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    flex-shrink: 0;
   }
   
   .shop-history-btn {
@@ -418,7 +408,7 @@
     min-width: 100px;
   }
   
-  /* MOBILE FIX: History and View Cart buttons in one line */
+  /* MOBILE FIX 2: History and View Cart buttons in one line */
   .header-buttons {
     display: flex;
     flex-direction: row;
@@ -463,7 +453,7 @@
     font-size: 18px;
   }
   
-  /* SMALL MOBILE: Search box and search button in one line with 70:30 ratio */
+  /* SMALL MOBILE: Search box and search button in one line */
   .search-history-line {
     display: flex;
     flex-direction: row;
@@ -474,7 +464,6 @@
     flex-wrap: nowrap;
   }
   
-  /* Search container with 70:30 ratio */
   .search-container {
     display: flex;
     flex-direction: row;
@@ -482,13 +471,10 @@
     gap: 8px;
     flex: 1;
     margin-bottom: 0;
-    width: 100%;
   }
   
-  /* Search input wrapper - 70% width */
   .search-input-wrapper {
-    flex: 0 0 70%;
-    width: 70%;
+    flex: 1;
     margin-bottom: 0;
   }
   
@@ -497,18 +483,14 @@
     font-size: 14px;
     padding: 10px 36px 10px 12px;
     margin-bottom: 0;
-    width: 100%;
   }
   
-  /* Search button - 30% width */
   .shop-search-btn {
     height: 42px;
     font-size: 14px;
-    padding: 0 10px;
+    padding: 0 12px;
     margin-bottom: 0;
-    flex: 0 0 30%;
-    width: 30%;
-    min-width: auto;
+    min-width: 80px;
   }
   
   .shop-history-btn {
@@ -571,7 +553,7 @@
     padding-top: 200px;
   }
   
-  /* EXTRA SMALL MOBILE: Search box and search button in one line with 70:30 ratio */
+  /* EXTRA SMALL MOBILE: Search box and search button in one line */
   .search-history-line {
     display: flex;
     flex-direction: row;
@@ -582,7 +564,6 @@
     flex-wrap: nowrap;
   }
   
-  /* Search container with 70:30 ratio */
   .search-container {
     display: flex;
     flex-direction: row;
@@ -590,31 +571,19 @@
     gap: 6px;
     flex: 1;
     margin-bottom: 0;
-    width: 100%;
-  }
-  
-  /* Search input wrapper - 70% width */
-  .search-input-wrapper {
-    flex: 0 0 70%;
-    width: 70%;
-    margin-bottom: 0;
   }
   
   .search-input {
     height: 40px;
     font-size: 13px;
     padding: 8px 34px 8px 10px;
-    width: 100%;
   }
   
-  /* Search button - 30% width */
   .shop-search-btn {
     height: 40px;
     font-size: 12px;
     padding: 0 8px;
-    flex: 0 0 30%;
-    width: 30%;
-    min-width: auto;
+    min-width: 70px;
   }
   
   .shop-history-btn {
