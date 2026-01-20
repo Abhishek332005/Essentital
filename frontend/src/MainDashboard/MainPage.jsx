@@ -6522,11 +6522,12 @@ const SYMPTOMS_LIST = [
 //   return getImageUrl(farmer.photo);
 // };
 
-export function getFarmerImage(farmer) {
-  if (!farmer.photo) return "/profile.png";
-  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
-  return `${BASE_URL}/uploads/${farmer.photo}`;
-}
+
+export const getImageUrl = (filename) => {
+  if (!filename) return "/profile.png";
+  // Agar filename already /uploads/ ke sath hai to use as it
+  return `http://localhost:2008/uploads/${filename.replace(/^\/uploads\//, '')}`;
+};
 
 
 
@@ -7333,26 +7334,17 @@ const handleSearch = async () => {
               <div key={f._id} className="farmer-box">
                 {/* <img
                   src={getFarmerImage(f)}
-                  alt={f.name}
+                  alt={f.name} */}
+                  
                   className="profile-pic"
                   loading="lazy"
                   onError={(e) => {
                     e.target.src = "/profile.png";
                     e.target.onerror = null;
                   }}
-                /> */}
+                />
 
 
-  <img
-  src={getFarmerImage(f)}
-  alt={f.name}
-  className="profile-pic"
-  loading="lazy"
-  onError={(e) => {
-    e.target.src = "/profile.png";
-    e.target.onerror = null;
-  }}
-/>
 
 
 
