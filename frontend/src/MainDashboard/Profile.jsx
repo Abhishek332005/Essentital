@@ -536,6 +536,9 @@
 
 
 
+
+
+
 // import React, { useState, useEffect } from "react";
 // import { Link } from "react-router-dom";
 // import { useTranslation } from "react-i18next";
@@ -564,8 +567,9 @@
 
 //   const userId = localStorage.getItem("userId");
 
-//   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-//   const [showNewPassword, setShowNewPassword] = useState(false);
+//   // Eye button states - CHANGE THE DEFAULT TO true IF YOU WANT PASSWORD HIDDEN INITIALLY
+//   const [showCurrentPassword, setShowCurrentPassword] = useState(false); // false = password hidden
+//   const [showNewPassword, setShowNewPassword] = useState(false); // false = password hidden
 
 //   // Check if mobile view
 //   useEffect(() => {
@@ -888,25 +892,51 @@
 //             <div className="profile-form-group">
 //               <h4>{t("changePassword")}</h4>
               
+//               {/* Current Password with Eye Button */}
 //               <label className="profile-form-label">{t("currentPassword")}:</label>
-//               <input
-//                 type="password"
-//                 className="profile-form-input"
-//                 placeholder={t("currentPassword")}
-//                 value={currentPassword}
-//                 onChange={(e) => setCurrentPassword(e.target.value)}
-//                 disabled={isUpdatingPassword}
-//               />
+//               <div className="password-input-container">
+//                 <input
+//                   type={showCurrentPassword ? "text" : "password"}
+//                   className="profile-form-input password-input"
+//                   placeholder={t("currentPassword")}
+//                   value={currentPassword}
+//                   onChange={(e) => setCurrentPassword(e.target.value)}
+//                   disabled={isUpdatingPassword}
+//                 />
+//                 <button 
+//                   type="button"
+//                   className="password-toggle-btn"
+//                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+//                   disabled={isUpdatingPassword}
+//                   aria-label={showCurrentPassword ? "Hide password" : "Show password"}
+//                 >
+//                   {/* INVERT THE ICON LOGIC */}
+//                   {showCurrentPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+//                 </button>
+//               </div>
 
+//               {/* New Password with Eye Button */}
 //               <label className="profile-form-label">{t("newPassword")}:</label>
-//               <input
-//                 type="password"
-//                 className="profile-form-input"
-//                 placeholder={t("newPassword")}
-//                 value={newPassword}
-//                 onChange={(e) => setNewPassword(e.target.value)}
-//                 disabled={isUpdatingPassword}
-//               />
+//               <div className="password-input-container">
+//                 <input
+//                   type={showNewPassword ? "text" : "password"}
+//                   className="profile-form-input password-input"
+//                   placeholder={t("newPassword")}
+//                   value={newPassword}
+//                   onChange={(e) => setNewPassword(e.target.value)}
+//                   disabled={isUpdatingPassword}
+//                 />
+//                 <button 
+//                   type="button"
+//                   className="password-toggle-btn"
+//                   onClick={() => setShowNewPassword(!showNewPassword)}
+//                   disabled={isUpdatingPassword}
+//                   aria-label={showNewPassword ? "Hide password" : "Show password"}
+//                 >
+//                   {/* INVERT THE ICON LOGIC */}
+//                   {showNewPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+//                 </button>
+//               </div>
               
 //               <button 
 //                 className="profile-btn-warning" 
@@ -940,15 +970,25 @@
 
 
 
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api, { getImageUrl } from "../utils/api";
-import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Eye, EyeOff } from "lucide-react";
+import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Eye, EyeOff, LogOut } from "lucide-react";
 import "./Profile.css";
 
 function Profile() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -968,9 +1008,9 @@ function Profile() {
 
   const userId = localStorage.getItem("userId");
 
-  // Eye button states - CHANGE THE DEFAULT TO true IF YOU WANT PASSWORD HIDDEN INITIALLY
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false); // false = password hidden
-  const [showNewPassword, setShowNewPassword] = useState(false); // false = password hidden
+  // Eye button states
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   // Check if mobile view
   useEffect(() => {
@@ -1027,6 +1067,11 @@ function Profile() {
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
     localStorage.setItem("lang", lang);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
   };
 
   const handlePhotoChange = async () => {
@@ -1173,6 +1218,16 @@ function Profile() {
            <Users size={18} />     {t("agents")}
             </Link>
           </li>
+          
+          {/* Logout Button in Sidebar */}
+          <li>
+            <button 
+              className="profile-menu-btn logout-btn"
+              onClick={handleLogout}
+            >
+              <LogOut size={18} /> {t("logout") || "Logout"}
+            </button>
+          </li>
         </ul>
 
         {/* ================= LANGUAGE ================= */}
@@ -1205,9 +1260,15 @@ function Profile() {
       {/* ================= RIGHT CONTENT ================= */}
       <div className={`profile-content-area ${isMobile ? 'mobile-view' : ''}`}>
         
-        {/* Profile Header */}
+        {/* Profile Header with Logout Button */}
         <div className="profile-header">
           <h3>{t("myProfile")}</h3>
+          <button 
+            className="logout-btn-header"
+            onClick={handleLogout}
+          >
+            <LogOut size={20} /> {t("logout") || "Logout"}
+          </button>
         </div>
 
         {/* Profile Content in Cards Layout */}
@@ -1311,7 +1372,6 @@ function Profile() {
                   disabled={isUpdatingPassword}
                   aria-label={showCurrentPassword ? "Hide password" : "Show password"}
                 >
-                  {/* INVERT THE ICON LOGIC */}
                   {showCurrentPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
               </div>
@@ -1334,7 +1394,6 @@ function Profile() {
                   disabled={isUpdatingPassword}
                   aria-label={showNewPassword ? "Hide password" : "Show password"}
                 >
-                  {/* INVERT THE ICON LOGIC */}
                   {showNewPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
               </div>
@@ -1363,4 +1422,3 @@ function Profile() {
 }
 
 export default Profile;
-

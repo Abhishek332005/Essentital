@@ -20,6 +20,7 @@
     "express": "^5.1.0",
     "firebase-admin": "^13.6.0",
     "i18next": "^25.6.3",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.1",
     "multer": "^2.0.2",
     "xlsx": "^0.18.5"

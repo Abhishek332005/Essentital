@@ -3,35 +3,97 @@
 
 
 
+// import axios from "axios";
+
+// export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
+
+// const api = axios.create({
+//   baseURL: API_URL,
+//   withCredentials: false,
+// });
+
+// // ✅ SAFE IMAGE URL BUILDER (REPLACE ONLY THIS)
+// export const getImageUrl = (path) => {
+//   // fallback image
+//   if (!path) return "/profile.png";
+
+//   // already full URL
+//   if (path.startsWith("http://") || path.startsWith("https://")) {
+//     return path;
+//   }
+
+//   // normalize path
+//   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
+//   return `${API_URL.replace(/\/$/, "")}/${cleanPath}`;
+// };
+
+// export default api;
+
+
+
+
+
+
+
+
+//second time
+
+
 import axios from "axios";
 
-export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:2008";
+export const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:2008";
 
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: false,
 });
 
-// ✅ SAFE IMAGE URL BUILDER (REPLACE ONLY THIS)
+/* ===============================
+   🔐 REQUEST INTERCEPTOR
+   - Har request me token attach
+================================ */
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+/* ===============================
+   🚨 RESPONSE INTERCEPTOR
+   - Token expire → logout
+================================ */
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.clear();
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
+/* ===============================
+   🖼️ SAFE IMAGE URL BUILDER
+================================ */
 export const getImageUrl = (path) => {
-  // fallback image
   if (!path) return "/profile.png";
 
-  // already full URL
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path;
   }
 
-  // normalize path
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
 
   return `${API_URL.replace(/\/$/, "")}/${cleanPath}`;
 };
 
 export default api;
-
-
-
-
-
 

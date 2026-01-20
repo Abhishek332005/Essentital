@@ -89,20 +89,37 @@ body {
   border-radius: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 500;
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
 }
 
-/* .profile-menu-btn:hover {
+.profile-menu-btn:hover {
   background-color: #f3f4f6;
   color: #2563eb;
   transform: translateX(4px);
-} */
+}
 
-/* .profile-menu-btn.active {
+.profile-menu-btn.active {
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: gray;
+  color: white;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
               0 2px 4px -1px rgba(0, 0, 0, 0.06);
-} */
+}
+
+/* Logout Button Styles in Sidebar */
+.profile-menu-btn.logout-btn {
+  color: #dc2626;
+  margin-top: 10px;
+}
+
+.profile-menu-btn.logout-btn:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
 
 /* LANGUAGE SECTION */
 .profile-language-section {
@@ -147,7 +164,7 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Header - Modern Design */
+/* Header - Modern Design with Logout Button */
 .profile-header {
   background: white;
   padding: 25px 30px;
@@ -172,6 +189,30 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Logout Button in Header */
+.logout-btn-header {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+  border: 1.5px solid #fca5a5;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.logout-btn-header:hover {
+  background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+  border-color: #f87171;
 }
 
 /* Cards Container - Responsive Grid */
@@ -485,6 +526,69 @@ body {
   to { opacity: 1; }
 }
 
+/* ================= LOADER STYLES ================= */
+.loader {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ================= BUTTON DISABLED STATES ================= */
+.profile-btn-primary:disabled,
+.profile-btn-success:disabled,
+.profile-btn-warning:disabled,
+.logout-btn-header:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Password Input Container Styles */
+.password-input-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.password-input {
+  width: 100%;
+  padding-right: 40px !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.password-toggle-btn:hover {
+  color: #333;
+}
+
+.password-toggle-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ===============================
    RESPONSIVE DESIGN - IMPROVED
 ================================ */
@@ -531,7 +635,7 @@ body {
 
   .profile-content-area.mobile-view {
     margin-left: 0;
-    margin-top: 60px; /* For navbar height */
+    margin-top: 60px;
     padding: 20px;
     min-height: calc(100vh - 60px);
   }
@@ -542,6 +646,11 @@ body {
   
   .profile-form-group {
     padding: 25px;
+  }
+  
+  .logout-btn-header {
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 }
 
@@ -570,6 +679,11 @@ body {
   
   .profile-header h3 {
     font-size: 1.5rem;
+  }
+  
+  .logout-btn-header {
+    width: 100%;
+    justify-content: center;
   }
   
   .profile-form-group {
@@ -604,6 +718,11 @@ body {
   
   .profile-header h3 {
     font-size: 1.3rem;
+  }
+  
+  .logout-btn-header {
+    padding: 10px 15px;
+    font-size: 0.85rem;
   }
   
   .profile-cards-container {
@@ -691,192 +810,4 @@ body {
 
 .profile-content-area {
   transition: all 0.3s ease;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ================= LOADER STYLES ================= */
-.loader {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 0.8s linear infinite;
-  margin-right: 8px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ================= BUTTON DISABLED STATES ================= */
-.profile-btn-primary:disabled,
-.profile-btn-success:disabled,
-.profile-btn-warning:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-
-
-
-
-
-
-
-
-
-/* eyebutton css */
-
-/* .password-input-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.password-eye {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #6b7280;
-}
-
-.password-eye:hover {
-  color: #111827;
-} */
-/* Add this to your Profile.css */
-/* .password-input-wrapper {
-  position: relative;
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.password-input-wrapper .profile-form-input {
-  width: 100%;
-  padding-right: 40px; 
-}
-
-.password-eye {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #6b7280;
-  background: transparent;
-  border: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.password-eye:hover {
-  color: #111827;
-}
-
-
-.profile-form-group .password-input-wrapper:first-of-type {
-  margin-top: 8px;
-} */
-
-
-
-
-
-
-
-
-
-/* Add these styles to your Profile.css file */
-/* Password Input Container Styles */
-.password-input-container {
-  position: relative;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.password-input {
-  width: 100%;
-  padding-right: 40px !important; /* Space for eye button */
-  -webkit-text-security: disc !important; /* For Safari */
-  text-security: disc !important; /* For other browsers */
-}
-
-/* When password is visible */
-.password-input[type="text"] {
-  -webkit-text-security: none !important;
-  text-security: none !important;
-}
-
-.password-toggle-btn {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #666;
-  cursor: pointer;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.3s ease;
-  z-index: 10;
-}
-
-.password-toggle-btn:hover {
-  color: #333;
-}
-
-.password-toggle-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Ensure input has proper styling */
-.profile-form-input {
-  min-height: 40px;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color 0.3s ease;
-}
-
-.profile-form-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-}
-
-.profile-form-input:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
 }
