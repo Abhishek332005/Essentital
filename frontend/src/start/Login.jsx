@@ -180,6 +180,119 @@
 
 //login na karne pade 
 
+// import React, { useState, useEffect } from "react";
+// import { useNavigate, Link } from "react-router-dom";
+// import api from "../utils/api";
+
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "./Login.css";
+
+// function Login() {
+//   const navigate = useNavigate();
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [showPassword, setShowPassword] = useState(false);
+
+//   // ⭐ AUTO LOGIN CHECK
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     if (token) {
+//       navigate("/maindashboard");
+//     }
+//   }, [navigate]);
+
+//   const handleLogin = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+
+//     try {
+//       const res = await api.post("/api/user/login", {
+//         email,
+//         password,
+//       });
+
+//       // ⭐ SAVE TOKEN (MOST IMPORTANT)
+//       localStorage.setItem("token", res.data.token);
+
+//       // ⭐ SAVE USER INFO
+//       localStorage.setItem("userId", res.data.user._id);
+//       localStorage.setItem("username", res.data.user.name);
+
+//       navigate("/maindashboard");
+
+//     } catch (error) {
+//       alert(error.response?.data?.message || "Login failed");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="login-page-body">
+//       <div className="login-container-wrapper">
+
+//         <div className="login-logo-container">
+//           <img src="/CompanyLogo.png" alt="logo" />
+//         </div>
+
+//         <h2 className="login-company-name">
+//           Essential Aquatech <span className="login-tm-symbol">™</span>
+//         </h2>
+
+//         <div className="login-tabs-container">
+//           <button className="login-tab-button login-tab-active">Login</button>
+//           <Link to="/signup">
+//             <button className="login-tab-button">Sign Up</button>
+//           </Link>
+//         </div>
+
+//         <form onSubmit={handleLogin} className="login-form-container">
+
+//           <label className="login-form-label">Email Address</label>
+//           <div className="login-input-wrapper">
+//             <input
+//               type="email"
+//               className="login-form-control"
+//               value={email}
+//               onChange={(e) => setEmail(e.target.value)}
+//               required
+//             />
+//           </div>
+
+//           <label className="login-form-label">Password</label>
+//           <div className="login-input-wrapper">
+//             <input
+//               type={showPassword ? "text" : "password"}
+//               className="login-form-control"
+//               value={password}
+//               onChange={(e) => setPassword(e.target.value)}
+//               required
+//             />
+//             <button
+//               type="button"
+//               onClick={() => setShowPassword(!showPassword)}
+//             >
+//               👁
+//             </button>
+//           </div>
+
+//           <button type="submit" disabled={loading}>
+//             {loading ? "Logging in..." : "Log In"}
+//           </button>
+
+//         </form>
+
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Login;
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../utils/api";
@@ -207,12 +320,9 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await api.post("/api/user/login", {
-        email,
-        password,
-      });
+      const res = await api.post("/api/user/login", { email, password });
 
-      // ⭐ SAVE TOKEN (MOST IMPORTANT)
+      // ⭐ SAVE TOKEN
       localStorage.setItem("token", res.data.token);
 
       // ⭐ SAVE USER INFO
@@ -282,6 +392,16 @@ function Login() {
           </button>
 
         </form>
+
+        {/* ================= ADMIN LOGIN BUTTON ================= */}
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <button
+            className="login-admin-btn"
+            onClick={() => navigate("/admin/login")}
+          >
+            Login as Admin
+          </button>
+        </div>
 
       </div>
     </div>
