@@ -6522,6 +6522,9 @@ const getFarmerImage = (farmer) => {
   return getImageUrl(farmer.photo);
 };
 
+
+
+
 function MainPage() {
   const { t, i18n } = useTranslation();
   const username = localStorage.getItem("username") || "User";
