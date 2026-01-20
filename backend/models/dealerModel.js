@@ -25,13 +25,15 @@ const dealerSchema = new mongoose.Schema({
   contact: { type: String, required: true },
   
   // Updated Fields (ISDN → GST Number)
-  gstNumber: { type: String }, // ✅ ISDN se change hua
-  
+  // gstNumber: { type: String }, // ✅ ISDN se change hua
+  gstNumber: { type: String, required: true },
+
+
   // Updated / New Field
   shopAddress: { type: String, required: true },
 
   // Image Path
-  image: { type: String },
+  image: { type: String, required: true },
 
   // User Who Created The Dealer
   createdBy: { 

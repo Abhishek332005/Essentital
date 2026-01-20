@@ -2611,38 +2611,73 @@ function DealersPage() {
     fetchDealers();
   }, []);
 
+  // const handleAddDealer = async () => {
+  //   if (!dealerName || !contact || !gstNumber || !shopAddress || !image)
+  //     return alert(t("fillAllFields"));
+
+  //   setLoadingSave(true);
+  //   const formData = new FormData();
+  //   formData.append("name", dealerName);
+  //   formData.append("contact", contact);
+  //   formData.append("gstNumber", gstNumber);
+  //   formData.append("image", image);
+  //   formData.append("shopAddress", shopAddress);
+  //   formData.append("userId", userId);
+
+  //   try {
+  //     // ✅ CHANGED HERE: No headers specified
+  //     await api.post("/api/dealers", formData);
+
+  //     setDealerName("");
+  //     setContact("");
+  //     setShopAddress("");
+  //     setGstNumber("");
+  //     setImage(null);
+
+  //     setShowForm(false);
+  //     fetchDealers();
+  //   } catch (err) {
+  //     console.log(err);
+  //     alert(t("errorAddingDealer"));
+  //   } finally {
+  //     setLoadingSave(false);
+  //   }
+  // };
+
+
   const handleAddDealer = async () => {
-    if (!dealerName || !contact || !gstNumber || !image)
-      return alert(t("fillAllFields"));
+  if (!dealerName || !contact || !gstNumber || !shopAddress || !image) {
+    return alert(t("fillAllFields")); // "Please fill all fields"
+  }
 
-    setLoadingSave(true);
-    const formData = new FormData();
-    formData.append("name", dealerName);
-    formData.append("contact", contact);
-    formData.append("gstNumber", gstNumber);
-    formData.append("image", image);
-    formData.append("shopAddress", shopAddress);
-    formData.append("userId", userId);
+  setLoadingSave(true);
+  const formData = new FormData();
+  formData.append("name", dealerName);
+  formData.append("contact", contact);
+  formData.append("gstNumber", gstNumber);
+  formData.append("shopAddress", shopAddress);
+  formData.append("image", image);
+  formData.append("userId", userId);
 
-    try {
-      // ✅ CHANGED HERE: No headers specified
-      await api.post("/api/dealers", formData);
+  try {
+    await api.post("/api/dealers", formData);
 
-      setDealerName("");
-      setContact("");
-      setShopAddress("");
-      setGstNumber("");
-      setImage(null);
+    // Reset form
+    setDealerName("");
+    setContact("");
+    setGstNumber("");
+    setShopAddress("");
+    setImage(null);
+    setShowForm(false);
+    fetchDealers();
+  } catch (err) {
+    console.log(err);
+    alert(t("errorAddingDealer"));
+  } finally {
+    setLoadingSave(false);
+  }
+};
 
-      setShowForm(false);
-      fetchDealers();
-    } catch (err) {
-      console.log(err);
-      alert(t("errorAddingDealer"));
-    } finally {
-      setLoadingSave(false);
-    }
-  };
 
   const handleCardClick = async (dealer) => {
     setLoadingCard(prev => ({ ...prev, [dealer._id]: true }));
@@ -2870,7 +2905,7 @@ function DealersPage() {
 
               <div className="dealers-form-group">
                 <label className="dealers-form-label">{t("dealerName")}:</label>
-                <input 
+                {/* <input 
                   type="text" 
                   value={dealerName} 
                   onChange={(e) => setDealerName(e.target.value)} 
@@ -2919,7 +2954,55 @@ function DealersPage() {
                   onChange={(e) => setImage(e.target.files[0])} 
                   className="dealers-form-input" 
                   disabled={loadingSave}
-                />
+                /> */}
+
+
+<input 
+  type="text" 
+  value={dealerName} 
+  onChange={(e) => setDealerName(e.target.value)} 
+  className="dealers-form-input"
+  required
+  disabled={loadingSave}
+/>
+
+<input 
+  type="text" 
+  value={contact} 
+  onChange={(e) => setContact(e.target.value)} 
+  className="dealers-form-input"
+  required
+  disabled={loadingSave}
+/>
+
+<input 
+  type="text" 
+  value={shopAddress} 
+  onChange={(e) => setShopAddress(e.target.value)} 
+  className="dealers-form-input"
+  required
+  disabled={loadingSave}
+/>
+
+<input 
+  type="text" 
+  value={gstNumber} 
+  onChange={(e) => setGstNumber(e.target.value)} 
+  className="dealers-form-input"
+  required
+  disabled={loadingSave}
+/>
+
+<input 
+  type="file" 
+  onChange={(e) => setImage(e.target.files[0])} 
+  className="dealers-form-input"
+  required
+  disabled={loadingSave}
+/>
+
+
+
               </div>
 
               <div className="dealers-form-buttons">
