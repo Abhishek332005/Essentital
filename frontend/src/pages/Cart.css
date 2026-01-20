@@ -51,6 +51,7 @@
   font-size: 14px;
   color: #4a5568;
   transition: all 0.2s ease;
+  padding: 0;
 }
 
 .clear-search-btn:hover {
@@ -77,13 +78,14 @@
   background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
   border: none;
-  padding: 10px 24px;
+  padding: 12px 28px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 3px 10px rgba(74, 144, 226, 0.15);
+  min-height: 44px;
 }
 
 .clear-search-btn-large:hover {
@@ -140,9 +142,9 @@
   background: rgba(255, 255, 255, 0.12);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -150,6 +152,7 @@
   align-items: center;
   gap: 8px;
   backdrop-filter: blur(8px);
+  min-height: 44px;
 }
 
 .back-to-shop-btn:hover {
@@ -161,11 +164,15 @@
 .cart-count {
   font-size: 1.1rem;
   background: rgba(255, 255, 255, 0.12);
-  padding: 8px 18px;
+  padding: 10px 20px;
   border-radius: 40px;
   font-weight: 600;
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart-page-content {
@@ -222,13 +229,14 @@
   background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
   border: none;
-  padding: 12px 32px;
+  padding: 14px 36px;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+  min-height: 48px;
 }
 
 .shop-now-btn:hover {
@@ -282,7 +290,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   background: #f0f7ff;
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: 4px;
   display: inline-block;
 }
@@ -291,7 +299,7 @@
   background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
   border: none;
-  padding: 8px 18px;
+  padding: 10px 20px;
   border-radius: 6px;
   font-size: 0.9rem;
   font-weight: 500;
@@ -301,6 +309,7 @@
   align-items: center;
   gap: 6px;
   box-shadow: 0 3px 10px rgba(74, 144, 226, 0.15);
+  min-height: 38px;
 }
 
 .remove-btn:hover {
@@ -328,7 +337,7 @@
 }
 
 .cart-weight-btn {
-  padding: 10px 18px;
+  padding: 12px 20px;
   background: #f8fbff;
   border: 1px solid #d1e3ff;
   border-radius: 8px;
@@ -339,11 +348,13 @@
   flex: 1;
   min-width: 90px;
   font-size: 0.95rem;
+  min-height: 44px;
 }
 
 .cart-weight-btn:hover {
   background: #f0f7ff;
   border-color: #4a90e2;
+  transform: translateY(-1px);
 }
 
 .cart-weight-btn.active {
@@ -377,12 +388,12 @@
 }
 
 .qty-btn {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   background: white;
   border: 2px solid;
   border-radius: 10px;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: bold;
   cursor: pointer;
   display: flex;
@@ -390,6 +401,8 @@
   justify-content: center;
   transition: all 0.2s ease;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+  padding: 0;
+  line-height: 1;
 }
 
 .qty-btn.minus {
@@ -473,13 +486,15 @@
   background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
   color: white;
   border: none;
-  padding: 14px 35px;
+  padding: 16px 40px;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+  min-height: 52px;
+  width: 100%;
 }
 
 .clear-cart-btn:hover {
@@ -550,7 +565,7 @@
   font-weight: 600;
   font-size: 1rem;
   background: #f0f7ff;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 16px;
   min-width: 40px;
 }
@@ -598,6 +613,7 @@
   margin-bottom: 14px;
   transition: all 0.25s ease;
   box-shadow: 0 6px 18px rgba(74, 144, 226, 0.2);
+  min-height: 56px;
 }
 
 .place-order-btn:hover {
@@ -618,6 +634,7 @@
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 12px rgba(74, 144, 226, 0.1);
+  min-height: 52px;
 }
 
 .continue-shopping-btn:hover {
@@ -682,19 +699,22 @@
   .header-actions {
     flex-direction: column;
     gap: 12px;
-    align-items: flex-start;
+    align-items: stretch;
   }
   
   .back-to-shop-btn {
     width: 100%;
     justify-content: center;
     padding: 12px;
+    min-height: 44px;
   }
   
   .cart-count {
-    align-self: stretch;
+    width: 100%;
     text-align: center;
-    padding: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    min-height: 44px;
   }
   
   .search-box {
@@ -716,9 +736,10 @@
   }
   
   .remove-btn {
-    align-self: stretch;
+    width: 100%;
     justify-content: center;
-    padding: 10px;
+    padding: 12px;
+    min-height: 42px;
   }
   
   .cart-weight-selector label {
@@ -734,6 +755,7 @@
     width: 100%;
     padding: 12px;
     font-size: 0.9rem;
+    min-height: 42px;
   }
   
   .quantity-controls {
@@ -748,8 +770,8 @@
   }
   
   .qty-btn {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     font-size: 1.4rem;
   }
   
@@ -763,6 +785,18 @@
   .shop-now-btn {
     padding: 14px;
     font-size: 1rem;
+  }
+  
+  .clear-cart-btn {
+    min-height: 48px;
+  }
+  
+  .place-order-btn {
+    min-height: 52px;
+  }
+  
+  .continue-shopping-btn {
+    min-height: 48px;
   }
   
   .summary-items {
@@ -803,11 +837,13 @@
   .cart-weight-btn {
     padding: 10px;
     font-size: 0.85rem;
+    min-height: 40px;
   }
   
   .place-order-btn {
     padding: 14px;
     font-size: 1.1rem;
+    min-height: 48px;
   }
   
   .continue-shopping-btn,
@@ -815,5 +851,45 @@
   .shop-now-btn {
     padding: 12px;
     font-size: 0.95rem;
+    min-height: 44px;
+  }
+  
+  .qty-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
+  }
+}
+
+/* Button focus states for accessibility */
+button:focus {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+}
+
+/* Loading state for place order button */
+.place-order-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .cart-weight-btn,
+  .qty-btn,
+  .remove-btn,
+  .back-to-shop-btn,
+  .clear-cart-btn,
+  .place-order-btn,
+  .continue-shopping-btn,
+  .shop-now-btn {
+    min-height: 48px;
+    padding: 14px 20px;
+  }
+  
+  .clear-search-btn {
+    width: 36px;
+    height: 36px;
   }
 }
