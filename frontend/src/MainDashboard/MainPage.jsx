@@ -7104,28 +7104,56 @@ function MainPage() {
 
   const [searchId, setSearchId] = useState("");
 
-  const handleSearch = async () => {
-    if (!searchId) {
+  // const handleSearch = async () => {
+  //   if (!searchId) {
+  //     await fetchFarmers();
+  //     return;
+  //   }
+
+  //   setLoading(prev => ({ ...prev, search: true }));
+  //   try {
+  //     const filtered = farmers.filter(f =>
+  //       f.farmerId.toLowerCase().includes(searchId.toLowerCase())
+  //     );
+
+  //     if (filtered.length > 0) {
+  //       const remaining = farmers.filter(f => !filtered.includes(f));
+  //       setFarmers([...filtered, ...remaining]);
+  //     } else {
+  //       await fetchFarmers();
+  //     }
+  //   } finally {
+  //     setLoading(prev => ({ ...prev, search: false }));
+  //   }
+  // };
+
+
+
+const handleSearch = async () => {
+  if (!searchId) {
+    await fetchFarmers();
+    return;
+  }
+
+  setLoading(prev => ({ ...prev, search: true }));
+  try {
+    const searchValue = searchId.trim().toLowerCase(); // ⭐ ADD
+
+    const filtered = farmers.filter(f =>
+      (f.farmerId || "").toLowerCase().includes(searchValue)
+    ); // ✅ SIRF YE CHANGE KARO
+
+    if (filtered.length > 0) {
+      const remaining = farmers.filter(f => !filtered.includes(f));
+      setFarmers([...filtered, ...remaining]);
+    } else {
       await fetchFarmers();
-      return;
     }
+  } finally {
+    setLoading(prev => ({ ...prev, search: false }));
+  }
+};
 
-    setLoading(prev => ({ ...prev, search: true }));
-    try {
-      const filtered = farmers.filter(f =>
-        f.farmerId.toLowerCase().includes(searchId.toLowerCase())
-      );
-
-      if (filtered.length > 0) {
-        const remaining = farmers.filter(f => !filtered.includes(f));
-        setFarmers([...filtered, ...remaining]);
-      } else {
-        await fetchFarmers();
-      }
-    } finally {
-      setLoading(prev => ({ ...prev, search: false }));
-    }
-  };
 
   // Loader component for buttons
   const ButtonLoader = () => (
@@ -7290,7 +7318,8 @@ function MainPage() {
               placeholder={t('farmerSearchById')}
               className="form-control"
               value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
+              // onChange={(e) => setSearchId(e.target.value)}
+                onChange={(e) => setSearchId(e.target.value.replace(/^\s+/, ""))}
               disabled={loading.search}
             />
 
