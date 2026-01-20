@@ -7346,7 +7346,7 @@ const handleSearch = async () => {
           ) : (
             farmers.map(f => (
               <div key={f._id} className="farmer-box">
-                <img
+                {/* <img
                   src={getFarmerImage(f)}
                   alt={f.name}
                   className="profile-pic"
@@ -7355,7 +7355,20 @@ const handleSearch = async () => {
                     e.target.src = "/profile.png";
                     e.target.onerror = null;
                   }}
-                />
+                /> */}
+
+
+                <img
+  src={`https://betaproject.onrender.com/${f.photo}`}
+  alt={f.name}
+  className="profile-pic"
+  loading="lazy"
+  onError={(e) => {
+    e.target.src = "/profile.png";
+    e.target.onerror = null;
+  }}
+/>
+
 
                 <div style={{ flex: 1 }}>
                   <p><b>{t('farmerName')}:</b> {f.name}</p>
