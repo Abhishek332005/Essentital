@@ -1576,21 +1576,28 @@ function Profile() {
 
 
 
-// 🔒 Lock body scroll when mobile sidebar is open
+// 🔒 Lock background scroll when mobile sidebar is open
 useEffect(() => {
   if (isMobile && isSidebarOpen) {
+    document.documentElement.style.overflow = "hidden"; // html
     document.body.style.overflow = "hidden";
-    document.body.style.touchAction = "none"; // mobile touch fix
+    document.body.style.position = "fixed";   // 🔥 key fix
+    document.body.style.width = "100%";
   } else {
+    document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
-    document.body.style.touchAction = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
   }
 
   return () => {
+    document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
-    document.body.style.touchAction = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
   };
 }, [isMobile, isSidebarOpen]);
+
 
 
 
