@@ -178,23 +178,18 @@
 
 
 
-
 export const getImageUrl = (path) => {
-  if (!path) return "/profile.png";
+  if (!path || path === "" || path === "null") return "/profile.png";
   
-  // Agar already full URL hai
+  console.log("🖼️ getImageUrl received path:", path);
+  
+  // Agar already full URL hai (server ne diya hai)
   if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
+    // Force HTTPS
+    return path.replace("http://", "https://");
   }
   
-  // Agar path me pehle se "uploads/" hai toh direct use karo
-  if (path.includes("uploads/")) {
-    // Extra "/uploads/" na add karein
-    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-    return `${API_URL.replace(/\/$/, "")}/${cleanPath}`;
-  }
-  
-  // Agar sirf filename hai toh "uploads/" prefix add karo
+  // Agar sirf filename hai
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-  return `${API_URL.replace(/\/$/, "")}/uploads/${cleanPath}`;
+  return `https://essentital.onrender.com/uploads/${cleanPath}`;
 };

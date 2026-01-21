@@ -2488,8 +2488,6 @@
 
 
 
-
-
 import Farmer from "../models/farmerModel.js";
 import AccessRequest from "../models/accessRequestModel.js";
 
@@ -2518,8 +2516,8 @@ export const getFarmersByAgent = async (req, res) => {
             ...fullFarmer.toObject(), 
             accessApproved: true,
             photo: fullFarmer.photo
-              ? `${req.protocol}://${req.get("host")}/uploads/${fullFarmer.photo}`
-              : null // ✅ PHOTO URL FORMATTED (CHANGED)
+              ? `https://essentital.onrender.com/uploads/${fullFarmer.photo}`
+              : null // ✅ PHOTO URL HARDCODED FIX
           };
         }
 
@@ -2529,8 +2527,8 @@ export const getFarmersByAgent = async (req, res) => {
           contact: farmer.contact,
           village: farmer.village,
           photo: farmer.photo
-            ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-            : null, // ✅ PHOTO URL FORMATTED (CHANGED)
+            ? `https://essentital.onrender.com/uploads/${farmer.photo}`
+            : null, // ✅ PHOTO URL HARDCODED FIX
           accessApproved: false,
         };
       })
@@ -2602,7 +2600,7 @@ export const addFarmer = async (req, res) => {
 
     // DEBUG लाइनें add करो
     console.log("📸 Photo filename being saved:", photo);
-    console.log("📸 Full farmer photo path:", `${req.protocol}://${req.get("host")}/uploads/${photo}`);
+    console.log("📸 Full farmer photo path:", `https://essentital.onrender.com/uploads/${photo}`);
 
     const pondImage = req.files?.pondImage?.[0]?.filename || "";
     const pondFiles = req.files?.pondFiles?.map(f => f.filename) || [];
@@ -2674,8 +2672,8 @@ export const addFarmer = async (req, res) => {
     const formattedFarmer = {
       ...newFarmer.toObject(),
       photo: newFarmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${newFarmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED (CHANGED)
+        ? `https://essentital.onrender.com/uploads/${newFarmer.photo}`
+        : null // ✅ PHOTO URL HARDCODED FIX
     };
 
     res.status(201).json(formattedFarmer);
@@ -2716,8 +2714,8 @@ export const getFarmers = async (req, res) => {
     const formattedFarmers = farmers.map(farmer => ({
       ...farmer.toObject(),
       photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED FOR ALL FARMERS (CHANGED)
+        ? `https://essentital.onrender.com/uploads/${farmer.photo.replace(/^uploads\//, '')}`
+        : null // ✅ PHOTO URL HARDCODED FIX
     }));
 
     res.status(200).json(formattedFarmers);
@@ -2740,8 +2738,8 @@ export const getFarmerById = async (req, res) => {
     const formattedFarmer = {
       ...farmer.toObject(),
       photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED (CHANGED)
+        ? `https://essentital.onrender.com/uploads/${farmer.photo}`
+        : null // ✅ PHOTO URL HARDCODED FIX
     };
     
     res.json(formattedFarmer);
@@ -2823,7 +2821,7 @@ export const updateFarmer = async (req, res) => {
       
       // DEBUG लाइनें add करो
       console.log("📸 Update - Photo filename being saved:", farmer.photo);
-      console.log("📸 Update - Full farmer photo path:", `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`);
+      console.log("📸 Update - Full farmer photo path:", `https://essentital.onrender.com/uploads/${farmer.photo}`);
     }
 
     // Other files
@@ -2842,8 +2840,8 @@ export const updateFarmer = async (req, res) => {
     const formattedFarmer = {
       ...farmer.toObject(),
       photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED (CHANGED)
+        ? `https://essentital.onrender.com/uploads/${farmer.photo}`
+        : null // ✅ PHOTO URL HARDCODED FIX
     };
     
     res.status(200).json(formattedFarmer);
@@ -2953,8 +2951,8 @@ export const addPondWithValidation = async (req, res) => {
     const formattedFarmer = {
       ...farmer.toObject(),
       photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED (CHANGED)
+        ? `https://essentital.onrender.com/uploads/${farmer.photo}`
+        : null // ✅ PHOTO URL HARDCODED FIX
     };
 
     res.json({ success: true, farmer: formattedFarmer });
@@ -3097,8 +3095,8 @@ export const updatePondWithValidation = async (req, res) => {
     const formattedFarmer = {
       ...farmer.toObject(),
       photo: farmer.photo 
-        ? `${req.protocol}://${req.get("host")}/uploads/${farmer.photo}`
-        : null // ✅ PHOTO URL FORMATTED (CHANGED)
+        ? `https://essentital.onrender.com/uploads/${farmer.photo}`
+        : null // ✅ PHOTO URL HARDCODED FIX
     };
 
     res.json({ success: true, farmer: formattedFarmer });
