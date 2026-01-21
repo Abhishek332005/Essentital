@@ -4843,1614 +4843,1614 @@
 
 
 
-// import React, { useState, useEffect } from "react";
-// import api, { getImageUrl } from "../utils/api";
-// import { Link } from "react-router-dom";
-// import { useTranslation } from "react-i18next";
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import "./mainPage.css";
+import React, { useState, useEffect } from "react";
+import api, { getImageUrl } from "../utils/api";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./mainPage.css";
 
-// // Import Lucide icons
-// import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2 } from "lucide-react";
+// Import Lucide icons
+import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2 } from "lucide-react";
 
-// function timeAgo(dateStr, t) {
-//   if (!dateStr) return t('notUpdated');
-//   const now = new Date();
-//   const d = new Date(dateStr);
-//   const diffMs = now - d;
-//   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-//   if (days === 0) return t('today');
-//   if (days === 1) return t('oneDayAgo');
-//   return t('daysAgo', { count: days });
-// }
+function timeAgo(dateStr, t) {
+  if (!dateStr) return t('notUpdated');
+  const now = new Date();
+  const d = new Date(dateStr);
+  const diffMs = now - d;
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (days === 0) return t('today');
+  if (days === 1) return t('oneDayAgo');
+  return t('daysAgo', { count: days });
+}
 
-// const SYMPTOMS_LIST = [
-//   "Erratic swimming", 
-//   "Loss of appetite",
-//   "Gasping at surface",
-//   "Lesions or ulcers",
-//   "Fin rot",
-//   "Fish Lice",
-//   "Discoloration or white patches",
-//   "Scale loss",
-//   "Swollen abdomen",
-//   "Fungal/cotton-like growth",
-//   "Flared gills",
-//   "Mucus secretion",
-//   "Blood spots",
-//   "Other"
-// ];
+const SYMPTOMS_LIST = [
+  "Erratic swimming", 
+  "Loss of appetite",
+  "Gasping at surface",
+  "Lesions or ulcers",
+  "Fin rot",
+  "Fish Lice",
+  "Discoloration or white patches",
+  "Scale loss",
+  "Swollen abdomen",
+  "Fungal/cotton-like growth",
+  "Flared gills",
+  "Mucus secretion",
+  "Blood spots",
+  "Other"
+];
 
-// // ✅ FIXED: Helper function for farmer image
-// const getFarmerImage = (farmer) => {
-//   if (!farmer || !farmer.photo) return "/profile.png";
-//   return getImageUrl(farmer.photo);
-// };
+// ✅ FIXED: Helper function for farmer image
+const getFarmerImage = (farmer) => {
+  if (!farmer || !farmer.photo) return "/profile.png";
+  return getImageUrl(farmer.photo);
+};
 
-// function MainPage() {
-//   const { t, i18n } = useTranslation();
-//   const username = localStorage.getItem("username") || "User";
-//   const photo = localStorage.getItem("photo") || "/profile.png";
-//   const userId = localStorage.getItem("userId");
+function MainPage() {
+  const { t, i18n } = useTranslation();
+  const username = localStorage.getItem("username") || "User";
+  const photo = localStorage.getItem("photo") || "/profile.png";
+  const userId = localStorage.getItem("userId");
 
-//   const [farmers, setFarmers] = useState([]);
-//   const [showForm, setShowForm] = useState(false);
-//   const [showPondForm, setShowPondForm] = useState(false);
-//   const [editingFarmerId, setEditingFarmerId] = useState(null);
-//   const [editingPondId, setEditingPondId] = useState(null);
-//   const [currentFarmerId, setCurrentFarmerId] = useState(null);
-//   const [welcomeMsg, setWelcomeMsg] = useState("");
-//   const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [farmers, setFarmers] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [showPondForm, setShowPondForm] = useState(false);
+  const [editingFarmerId, setEditingFarmerId] = useState(null);
+  const [editingPondId, setEditingPondId] = useState(null);
+  const [currentFarmerId, setCurrentFarmerId] = useState(null);
+  const [welcomeMsg, setWelcomeMsg] = useState("");
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
   
-//   // Loading states
-//   const [loading, setLoading] = useState({
-//     fetchFarmers: false,
-//     addFarmer: false,
-//     updateFarmer: false,
-//     addPond: false,
-//     updatePond: false,
-//     deleteFarmer: false,
-//     deletePond: false,
-//     search: false
-//   });
+  // Loading states
+  const [loading, setLoading] = useState({
+    fetchFarmers: false,
+    addFarmer: false,
+    updateFarmer: false,
+    addPond: false,
+    updatePond: false,
+    deleteFarmer: false,
+    deletePond: false,
+    search: false
+  });
   
-//   // Mobile sidebar states
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//   const [isMobile, setIsMobile] = useState(false);
+  // Mobile sidebar states
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-//   // ✅ 1️⃣ Farmer form empty state - PHOTO FIELD ADDED
-//   const emptyFarmer = {
-//     name: "", contact: "", age: "", gender: "", village: "",
-//     pondCount: "", adhar: "", familyMembers: "", familyOccupation: "",
-//     photo: null,              // ✅ ADD THIS
-//     photoExisting: ""         // ✅ UPDATE MODE ke liye
-//   };
+  // ✅ 1️⃣ Farmer form empty state - PHOTO FIELD ADDED
+  const emptyFarmer = {
+    name: "", contact: "", age: "", gender: "", village: "",
+    pondCount: "", adhar: "", familyMembers: "", familyOccupation: "",
+    photo: null,              // ✅ ADD THIS
+    photoExisting: ""         // ✅ UPDATE MODE ke liye
+  };
 
-//   // Pond form empty state
-//   const emptyPond = {
-//     // Pond Details
-//     pondArea: "", pondAreaUnit: "acre", pondDepth: "", pondImage: null,
-//     overflow: "No", receivesSunlight: "Yes", treesOnBanks: "No",
-//     neighbourhood: "Agriculture Farm", wastewaterEnters: "No",
-//     // Species & files
-//     species: "",
-//     pondFiles: [],
-//     fishFiles: [],
-//     // Stocking & quantities
-//     dateOfStocking: "", qtySeedInitially: "", currentQty: "", avgSize: ">200gram",
-//     // Feed
-//     feedType: "Market Feed", feedOther: "", feedFreq: "Once a day", 
-//     feedQtyPerDay: "", feedTime: "6:00 am-10:00am",
-//     recentFeedChanges: "", reducedAppetite: "No",
-//     // Water quality
-//     waterTemperature: "", pH: "", DO: "", ammoniaLevel: "Medium", 
-//     phytoplanktonLevel: "Medium", waterHardness: "1",
-//     algaeBloom: "No", pondWaterColor: "Light Green", sourceOfWater: "Rainwater",
-//     // Disease / symptoms
-//     diseaseSymptoms: "No", symptomsObserved: "", symptoms: [],
-//     symptomsAffect: "All",
-//     fishDeaths: "",
-//     // Observation
-//     farmObservedDate: "", farmObservedTime: "",
-//     // misc
-//     notes: "",
-//     lastSpecies: "", lastHarvestComplete: "Yes", recentRainFlood: "No",
-//     pesticideRunoff: "No", constructionNear: "No", suddenTempChange: "No"
-//   };
+  // Pond form empty state
+  const emptyPond = {
+    // Pond Details
+    pondArea: "", pondAreaUnit: "acre", pondDepth: "", pondImage: null,
+    overflow: "No", receivesSunlight: "Yes", treesOnBanks: "No",
+    neighbourhood: "Agriculture Farm", wastewaterEnters: "No",
+    // Species & files
+    species: "",
+    pondFiles: [],
+    fishFiles: [],
+    // Stocking & quantities
+    dateOfStocking: "", qtySeedInitially: "", currentQty: "", avgSize: ">200gram",
+    // Feed
+    feedType: "Market Feed", feedOther: "", feedFreq: "Once a day", 
+    feedQtyPerDay: "", feedTime: "6:00 am-10:00am",
+    recentFeedChanges: "", reducedAppetite: "No",
+    // Water quality
+    waterTemperature: "", pH: "", DO: "", ammoniaLevel: "Medium", 
+    phytoplanktonLevel: "Medium", waterHardness: "1",
+    algaeBloom: "No", pondWaterColor: "Light Green", sourceOfWater: "Rainwater",
+    // Disease / symptoms
+    diseaseSymptoms: "No", symptomsObserved: "", symptoms: [],
+    symptomsAffect: "All",
+    fishDeaths: "",
+    // Observation
+    farmObservedDate: "", farmObservedTime: "",
+    // misc
+    notes: "",
+    lastSpecies: "", lastHarvestComplete: "Yes", recentRainFlood: "No",
+    pesticideRunoff: "No", constructionNear: "No", suddenTempChange: "No"
+  };
 
-//   const [newFarmer, setNewFarmer] = useState(emptyFarmer);
-//   const [newPond, setNewPond] = useState(emptyPond);
+  const [newFarmer, setNewFarmer] = useState(emptyFarmer);
+  const [newPond, setNewPond] = useState(emptyPond);
 
-//   // Check if mobile view
-//   useEffect(() => {
-//     const checkMobile = () => {
-//       setIsMobile(window.innerWidth <= 991);
-//     };
+  // Check if mobile view
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 991);
+    };
     
-//     checkMobile();
-//     window.addEventListener('resize', checkMobile);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
     
-//     return () => window.removeEventListener('resize', checkMobile);
-//   }, []);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-//   // Close sidebar when clicking outside on mobile
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (isMobile && isSidebarOpen && 
-//           !event.target.closest('.sidebar') && 
-//           !event.target.closest('.mobile-menu-toggle')) {
-//         setIsSidebarOpen(false);
-//       }
-//     };
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMobile && isSidebarOpen && 
+          !event.target.closest('.sidebar') && 
+          !event.target.closest('.mobile-menu-toggle')) {
+        setIsSidebarOpen(false);
+      }
+    };
 
-//     document.addEventListener('click', handleClickOutside);
-//     return () => document.removeEventListener('click', handleClickOutside);
-//   }, [isMobile, isSidebarOpen]);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isMobile, isSidebarOpen]);
 
-//   // Fetch data
-//   useEffect(() => {
-//     if (!userId) return console.error("UserId not found in localStorage");
-//     fetchFarmers();
-//     const savedLang = localStorage.getItem("lang");
-//     if (savedLang) i18n.changeLanguage(savedLang);
-//   }, []);
+  // Fetch data
+  useEffect(() => {
+    if (!userId) return console.error("UserId not found in localStorage");
+    fetchFarmers();
+    const savedLang = localStorage.getItem("lang");
+    if (savedLang) i18n.changeLanguage(savedLang);
+  }, []);
 
-//   // Close sidebar when route changes
-//   useEffect(() => {
-//     setIsSidebarOpen(false);
-//   }, [window.location.pathname]);
+  // Close sidebar when route changes
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [window.location.pathname]);
 
-//   const changeLanguage = (lang) => {
-//     i18n.changeLanguage(lang);
-//     localStorage.setItem("lang", lang);
-//   };
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
+  };
 
-//   const fetchFarmers = async () => {
-//     try {
-//       setLoading(prev => ({ ...prev, fetchFarmers: true }));
-//       const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
+  const fetchFarmers = async () => {
+    try {
+      setLoading(prev => ({ ...prev, fetchFarmers: true }));
+      const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
       
-//       // ✅ FIXED: Sirf direct data set karo, koi normalize mat karo
-//       setFarmers(res.data || []);
-//     } catch (err) {
-//       console.log("Fetch Farmers Error:", err);
-//     } finally {
-//       setLoading(prev => ({ ...prev, fetchFarmers: false }));
-//     }
-//   };
+      // ✅ FIXED: Sirf direct data set karo, koi normalize mat karo
+      setFarmers(res.data || []);
+    } catch (err) {
+      console.log("Fetch Farmers Error:", err);
+    } finally {
+      setLoading(prev => ({ ...prev, fetchFarmers: false }));
+    }
+  };
 
-//   // ✅ 3️⃣ Add Farmer API me photo FormData me bhejo
-//   const addFarmer = async () => {
-//     if (!newFarmer.name || !newFarmer.contact) return alert("Name and contact required");
+  // ✅ 3️⃣ Add Farmer API me photo FormData me bhejo
+  const addFarmer = async () => {
+    if (!newFarmer.name || !newFarmer.contact) return alert("Name and contact required");
     
-//     const formData = new FormData();
+    const formData = new FormData();
     
-//     // ✅ FIX: photo alag se handle karo
-//     for (let key in newFarmer) {
-//       if (key === "photo" || key === "photoExisting") continue;
-//       formData.append(key, newFarmer[key] ?? "");
-//     }
+    // ✅ FIX: photo alag se handle karo
+    for (let key in newFarmer) {
+      if (key === "photo" || key === "photoExisting") continue;
+      formData.append(key, newFarmer[key] ?? "");
+    }
     
-//     formData.append("userId", userId);
+    formData.append("userId", userId);
     
-//     // ✅ IMPORTANT: photo file ko alag se append karo (CHECK File instance)
-//     if (newFarmer.photo instanceof File) {
-//       formData.append("photo", newFarmer.photo);
-//     }
+    // ✅ IMPORTANT: photo file ko alag se append karo (CHECK File instance)
+    if (newFarmer.photo instanceof File) {
+      formData.append("photo", newFarmer.photo);
+    }
 
-//     try {
-//       setLoading(prev => ({ ...prev, addFarmer: true }));
-//       const res = await api.post(`/api/farmers/add`, formData, {
-//         headers: { "Content-Type": "multipart/form-data" }
-//       });
-//       setFarmers([...farmers, res.data]);
-//       setShowForm(false);
-//       setNewFarmer(emptyFarmer);
-//     } catch (err) {
-//       console.error("Add Farmer Error:", err);
-//       alert("Server error. See console.");
-//     } finally {
-//       setLoading(prev => ({ ...prev, addFarmer: false }));
-//     }
-//   };
+    try {
+      setLoading(prev => ({ ...prev, addFarmer: true }));
+      const res = await api.post(`/api/farmers/add`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      setFarmers([...farmers, res.data]);
+      setShowForm(false);
+      setNewFarmer(emptyFarmer);
+    } catch (err) {
+      console.error("Add Farmer Error:", err);
+      alert("Server error. See console.");
+    } finally {
+      setLoading(prev => ({ ...prev, addFarmer: false }));
+    }
+  };
 
-//   // ✅ 4️⃣ Update Farmer API me bhi photo bhejo
-//   const updateFarmer = async () => {
-//     if (!editingFarmerId) return;
+  // ✅ 4️⃣ Update Farmer API me bhi photo bhejo
+  const updateFarmer = async () => {
+    if (!editingFarmerId) return;
     
-//     const formData = new FormData();
+    const formData = new FormData();
     
-//     // ✅ FIX: photo alag se handle karo
-//     for (let key in newFarmer) {
-//       if (key === "photo" || key === "photoExisting") continue;
-//       formData.append(key, newFarmer[key] ?? "");
-//     }
+    // ✅ FIX: photo alag se handle karo
+    for (let key in newFarmer) {
+      if (key === "photo" || key === "photoExisting") continue;
+      formData.append(key, newFarmer[key] ?? "");
+    }
     
-//     formData.append("userId", userId);
+    formData.append("userId", userId);
     
-//     // ✅ IMPORTANT: photo file ko alag se append karo (CHECK File instance)
-//     if (newFarmer.photo instanceof File) {
-//       formData.append("photo", newFarmer.photo);
-//     }
+    // ✅ IMPORTANT: photo file ko alag se append karo (CHECK File instance)
+    if (newFarmer.photo instanceof File) {
+      formData.append("photo", newFarmer.photo);
+    }
 
-//     try {
-//       setLoading(prev => ({ ...prev, updateFarmer: true }));
-//       const res = await api.put(`/api/farmers/update/${editingFarmerId}`, formData, {
-//         headers: { "Content-Type": "multipart/form-data" }
-//       });
+    try {
+      setLoading(prev => ({ ...prev, updateFarmer: true }));
+      const res = await api.put(`/api/farmers/update/${editingFarmerId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
       
-//       // ✅ STEP 4: Update Farmer ke baad photo safe rakho
-//       setFarmers(farmers.map(f =>
-//         f._id === res.data._id
-//           ? { ...res.data, photo: res.data.photo || f.photo }
-//           : f
-//       ));
+      // ✅ STEP 4: Update Farmer ke baad photo safe rakho
+      setFarmers(farmers.map(f =>
+        f._id === res.data._id
+          ? { ...res.data, photo: res.data.photo || f.photo }
+          : f
+      ));
       
-//       setShowForm(false);
-//       setEditingFarmerId(null);
-//       setNewFarmer(emptyFarmer);
-//       setIsUpdateMode(false);
-//     } catch (err) {
-//       console.error("Update Farmer Error:", err);
-//       alert("Server error. See console.");
-//     } finally {
-//       setLoading(prev => ({ ...prev, updateFarmer: false }));
-//     }
-//   };
+      setShowForm(false);
+      setEditingFarmerId(null);
+      setNewFarmer(emptyFarmer);
+      setIsUpdateMode(false);
+    } catch (err) {
+      console.error("Update Farmer Error:", err);
+      alert("Server error. See console.");
+    } finally {
+      setLoading(prev => ({ ...prev, updateFarmer: false }));
+    }
+  };
 
-//   // Add Pond to Farmer
-//   const addPond = async () => {
-//     if (!currentFarmerId) return alert("Farmer ID missing");
+  // Add Pond to Farmer
+  const addPond = async () => {
+    if (!currentFarmerId) return alert("Farmer ID missing");
     
-//     const formData = new FormData();
-//     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
-//       ? newPond.symptoms.join(", ")
-//       : (newPond.symptomsObserved || "");
+    const formData = new FormData();
+    const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
+      ? newPond.symptoms.join(", ")
+      : (newPond.symptomsObserved || "");
 
-//     const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
-//     for (let key in newPond) {
-//       if (skipFiles.includes(key)) continue;
-//       formData.append(key, newPond[key] ?? "");
-//     }
-//     formData.set("symptomsObserved", symptomsStr);
+    const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
+    for (let key in newPond) {
+      if (skipFiles.includes(key)) continue;
+      formData.append(key, newPond[key] ?? "");
+    }
+    formData.set("symptomsObserved", symptomsStr);
 
-//     if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
-//     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
-//       newPond.pondFiles.forEach((f) => {
-//         if (f instanceof File) formData.append("pondFiles", f);
-//       });
-//     }
-//     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
-//       newPond.fishFiles.forEach((f) => {
-//         if (f instanceof File) formData.append("fishFiles", f);
-//       });
-//     }
+    if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+    if (newPond.pondFiles && newPond.pondFiles.length > 0) {
+      newPond.pondFiles.forEach((f) => {
+        if (f instanceof File) formData.append("pondFiles", f);
+      });
+    }
+    if (newPond.fishFiles && newPond.fishFiles.length > 0) {
+      newPond.fishFiles.forEach((f) => {
+        if (f instanceof File) formData.append("fishFiles", f);
+      });
+    }
 
-//     try {
-//       setLoading(prev => ({ ...prev, addPond: true }));
-//       const res = await api.post(`/api/farmers/add-pond/${currentFarmerId}`, formData, {
-//         headers: { "Content-Type": "multipart/form-data" }
-//       });
+    try {
+      setLoading(prev => ({ ...prev, addPond: true }));
+      const res = await api.post(`/api/farmers/add-pond/${currentFarmerId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
       
-//       // Update local state
-//       setFarmers(farmers.map(f => 
-//         f._id === currentFarmerId ? res.data.farmer : f
-//       ));
-//       setShowPondForm(false);
-//       setNewPond(emptyPond);
-//       setCurrentFarmerId(null);
-//     } catch (err) {
-//       console.error("Add Pond Error:", err);
-//       alert("Server error. See console.");
-//     } finally {
-//       setLoading(prev => ({ ...prev, addPond: false }));
-//     }
-//   };
+      // Update local state
+      setFarmers(farmers.map(f => 
+        f._id === currentFarmerId ? res.data.farmer : f
+      ));
+      setShowPondForm(false);
+      setNewPond(emptyPond);
+      setCurrentFarmerId(null);
+    } catch (err) {
+      console.error("Add Pond Error:", err);
+      alert("Server error. See console.");
+    } finally {
+      setLoading(prev => ({ ...prev, addPond: false }));
+    }
+  };
 
-//   // Update Pond
-//   const updatePond = async () => {
-//     if (!currentFarmerId || !editingPondId) return;
+  // Update Pond
+  const updatePond = async () => {
+    if (!currentFarmerId || !editingPondId) return;
     
-//     const formData = new FormData();
-//     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
-//       ? newPond.symptoms.join(", ")
-//       : (newPond.symptomsObserved || "");
+    const formData = new FormData();
+    const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
+      ? newPond.symptoms.join(", ")
+      : (newPond.symptomsObserved || "");
 
-//     const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
-//     for (let key in newPond) {
-//       if (skipFiles.includes(key)) continue;
-//       formData.append(key, newPond[key] ?? "");
-//     }
-//     formData.set("symptomsObserved", symptomsStr);
+    const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
+    for (let key in newPond) {
+      if (skipFiles.includes(key)) continue;
+      formData.append(key, newPond[key] ?? "");
+    }
+    formData.set("symptomsObserved", symptomsStr);
 
-//     if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
-//     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
-//       newPond.pondFiles.forEach((f) => {
-//         if (f instanceof File) formData.append("pondFiles", f);
-//       });
-//     }
-//     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
-//       newPond.fishFiles.forEach((f) => {
-//         if (f instanceof File) formData.append("fishFiles", f);
-//       });
-//     }
+    if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+    if (newPond.pondFiles && newPond.pondFiles.length > 0) {
+      newPond.pondFiles.forEach((f) => {
+        if (f instanceof File) formData.append("pondFiles", f);
+      });
+    }
+    if (newPond.fishFiles && newPond.fishFiles.length > 0) {
+      newPond.fishFiles.forEach((f) => {
+        if (f instanceof File) formData.append("fishFiles", f);
+      });
+    }
 
-//     try {
-//       setLoading(prev => ({ ...prev, updatePond: true }));
-//       const res = await api.put(`/api/farmers/update-pond/${currentFarmerId}/${editingPondId}`, formData, {
-//         headers: { "Content-Type": "multipart/form-data" }
-//       });
+    try {
+      setLoading(prev => ({ ...prev, updatePond: true }));
+      const res = await api.put(`/api/farmers/update-pond/${currentFarmerId}/${editingPondId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
       
-//       // Update local state
-//       setFarmers(farmers.map(f => 
-//         f._id === currentFarmerId ? res.data.farmer : f
-//       ));
-//       setShowPondForm(false);
-//       setNewPond(emptyPond);
-//       setCurrentFarmerId(null);
-//       setEditingPondId(null);
-//     } catch (err) {
-//       console.error("Update Pond Error:", err);
-//       alert("Server error. See console.");
-//     } finally {
-//       setLoading(prev => ({ ...prev, updatePond: false }));
-//     }
-//   };
+      // Update local state
+      setFarmers(farmers.map(f => 
+        f._id === currentFarmerId ? res.data.farmer : f
+      ));
+      setShowPondForm(false);
+      setNewPond(emptyPond);
+      setCurrentFarmerId(null);
+      setEditingPondId(null);
+    } catch (err) {
+      console.error("Update Pond Error:", err);
+      alert("Server error. See console.");
+    } finally {
+      setLoading(prev => ({ ...prev, updatePond: false }));
+    }
+  };
 
-//   // ✅ 5️⃣ Edit Farmer open karte waqt existing photo set karo
-//   const openEdit = (farmer) => {
-//     setIsUpdateMode(true);
-//     const pre = { ...emptyFarmer };
-//     Object.keys(pre).forEach(k => {
-//       if (farmer[k] !== undefined && farmer[k] !== null) {
-//         pre[k] = farmer[k];
-//       }
-//     });
+  // ✅ 5️⃣ Edit Farmer open karte waqt existing photo set karo
+  const openEdit = (farmer) => {
+    setIsUpdateMode(true);
+    const pre = { ...emptyFarmer };
+    Object.keys(pre).forEach(k => {
+      if (farmer[k] !== undefined && farmer[k] !== null) {
+        pre[k] = farmer[k];
+      }
+    });
 
-//     // ✅ FIX: photo null rakho, photoExisting me existing photo
-//     pre.photo = null;
-//     pre.photoExisting = farmer.photo || ""; // ✅ ADD THIS
+    // ✅ FIX: photo null rakho, photoExisting me existing photo
+    pre.photo = null;
+    pre.photoExisting = farmer.photo || ""; // ✅ ADD THIS
 
-//     setNewFarmer(pre);
-//     setEditingFarmerId(farmer._id);
-//     setShowForm(true);
-//   };
+    setNewFarmer(pre);
+    setEditingFarmerId(farmer._id);
+    setShowForm(true);
+  };
 
-//   // Open Add Pond Form
-//   const openAddPond = (farmerId) => {
-//     setCurrentFarmerId(farmerId);
-//     setEditingPondId(null);
-//     setNewPond(emptyPond);
-//     setShowPondForm(true);
-//   };
+  // Open Add Pond Form
+  const openAddPond = (farmerId) => {
+    setCurrentFarmerId(farmerId);
+    setEditingPondId(null);
+    setNewPond(emptyPond);
+    setShowPondForm(true);
+  };
 
-//   // Open Edit Pond Form
-//   const openEditPond = (farmerId, pond) => {
-//     setCurrentFarmerId(farmerId);
-//     setEditingPondId(pond.pondId);
+  // Open Edit Pond Form
+  const openEditPond = (farmerId, pond) => {
+    setCurrentFarmerId(farmerId);
+    setEditingPondId(pond.pondId);
     
-//     const pre = { ...emptyPond };
-//     Object.keys(pre).forEach(k => {
-//       if (pond[k] !== undefined && pond[k] !== null) {
-//         pre[k] = pond[k];
-//       }
-//     });
+    const pre = { ...emptyPond };
+    Object.keys(pre).forEach(k => {
+      if (pond[k] !== undefined && pond[k] !== null) {
+        pre[k] = pond[k];
+      }
+    });
 
-//     // Handle symptoms
-//     if (typeof pond.symptomsObserved === "string" && pond.symptomsObserved.trim() !== "") {
-//       pre.symptoms = pond.symptomsObserved.split(",").map(s => s.trim()).filter(Boolean);
-//       pre.symptomsObserved = pond.symptomsObserved;
-//     }
+    // Handle symptoms
+    if (typeof pond.symptomsObserved === "string" && pond.symptomsObserved.trim() !== "") {
+      pre.symptoms = pond.symptomsObserved.split(",").map(s => s.trim()).filter(Boolean);
+      pre.symptomsObserved = pond.symptomsObserved;
+    }
 
-//     // ✅ FIX: files null rakho, existing alag se
-//     pre.pondFiles = [];
-//     pre.fishFiles = [];
-//     pre.pondImage = null;
+    // ✅ FIX: files null rakho, existing alag se
+    pre.pondFiles = [];
+    pre.fishFiles = [];
+    pre.pondImage = null;
     
-//     pre.pondFilesExisting = pond.pondFiles || [];
-//     pre.fishFilesExisting = pond.fishFiles || [];
-//     pre.pondImageExisting = pond.pondImage || "";
+    pre.pondFilesExisting = pond.pondFiles || [];
+    pre.fishFilesExisting = pond.fishFiles || [];
+    pre.pondImageExisting = pond.pondImage || "";
 
-//     setNewPond(pre);
-//     setShowPondForm(true);
-//   };
+    setNewPond(pre);
+    setShowPondForm(true);
+  };
 
-//   const toggleSymptom = (s) => {
-//     const arr = newPond.symptoms ? [...newPond.symptoms] : [];
-//     const idx = arr.indexOf(s);
-//     if (idx === -1) arr.push(s); else arr.splice(idx, 1);
-//     setNewPond({ ...newPond, symptoms: arr, symptomsObserved: arr.join(", ") });
-//   };
+  const toggleSymptom = (s) => {
+    const arr = newPond.symptoms ? [...newPond.symptoms] : [];
+    const idx = arr.indexOf(s);
+    if (idx === -1) arr.push(s); else arr.splice(idx, 1);
+    setNewPond({ ...newPond, symptoms: arr, symptomsObserved: arr.join(", ") });
+  };
 
-//   useEffect(() => {
-//     const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
+  useEffect(() => {
+    const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
 
-//     const message = isFirstLogin
-//       ? `Welcome, ${username}`
-//       : `Welcome Back, ${username}`;
+    const message = isFirstLogin
+      ? `Welcome, ${username}`
+      : `Welcome Back, ${username}`;
 
-//     setWelcomeMsg(message);
+    setWelcomeMsg(message);
 
-//     if (isFirstLogin) {
-//       localStorage.setItem("isFirstLogin", "false");
-//     }
-//   }, [username]);
+    if (isFirstLogin) {
+      localStorage.setItem("isFirstLogin", "false");
+    }
+  }, [username]);
 
-//   const renderExistingFiles = (list) => {
-//     if (!list || list.length === 0) return null;
-//     return (
-//       <div style={{ marginTop: 6 }}>
-//         {list.map((fn, i) => (
-//           <div key={i}>
-//             <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
-//               {fn.split('/').pop()}
-//             </a>
-//           </div>
-//         ))}
-//       </div>
-//     );
-//   };
+  const renderExistingFiles = (list) => {
+    if (!list || list.length === 0) return null;
+    return (
+      <div style={{ marginTop: 6 }}>
+        {list.map((fn, i) => (
+          <div key={i}>
+            <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
+              {fn.split('/').pop()}
+            </a>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
-//   const totalFarmers = farmers.length;
-//   const totalPonds = farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0);
+  const totalFarmers = farmers.length;
+  const totalPonds = farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0);
 
-//   const [searchId, setSearchId] = useState("");
+  const [searchId, setSearchId] = useState("");
 
-//   const handleSearch = async () => {
-//     if (!searchId) {
-//       await fetchFarmers();
-//       return;
-//     }
+  const handleSearch = async () => {
+    if (!searchId) {
+      await fetchFarmers();
+      return;
+    }
 
-//     setLoading(prev => ({ ...prev, search: true }));
-//     try {
-//       const filtered = farmers.filter(f =>
-//         f.farmerId.toLowerCase().includes(searchId.toLowerCase())
-//       );
+    setLoading(prev => ({ ...prev, search: true }));
+    try {
+      const filtered = farmers.filter(f =>
+        f.farmerId.toLowerCase().includes(searchId.toLowerCase())
+      );
 
-//       if (filtered.length > 0) {
-//         const remaining = farmers.filter(f => !filtered.includes(f));
-//         setFarmers([...filtered, ...remaining]);
-//       } else {
-//         await fetchFarmers();
-//       }
-//     } finally {
-//       setLoading(prev => ({ ...prev, search: false }));
-//     }
-//   };
+      if (filtered.length > 0) {
+        const remaining = farmers.filter(f => !filtered.includes(f));
+        setFarmers([...filtered, ...remaining]);
+      } else {
+        await fetchFarmers();
+      }
+    } finally {
+      setLoading(prev => ({ ...prev, search: false }));
+    }
+  };
 
-//   // Loader component for buttons
-//   const ButtonLoader = () => (
-//     <Loader2 className="spin-loader" size={16} />
-//   );
+  // Loader component for buttons
+  const ButtonLoader = () => (
+    <Loader2 className="spin-loader" size={16} />
+  );
 
-//   return (
-//     <div className="dashboard-container">
-//       {/* ================= MOBILE NAVBAR ================= */}
-//       {isMobile && (
-//         <div className="mobile-navbar">
-//           <button 
-//             className="mobile-menu-toggle"
-//             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-//             aria-label="Toggle menu"
-//             disabled={loading.fetchFarmers}
-//           >
-//             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-//           </button>
+  return (
+    <div className="dashboard-container">
+      {/* ================= MOBILE NAVBAR ================= */}
+      {isMobile && (
+        <div className="mobile-navbar">
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            aria-label="Toggle menu"
+            disabled={loading.fetchFarmers}
+          >
+            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
           
-//           <div className="mobile-logo">
-//             <h3>Dashboard</h3>
-//           </div>
+          <div className="mobile-logo">
+            <h3>Dashboard</h3>
+          </div>
           
-//           <div className="mobile-profile">
-//             <img
-//               src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
-//               alt="User"
-//               className="mobile-profile-pic"
-//               onError={(e) => {
-//                 e.target.src = "/profile.png";
-//                 e.target.onerror = null;
-//               }}
-//             />
-//           </div>
-//         </div>
-//       )}
+          <div className="mobile-profile">
+            <img
+              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              alt="User"
+              className="mobile-profile-pic"
+              onError={(e) => {
+                e.target.src = "/profile.png";
+                e.target.onerror = null;
+              }}
+            />
+          </div>
+        </div>
+      )}
 
-//       {/* ================= SIDEBAR ================= */}
-//       <div className={`sidebar ${isMobile ? (isSidebarOpen ? 'mobile-open' : 'mobile-closed') : ''}`}>
-//         <div className="sidebar-close-container">
-//           <div className="profile-section text-center mb-4">
-//             <img
-//               src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
-//               alt="User"
-//               className="profile-pic"
-//               onError={(e) => {
-//                 e.target.src = "/profile.png";
-//                 e.target.onerror = null;
-//               }}
-//             />
-//             <h5>{username}</h5>
-//           </div>
+      {/* ================= SIDEBAR ================= */}
+      <div className={`sidebar ${isMobile ? (isSidebarOpen ? 'mobile-open' : 'mobile-closed') : ''}`}>
+        <div className="sidebar-close-container">
+          <div className="profile-section text-center mb-4">
+            <img
+              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+              alt="User"
+              className="profile-pic"
+              onError={(e) => {
+                e.target.src = "/profile.png";
+                e.target.onerror = null;
+              }}
+            />
+            <h5>{username}</h5>
+          </div>
 
-//           {isMobile && (
-//             <button 
-//               className="sidebar-close-btn"
-//               onClick={() => setIsSidebarOpen(false)}
-//               aria-label="Close menu"
-//               disabled={loading.fetchFarmers}
-//             >
-//               <X size={20} />
-//             </button>
-//           )}
-//         </div>
+          {isMobile && (
+            <button 
+              className="sidebar-close-btn"
+              onClick={() => setIsSidebarOpen(false)}
+              aria-label="Close menu"
+              disabled={loading.fetchFarmers}
+            >
+              <X size={20} />
+            </button>
+          )}
+        </div>
 
-//         <ul className="menu">
-//           <li>
-//             <Link to="/profile" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-//               <User size={18} /> {t('profile')}
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/dashboard" className="menu-btn active" onClick={() => setIsSidebarOpen(false)}>
-//               <Home size={18} /> {t('dashboard')}
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/helpcenter" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-//               <HelpCircle size={18} /> {t('helpCenter')}
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/dealers" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-//               <ShoppingBag size={18} /> {t('dealers')}
-//             </Link>
-//           </li>
-//           <li>
-//             <Link to="/agents" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-//               <Users size={18} /> {t('agents')}
-//             </Link>
-//           </li>
-//         </ul>
+        <ul className="menu">
+          <li>
+            <Link to="/profile" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+              <User size={18} /> {t('profile')}
+            </Link>
+          </li>
+          <li>
+            <Link to="/dashboard" className="menu-btn active" onClick={() => setIsSidebarOpen(false)}>
+              <Home size={18} /> {t('dashboard')}
+            </Link>
+          </li>
+          <li>
+            <Link to="/helpcenter" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+              <HelpCircle size={18} /> {t('helpCenter')}
+            </Link>
+          </li>
+          <li>
+            <Link to="/dealers" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+              <ShoppingBag size={18} /> {t('dealers')}
+            </Link>
+          </li>
+          <li>
+            <Link to="/agents" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+              <Users size={18} /> {t('agents')}
+            </Link>
+          </li>
+        </ul>
 
-//         {/* ================= LANGUAGE ================= */}
-//         <div className="language-section mb-4">
-//           <h6>{t("chooseLanguage")}</h6>
-//           <select
-//             className="form-select form-select-sm"
-//             value={i18n.language}
-//             onChange={(e) => changeLanguage(e.target.value)}
-//             disabled={loading.fetchFarmers}
-//           >
-//             <option value="en">English</option>
-//             <option value="hi">हिन्दी</option>
-//             <option value="bn">বাংলা</option>
-//             <option value="as">অসমীয়া</option>
-//             <option value="ta">தமிழ்</option>
-//             <option value="kn">ಕನ್ನಡ</option>
-//             <option value="mr">मराठी</option>
-//           </select>
-//         </div>
-//       </div>
+        {/* ================= LANGUAGE ================= */}
+        <div className="language-section mb-4">
+          <h6>{t("chooseLanguage")}</h6>
+          <select
+            className="form-select form-select-sm"
+            value={i18n.language}
+            onChange={(e) => changeLanguage(e.target.value)}
+            disabled={loading.fetchFarmers}
+          >
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="bn">বাংলা</option>
+            <option value="as">অসমীয়া</option>
+            <option value="ta">தமிழ்</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="mr">मराठी</option>
+          </select>
+        </div>
+      </div>
 
-//       {/* ================= OVERLAY FOR MOBILE ================= */}
-//       {isMobile && isSidebarOpen && (
-//         <div 
-//           className="sidebar-overlay"
-//           onClick={() => setIsSidebarOpen(false)}
-//         ></div>
-//       )}
+      {/* ================= OVERLAY FOR MOBILE ================= */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          className="sidebar-overlay"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
 
-//       {/* ================= RIGHT SECTION ================= */}
-//       <div className={`right-section ${isMobile ? 'mobile-view' : ''}`}>
-//         <div className="top-bar">
-//           <h2>{welcomeMsg}</h2>
-//           <button 
-//             className="add-btn d-flex align-items-center gap-1"
-//             onClick={() => { 
-//               setShowForm(true); 
-//               setEditingFarmerId(null); 
-//               setNewFarmer(emptyFarmer);
-//               setIsUpdateMode(false);
-//             }}
-//             disabled={loading.fetchFarmers}
-//           >
-//             + <span>{t('addFarmer')}</span>
-//           </button>
-//         </div>
+      {/* ================= RIGHT SECTION ================= */}
+      <div className={`right-section ${isMobile ? 'mobile-view' : ''}`}>
+        <div className="top-bar">
+          <h2>{welcomeMsg}</h2>
+          <button 
+            className="add-btn d-flex align-items-center gap-1"
+            onClick={() => { 
+              setShowForm(true); 
+              setEditingFarmerId(null); 
+              setNewFarmer(emptyFarmer);
+              setIsUpdateMode(false);
+            }}
+            disabled={loading.fetchFarmers}
+          >
+            + <span>{t('addFarmer')}</span>
+          </button>
+        </div>
 
-//         {/* CARDS AND SEARCH SECTION */}
-//         <div className="cards-and-search">
-//           <div className="cards-section">
-//             <div className="card">
-//               <h5>{t('totalFarmers')}</h5>
-//               <p className="display-6">
-//                 {loading.fetchFarmers ? <ButtonLoader /> : totalFarmers}
-//               </p>
-//             </div>
-//             <div className="card">
-//               <h5>{t('totalPonds')}</h5>
-//               <p className="display-6">
-//                 {loading.fetchFarmers ? <ButtonLoader /> : totalPonds}
-//               </p>
-//             </div>
-//           </div>
+        {/* CARDS AND SEARCH SECTION */}
+        <div className="cards-and-search">
+          <div className="cards-section">
+            <div className="card">
+              <h5>{t('totalFarmers')}</h5>
+              <p className="display-6">
+                {loading.fetchFarmers ? <ButtonLoader /> : totalFarmers}
+              </p>
+            </div>
+            <div className="card">
+              <h5>{t('totalPonds')}</h5>
+              <p className="display-6">
+                {loading.fetchFarmers ? <ButtonLoader /> : totalPonds}
+              </p>
+            </div>
+          </div>
 
-//           <div className="search-section d-flex gap-2">
-//             <input
-//               type="text"
-//               placeholder={t('farmerSearchById')}
-//               className="form-control"
-//               value={searchId}
-//               onChange={(e) => setSearchId(e.target.value)}
-//               disabled={loading.search}
-//             />
+          <div className="search-section d-flex gap-2">
+            <input
+              type="text"
+              placeholder={t('farmerSearchById')}
+              className="form-control"
+              value={searchId}
+              onChange={(e) => setSearchId(e.target.value)}
+              disabled={loading.search}
+            />
 
-//             <button
-//               className="btn btn-sm btn-primary"
-//               onClick={handleSearch}
-//               disabled={loading.search}
-//             >
-//               {loading.search ? <ButtonLoader /> : "Search"}
-//             </button>
-//           </div>
-//         </div>
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={handleSearch}
+              disabled={loading.search}
+            >
+              {loading.search ? <ButtonLoader /> : "Search"}
+            </button>
+          </div>
+        </div>
 
-//         <div className="list-title">{t('farmersList')}</div>
-//         <div className="farmers-list">
-//           {loading.fetchFarmers ? (
-//             <div className="text-center py-5">
-//               <ButtonLoader />
-//               <p>Loading farmers...</p>
-//             </div>
-//           ) : (
-//             farmers.map(f => (
-//               <div key={f._id} className="farmer-box">
-//                 {/* ✅ FIXED: Farmer image using corrected helper function */}
-//                 <img
-//                   src={getFarmerImage(f)}
-//                   alt={f.name}
-//                   className="profile-pic"
-//                   loading="lazy"
-//                   onError={(e) => {
-//                     e.target.src = "/profile.png";
-//                     e.target.onerror = null;
-//                   }}
-//                 />
+        <div className="list-title">{t('farmersList')}</div>
+        <div className="farmers-list">
+          {loading.fetchFarmers ? (
+            <div className="text-center py-5">
+              <ButtonLoader />
+              <p>Loading farmers...</p>
+            </div>
+          ) : (
+            farmers.map(f => (
+              <div key={f._id} className="farmer-box">
+                {/* ✅ FIXED: Farmer image using corrected helper function */}
+                <img
+                  src={getFarmerImage(f)}
+                  alt={f.name}
+                  className="profile-pic"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.src = "/profile.png";
+                    e.target.onerror = null;
+                  }}
+                />
 
-//                 <div style={{ flex: 1 }}>
-//                   <p><b>{t('farmerName')}:</b> {f.name}</p>
-//                   <p><b>{t('farmerId')}:</b> {f.farmerId}</p>
-//                   <p><b>{t('contactNumber')}:</b> {f.contact}</p>
-//                   <p><b>{t('pondCount')}:</b> {f.pondCount}</p>
-//                   <p className="updated-text" style={{ fontSize: "0.85rem" }}>
-//                     <b>{t('updated')}:</b> {timeAgo(f.updatedAt || f.createdAt, t)}
-//                   </p>
-//                 </div>
+                <div style={{ flex: 1 }}>
+                  <p><b>{t('farmerName')}:</b> {f.name}</p>
+                  <p><b>{t('farmerId')}:</b> {f.farmerId}</p>
+                  <p><b>{t('contactNumber')}:</b> {f.contact}</p>
+                  <p><b>{t('pondCount')}:</b> {f.pondCount}</p>
+                  <p className="updated-text" style={{ fontSize: "0.85rem" }}>
+                    <b>{t('updated')}:</b> {timeAgo(f.updatedAt || f.createdAt, t)}
+                  </p>
+                </div>
 
-//                 {/* Pond List with Update Buttons */}
-//                 {f.ponds && f.ponds.length > 0 && (
-//                   <div style={{ marginTop: 10, width: "100%" }}>
-//                     <h6>Pond List</h6>
-//                     <button 
-//                       className="btn btn-sm btn-success mb-2"
-//                       onClick={() => openAddPond(f._id)}
-//                       disabled={loading.addPond}
-//                     >
-//                       {loading.addPond ? <ButtonLoader /> : "+ Add Pond"}
-//                     </button>
+                {/* Pond List with Update Buttons */}
+                {f.ponds && f.ponds.length > 0 && (
+                  <div style={{ marginTop: 10, width: "100%" }}>
+                    <h6>Pond List</h6>
+                    <button 
+                      className="btn btn-sm btn-success mb-2"
+                      onClick={() => openAddPond(f._id)}
+                      disabled={loading.addPond}
+                    >
+                      {loading.addPond ? <ButtonLoader /> : "+ Add Pond"}
+                    </button>
                     
-//                     {/* Desktop Table View */}
-//                     <div className="table-container">
-//                       <table className="table table-sm table-bordered">
-//                         <thead>
-//                           <tr>
-//                             <th>Pond No.</th>
-//                             <th>Pond ID</th>
-//                             <th>Species</th>
-//                             <th>Last Updated</th>
-//                             <th>Actions</th>
-//                           </tr>
-//                         </thead>
-//                         <tbody>
-//                           {f.ponds.map((pond, index) => (
-//                             <tr key={pond.pondId}>
-//                               <td>{pond.pondNumber || index + 1}</td>
-//                               <td>{pond.pondId}</td>
-//                               <td>{pond.species || "Not specified"}</td>
-//                               <td>{timeAgo(pond.updatedAt || pond.createdAt, t)}</td>
-//                               <td>
-//                                 <button 
-//                                   className="btn btn-sm btn-primary"
-//                                   onClick={() => openEditPond(f._id, pond)}
-//                                   disabled={loading.updatePond}
-//                                 >
-//                                   {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
-//                                 </button>
-//                               </td>
-//                             </tr>
-//                           ))}
-//                         </tbody>
-//                       </table>
-//                     </div>
+                    {/* Desktop Table View */}
+                    <div className="table-container">
+                      <table className="table table-sm table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Pond No.</th>
+                            <th>Pond ID</th>
+                            <th>Species</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {f.ponds.map((pond, index) => (
+                            <tr key={pond.pondId}>
+                              <td>{pond.pondNumber || index + 1}</td>
+                              <td>{pond.pondId}</td>
+                              <td>{pond.species || "Not specified"}</td>
+                              <td>{timeAgo(pond.updatedAt || pond.createdAt, t)}</td>
+                              <td>
+                                <button 
+                                  className="btn btn-sm btn-primary"
+                                  onClick={() => openEditPond(f._id, pond)}
+                                  disabled={loading.updatePond}
+                                >
+                                  {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                     
-//                     {/* Mobile Card View */}
-//                     <div className="mobile-pond-view">
-//                       {f.ponds.map((pond, index) => (
-//                         <div key={pond.pondId} className="mobile-pond-card">
-//                           <div className="mobile-pond-row">
-//                             <span className="mobile-pond-label">Pond No.</span>
-//                             <span className="mobile-pond-value">{pond.pondNumber || index + 1}</span>
-//                           </div>
-//                           <div className="mobile-pond-row">
-//                             <span className="mobile-pond-label">Pond ID</span>
-//                             <span className="mobile-pond-value">{pond.pondId}</span>
-//                           </div>
-//                           <div className="mobile-pond-row">
-//                             <span className="mobile-pond-label">Species</span>
-//                             <span className="mobile-pond-value">{pond.species || "Not specified"}</span>
-//                           </div>
-//                           <div className="mobile-pond-row">
-//                             <span className="mobile-pond-label">Last Updated</span>
-//                             <span className="mobile-pond-value">{timeAgo(pond.updatedAt || pond.createdAt, t)}</span>
-//                           </div>
-//                           <div className="mobile-pond-row">
-//                             <span className="mobile-pond-label">Actions</span>
-//                             <span className="mobile-pond-value">
-//                               <button 
-//                                 className="btn btn-sm btn-primary"
-//                                 onClick={() => openEditPond(f._id, pond)}
-//                                 style={{ width: "100%", marginTop: "4px" }}
-//                                 disabled={loading.updatePond}
-//                               >
-//                                 {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
-//                               </button>
-//                             </span>
-//                           </div>
-//                         </div>
-//                       ))}
-//                     </div>
-//                   </div>
-//                 )}
+                    {/* Mobile Card View */}
+                    <div className="mobile-pond-view">
+                      {f.ponds.map((pond, index) => (
+                        <div key={pond.pondId} className="mobile-pond-card">
+                          <div className="mobile-pond-row">
+                            <span className="mobile-pond-label">Pond No.</span>
+                            <span className="mobile-pond-value">{pond.pondNumber || index + 1}</span>
+                          </div>
+                          <div className="mobile-pond-row">
+                            <span className="mobile-pond-label">Pond ID</span>
+                            <span className="mobile-pond-value">{pond.pondId}</span>
+                          </div>
+                          <div className="mobile-pond-row">
+                            <span className="mobile-pond-label">Species</span>
+                            <span className="mobile-pond-value">{pond.species || "Not specified"}</span>
+                          </div>
+                          <div className="mobile-pond-row">
+                            <span className="mobile-pond-label">Last Updated</span>
+                            <span className="mobile-pond-value">{timeAgo(pond.updatedAt || pond.createdAt, t)}</span>
+                          </div>
+                          <div className="mobile-pond-row">
+                            <span className="mobile-pond-label">Actions</span>
+                            <span className="mobile-pond-value">
+                              <button 
+                                className="btn btn-sm btn-primary"
+                                onClick={() => openEditPond(f._id, pond)}
+                                style={{ width: "100%", marginTop: "4px" }}
+                                disabled={loading.updatePond}
+                              >
+                                {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-//                 {/* If no ponds, show Add Pond button */}
-//                 {(!f.ponds || f.ponds.length === 0) && (
-//                   <div style={{ marginTop: 10 }}>
-//                     <button 
-//                       className="btn btn-sm btn-success"
-//                       onClick={() => openAddPond(f._id)}
-//                       disabled={loading.addPond}
-//                     >
-//                       {loading.addPond ? <ButtonLoader /> : "+ Add First Pond"}
-//                     </button>
-//                   </div>
-//                 )}
+                {/* If no ponds, show Add Pond button */}
+                {(!f.ponds || f.ponds.length === 0) && (
+                  <div style={{ marginTop: 10 }}>
+                    <button 
+                      className="btn btn-sm btn-success"
+                      onClick={() => openAddPond(f._id)}
+                      disabled={loading.addPond}
+                    >
+                      {loading.addPond ? <ButtonLoader /> : "+ Add First Pond"}
+                    </button>
+                  </div>
+                )}
 
-//                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-//                   <button 
-//                     className="btn btn-sm btn-outline-primary" 
-//                     onClick={() => openEdit(f)}
-//                     disabled={loading.updateFarmer}
-//                   >
-//                     {loading.updateFarmer ? <ButtonLoader /> : t('updateFarmer')}
-//                   </button>
-//                 </div>
-//               </div>
-//             ))
-//           )}
-//         </div>
-//       </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <button 
+                    className="btn btn-sm btn-outline-primary" 
+                    onClick={() => openEdit(f)}
+                    disabled={loading.updateFarmer}
+                  >
+                    {loading.updateFarmer ? <ButtonLoader /> : t('updateFarmer')}
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
 
-//       {/* Farmer Modal Form */}
-//       {showForm && (
-//         <div className="form-modal">
-//           <div className="form-box" style={{ width: "500px", maxHeight: "90vh", overflowY: "auto" }}>
-//             <h5>{isUpdateMode ? "Update Farmer" : t('addFarmer')}</h5>
+      {/* Farmer Modal Form */}
+      {showForm && (
+        <div className="form-modal">
+          <div className="form-box" style={{ width: "500px", maxHeight: "90vh", overflowY: "auto" }}>
+            <h5>{isUpdateMode ? "Update Farmer" : t('addFarmer')}</h5>
             
-//             <div style={{ padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
-//               <h6>Farmer Details</h6>
-//               <div className="row g-2">
-//                 <div className="col-md-6">
-//                   <input 
-//                     className="form-control" 
-//                     placeholder="Name" 
-//                     value={newFarmer.name} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, name: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
-//                 <div className="col-md-6">
-//                   <input 
-//                     className="form-control" 
-//                     placeholder="Contact Number" 
-//                     value={newFarmer.contact} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, contact: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
+            <div style={{ padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
+              <h6>Farmer Details</h6>
+              <div className="row g-2">
+                <div className="col-md-6">
+                  <input 
+                    className="form-control" 
+                    placeholder="Name" 
+                    value={newFarmer.name} 
+                    onChange={e => setNewFarmer({ ...newFarmer, name: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <input 
+                    className="form-control" 
+                    placeholder="Contact Number" 
+                    value={newFarmer.contact} 
+                    onChange={e => setNewFarmer({ ...newFarmer, contact: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
                 
-//                 <div className="col-md-3">
-//                   <input 
-//                     type="number" 
-//                     className="form-control" 
-//                     placeholder="Age" 
-//                     value={newFarmer.age} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, age: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
+                <div className="col-md-3">
+                  <input 
+                    type="number" 
+                    className="form-control" 
+                    placeholder="Age" 
+                    value={newFarmer.age} 
+                    onChange={e => setNewFarmer({ ...newFarmer, age: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
 
-//                 <div className="col-md-3">
-//                   <input 
-//                     className="form-control" 
-//                     placeholder="Gender" 
-//                     value={newFarmer.gender} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
+                <div className="col-md-3">
+                  <input 
+                    className="form-control" 
+                    placeholder="Gender" 
+                    value={newFarmer.gender} 
+                    onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
 
-//                 <div className="col-md-3">
-//                   <input 
-//                     className="form-control" 
-//                     placeholder="Aadhar" 
-//                     value={newFarmer.adhar} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, adhar: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
+                <div className="col-md-3">
+                  <input 
+                    className="form-control" 
+                    placeholder="Aadhar" 
+                    value={newFarmer.adhar} 
+                    onChange={e => setNewFarmer({ ...newFarmer, adhar: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
 
-//                 <div className="col-md-3">
-//                   <input 
-//                     className="form-control" 
-//                     placeholder="Family Members" 
-//                     value={newFarmer.familyMembers} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, familyMembers: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
+                <div className="col-md-3">
+                  <input 
+                    className="form-control" 
+                    placeholder="Family Members" 
+                    value={newFarmer.familyMembers} 
+                    onChange={e => setNewFarmer({ ...newFarmer, familyMembers: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
 
-//                 <div className="col-md-6">
-//                   <input 
-//                     className="form-control" 
-//                     placeholder="Family Occupation" 
-//                     value={newFarmer.familyOccupation} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, familyOccupation: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
+                <div className="col-md-6">
+                  <input 
+                    className="form-control" 
+                    placeholder="Family Occupation" 
+                    value={newFarmer.familyOccupation} 
+                    onChange={e => setNewFarmer({ ...newFarmer, familyOccupation: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
 
-//                 <div className="col-md-6">
-//                   <input 
-//                     className="form-control" 
-//                     placeholder="Village" 
-//                     value={newFarmer.village} 
-//                     onChange={e => setNewFarmer({ ...newFarmer, village: e.target.value })}
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
-//                 </div>
+                <div className="col-md-6">
+                  <input 
+                    className="form-control" 
+                    placeholder="Village" 
+                    value={newFarmer.village} 
+                    onChange={e => setNewFarmer({ ...newFarmer, village: e.target.value })}
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
+                </div>
 
-//                 {/* ✅ 2️⃣ Farmer form ke andar IMAGE INPUT add karo */}
-//                 <div className="col-md-12">
-//                   <label>Farmer Photo (max 5MB)</label>
-//                   <input
-//                     type="file"
-//                     accept="image/*"
-//                     className="form-control"
-//                     onChange={(e) =>
-//                       setNewFarmer({ ...newFarmer, photo: e.target.files[0] })
-//                     }
-//                     disabled={loading.addFarmer || loading.updateFarmer}
-//                   />
+                {/* ✅ 2️⃣ Farmer form ke andar IMAGE INPUT add karo */}
+                <div className="col-md-12">
+                  <label>Farmer Photo (max 5MB)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="form-control"
+                    onChange={(e) =>
+                      setNewFarmer({ ...newFarmer, photo: e.target.files[0] })
+                    }
+                    disabled={loading.addFarmer || loading.updateFarmer}
+                  />
 
-//                   {/* ✅ UPDATE MODE me existing photo */}
-//                   {newFarmer.photoExisting && (
-//                     <div style={{ marginTop: 6 }}>
-//                       <img
-//                         src={getImageUrl(newFarmer.photoExisting)}
-//                         alt="Existing Farmer"
-//                         style={{ width: 80, height: 80, borderRadius: "50%" }}
-//                         onError={(e) => {
-//                           e.target.src = "/profile.png";
-//                           e.target.onerror = null;
-//                         }}
-//                       />
-//                     </div>
-//                   )}
-//                 </div>
-//               </div>
-//             </div>
+                  {/* ✅ UPDATE MODE me existing photo */}
+                  {newFarmer.photoExisting && (
+                    <div style={{ marginTop: 6 }}>
+                      <img
+                        src={getImageUrl(newFarmer.photoExisting)}
+                        alt="Existing Farmer"
+                        style={{ width: 80, height: 80, borderRadius: "50%" }}
+                        onError={(e) => {
+                          e.target.src = "/profile.png";
+                          e.target.onerror = null;
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
-//             <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-//               {isUpdateMode ? (
-//                 <>
-//                   <button 
-//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-//                     onClick={updateFarmer}
-//                     disabled={loading.updateFarmer}
-//                   >
-//                     {loading.updateFarmer ? <ButtonLoader /> : "Update Farmer"}
-//                   </button>
-//                   <button 
-//                     className="btn btn-secondary flex-grow-1" 
-//                     onClick={() => { 
-//                       setShowForm(false); 
-//                       setEditingFarmerId(null); 
-//                       setNewFarmer(emptyFarmer);
-//                       setIsUpdateMode(false);
-//                     }}
-//                     disabled={loading.updateFarmer}
-//                   >
-//                     {t('cancel')}
-//                   </button>
-//                 </>
-//               ) : (
-//                 <>
-//                   <button 
-//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-//                     onClick={addFarmer}
-//                     disabled={loading.addFarmer}
-//                   >
-//                     {loading.addFarmer ? <ButtonLoader /> : t('submit')}
-//                   </button>
-//                   <button 
-//                     className="btn btn-secondary flex-grow-1" 
-//                     onClick={() => { 
-//                       setShowForm(false); 
-//                       setNewFarmer(emptyFarmer);
-//                     }}
-//                     disabled={loading.addFarmer}
-//                   >
-//                     {t('cancel')}
-//                   </button>
-//                 </>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       )}
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+              {isUpdateMode ? (
+                <>
+                  <button 
+                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+                    onClick={updateFarmer}
+                    disabled={loading.updateFarmer}
+                  >
+                    {loading.updateFarmer ? <ButtonLoader /> : "Update Farmer"}
+                  </button>
+                  <button 
+                    className="btn btn-secondary flex-grow-1" 
+                    onClick={() => { 
+                      setShowForm(false); 
+                      setEditingFarmerId(null); 
+                      setNewFarmer(emptyFarmer);
+                      setIsUpdateMode(false);
+                    }}
+                    disabled={loading.updateFarmer}
+                  >
+                    {t('cancel')}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button 
+                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+                    onClick={addFarmer}
+                    disabled={loading.addFarmer}
+                  >
+                    {loading.addFarmer ? <ButtonLoader /> : t('submit')}
+                  </button>
+                  <button 
+                    className="btn btn-secondary flex-grow-1" 
+                    onClick={() => { 
+                      setShowForm(false); 
+                      setNewFarmer(emptyFarmer);
+                    }}
+                    disabled={loading.addFarmer}
+                  >
+                    {t('cancel')}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
-//       {/* Pond Modal Form */}
-//       {showPondForm && (
-//         <div className="form-modal">
-//           <div className="form-box" style={{ width: "850px", maxHeight: "90vh", overflowY: "auto" }}>
-//             <h5>{editingPondId ? "Update Pond" : "Add New Pond"}</h5>
+      {/* Pond Modal Form */}
+      {showPondForm && (
+        <div className="form-modal">
+          <div className="form-box" style={{ width: "850px", maxHeight: "90vh", overflowY: "auto" }}>
+            <h5>{editingPondId ? "Update Pond" : "Add New Pond"}</h5>
 
-//             {/* UPDATED MODAL FORM GRID */}
-//             <div className="modal-form-grid">
+            {/* UPDATED MODAL FORM GRID */}
+            <div className="modal-form-grid">
               
-//               {/* Pond Details */}
-//               <div className="modal-section">
-//                 <h6>Pond Details</h6>
-//                 <div className="row g-2">
-//                   <div className="col-md-4">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="Pond area (eg. 1 acre)" 
-//                       value={newPond.pondArea} 
-//                       onChange={e => setNewPond({ ...newPond, pondArea: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
-//                   <div className="col-md-2">
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.pondAreaUnit} 
-//                       onChange={e => setNewPond({ ...newPond, pondAreaUnit: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option value="acre">acre</option>
-//                       <option value="hectare">hectare</option>
-//                       <option value="footsquare">footsquare</option>
-//                     </select>
-//                   </div>
-//                   <div className="col-md-4">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="Pond depth (ft)" 
-//                       value={newPond.pondDepth} 
-//                       onChange={e => setNewPond({ ...newPond, pondDepth: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+              {/* Pond Details */}
+              <div className="modal-section">
+                <h6>Pond Details</h6>
+                <div className="row g-2">
+                  <div className="col-md-4">
+                    <input 
+                      className="form-control" 
+                      placeholder="Pond area (eg. 1 acre)" 
+                      value={newPond.pondArea} 
+                      onChange={e => setNewPond({ ...newPond, pondArea: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
+                  <div className="col-md-2">
+                    <select 
+                      className="form-control" 
+                      value={newPond.pondAreaUnit} 
+                      onChange={e => setNewPond({ ...newPond, pondAreaUnit: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option value="acre">acre</option>
+                      <option value="hectare">hectare</option>
+                      <option value="footsquare">footsquare</option>
+                    </select>
+                  </div>
+                  <div className="col-md-4">
+                    <input 
+                      className="form-control" 
+                      placeholder="Pond depth (ft)" 
+                      value={newPond.pondDepth} 
+                      onChange={e => setNewPond({ ...newPond, pondDepth: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Pond image (GPS) - max 10MB</label>
-//                     <input 
-//                       type="file" 
-//                       accept="image/*" 
-//                       className="form-control" 
-//                       onChange={e => setNewPond({ ...newPond, pondImage: e.target.files[0] })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                     {newPond.pondImageExisting && <div style={{ marginTop: 6 }}>
-//                       <a target="_blank" rel="noreferrer" href={getImageUrl(newPond.pondImageExisting)}>
-//                         Existing: {newPond.pondImageExisting.split('/').pop()}
-//                       </a>
-//                     </div>}
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Pond image (GPS) - max 10MB</label>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="form-control" 
+                      onChange={e => setNewPond({ ...newPond, pondImage: e.target.files[0] })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                    {newPond.pondImageExisting && <div style={{ marginTop: 6 }}>
+                      <a target="_blank" rel="noreferrer" href={getImageUrl(newPond.pondImageExisting)}>
+                        Existing: {newPond.pondImageExisting.split('/').pop()}
+                      </a>
+                    </div>}
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Upload Pond Picture/Video (up to 5, 100MB each)</label>
-//                     <input 
-//                       type="file" 
-//                       className="form-control" 
-//                       multiple 
-//                       onChange={e => setNewPond({ ...newPond, pondFiles: Array.from(e.target.files) })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                     {renderExistingFiles(newPond.pondFilesExisting)}
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Upload Pond Picture/Video (up to 5, 100MB each)</label>
+                    <input 
+                      type="file" 
+                      className="form-control" 
+                      multiple 
+                      onChange={e => setNewPond({ ...newPond, pondFiles: Array.from(e.target.files) })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                    {renderExistingFiles(newPond.pondFilesExisting)}
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Overflow from somewhere in pond?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.overflow} 
-//                       onChange={e => setNewPond({ ...newPond, overflow: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option>
-//                       <option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Overflow from somewhere in pond?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.overflow} 
+                      onChange={e => setNewPond({ ...newPond, overflow: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Pond receives proper Sunlight?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.receivesSunlight} 
-//                       onChange={e => setNewPond({ ...newPond, receivesSunlight: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option>
-//                       <option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Pond receives proper Sunlight?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.receivesSunlight} 
+                      onChange={e => setNewPond({ ...newPond, receivesSunlight: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Trees present on banks?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.treesOnBanks} 
-//                       onChange={e => setNewPond({ ...newPond, treesOnBanks: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option>
-//                       <option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Trees present on banks?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.treesOnBanks} 
+                      onChange={e => setNewPond({ ...newPond, treesOnBanks: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Neighbourhood</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.neighbourhood} 
-//                       onChange={e => setNewPond({ ...newPond, neighbourhood: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Agriculture Farm</option>
-//                       <option>Pond</option>
-//                       <option>Road</option>
-//                       <option>Residential Area</option>
-//                       <option>Other</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Neighbourhood</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.neighbourhood} 
+                      onChange={e => setNewPond({ ...newPond, neighbourhood: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Agriculture Farm</option>
+                      <option>Pond</option>
+                      <option>Road</option>
+                      <option>Residential Area</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Does wastewater enter pond?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.wastewaterEnters} 
-//                       onChange={e => setNewPond({ ...newPond, wastewaterEnters: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option>
-//                       <option>No</option>
-//                     </select>
-//                   </div>
-//                 </div>
-//               </div>
+                  <div className="col-md-6">
+                    <label>Does wastewater enter pond?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.wastewaterEnters} 
+                      onChange={e => setNewPond({ ...newPond, wastewaterEnters: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-//               {/* Species & Stocking */}
-//               <div className="modal-section">
-//                 <h6>Species & Stocking</h6>
-//                 <div className="row g-2">
-//                   <div className="col-md-6">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="Fish Species Cultured" 
-//                       value={newPond.species} 
-//                       onChange={e => setNewPond({ ...newPond, species: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
-//                   <div className="col-md-6">
-//                     <label>Date of Stocking</label>
-//                     <input 
-//                       type="date" 
-//                       className="form-control" 
-//                       value={newPond.dateOfStocking} 
-//                       onChange={e => setNewPond({ ...newPond, dateOfStocking: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+              {/* Species & Stocking */}
+              <div className="modal-section">
+                <h6>Species & Stocking</h6>
+                <div className="row g-2">
+                  <div className="col-md-6">
+                    <input 
+                      className="form-control" 
+                      placeholder="Fish Species Cultured" 
+                      value={newPond.species} 
+                      onChange={e => setNewPond({ ...newPond, species: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label>Date of Stocking</label>
+                    <input 
+                      type="date" 
+                      className="form-control" 
+                      value={newPond.dateOfStocking} 
+                      onChange={e => setNewPond({ ...newPond, dateOfStocking: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <input 
-//                       type="number" 
-//                       className="form-control" 
-//                       placeholder="Quantity of Seed initially in Pond" 
-//                       value={newPond.qtySeedInitially} 
-//                       onChange={e => setNewPond({ ...newPond, qtySeedInitially: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
-//                   <div className="col-md-6">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="Current Quantity of Fish in Pond" 
-//                       value={newPond.currentQty} 
-//                       onChange={e => setNewPond({ ...newPond, currentQty: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+                  <div className="col-md-6">
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      placeholder="Quantity of Seed initially in Pond" 
+                      value={newPond.qtySeedInitially} 
+                      onChange={e => setNewPond({ ...newPond, qtySeedInitially: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <input 
+                      className="form-control" 
+                      placeholder="Current Quantity of Fish in Pond" 
+                      value={newPond.currentQty} 
+                      onChange={e => setNewPond({ ...newPond, currentQty: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Average size of fishes</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.avgSize} 
-//                       onChange={e => setNewPond({ ...newPond, avgSize: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>&gt;200gram</option>
-//                       <option>200-500 gram</option>
-//                       <option>500-750 gram</option>
-//                       <option>&lt;750gram</option>
-//                     </select>
-//                   </div>
-//                 </div>
-//               </div>
+                  <div className="col-md-6">
+                    <label>Average size of fishes</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.avgSize} 
+                      onChange={e => setNewPond({ ...newPond, avgSize: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>&gt;200gram</option>
+                      <option>200-500 gram</option>
+                      <option>500-750 gram</option>
+                      <option>&lt;750gram</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-//               {/* Feed Details */}
-//               <div className="modal-section">
-//                 <h6>Feed Details</h6>
-//                 <div className="row g-2">
-//                   <div className="col-md-6">
-//                     <label>Feed Type Used</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.feedType} 
-//                       onChange={e => setNewPond({ ...newPond, feedType: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Market Feed</option>
-//                       <option>Homemade Feed</option>
-//                       <option>Both</option>
-//                       <option>Other</option>
-//                     </select>
-//                   </div>
-//                   <div className="col-md-6">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="If Other, mention" 
-//                       value={newPond.feedOther} 
-//                       onChange={e => setNewPond({ ...newPond, feedOther: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+              {/* Feed Details */}
+              <div className="modal-section">
+                <h6>Feed Details</h6>
+                <div className="row g-2">
+                  <div className="col-md-6">
+                    <label>Feed Type Used</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.feedType} 
+                      onChange={e => setNewPond({ ...newPond, feedType: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Market Feed</option>
+                      <option>Homemade Feed</option>
+                      <option>Both</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <input 
+                      className="form-control" 
+                      placeholder="If Other, mention" 
+                      value={newPond.feedOther} 
+                      onChange={e => setNewPond({ ...newPond, feedOther: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Feed frequency</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.feedFreq} 
-//                       onChange={e => setNewPond({ ...newPond, feedFreq: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Once a day</option>
-//                       <option>twice a day</option>
-//                       <option>thrice a day</option>
-//                       <option>Other</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Feed frequency</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.feedFreq} 
+                      onChange={e => setNewPond({ ...newPond, feedFreq: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Once a day</option>
+                      <option>twice a day</option>
+                      <option>thrice a day</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="Feed quantity given per day (in kg)" 
-//                       value={newPond.feedQtyPerDay} 
-//                       onChange={e => setNewPond({ ...newPond, feedQtyPerDay: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+                  <div className="col-md-6">
+                    <input 
+                      className="form-control" 
+                      placeholder="Feed quantity given per day (in kg)" 
+                      value={newPond.feedQtyPerDay} 
+                      onChange={e => setNewPond({ ...newPond, feedQtyPerDay: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Approx time of feeding</label>
-//                     <input 
-//                       type="time" 
-//                       className="form-control" 
-//                       value={newPond.feedTime} 
-//                       onChange={e => setNewPond({ ...newPond, feedTime: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Approx time of feeding</label>
+                    <input 
+                      type="time" 
+                      className="form-control" 
+                      value={newPond.feedTime} 
+                      onChange={e => setNewPond({ ...newPond, feedTime: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="Any recent changes in feed or feeding behaviour" 
-//                       value={newPond.recentFeedChanges} 
-//                       onChange={e => setNewPond({ ...newPond, recentFeedChanges: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+                  <div className="col-md-6">
+                    <input 
+                      className="form-control" 
+                      placeholder="Any recent changes in feed or feeding behaviour" 
+                      value={newPond.recentFeedChanges} 
+                      onChange={e => setNewPond({ ...newPond, recentFeedChanges: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Do fish show reduced appetite?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.reducedAppetite} 
-//                       onChange={e => setNewPond({ ...newPond, reducedAppetite: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option>
-//                       <option>No</option>
-//                     </select>
-//                   </div>
-//                 </div>
-//               </div>
+                  <div className="col-md-6">
+                    <label>Do fish show reduced appetite?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.reducedAppetite} 
+                      onChange={e => setNewPond({ ...newPond, reducedAppetite: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-//               {/* Water Quality */}
-//               <div className="modal-section">
-//                 <h6>Water Quality</h6>
-//                 <div className="row g-2">
-//                   <div className="col-md-3">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="Water Temp (°C)" 
-//                       value={newPond.waterTemperature} 
-//                       onChange={e => setNewPond({ ...newPond, waterTemperature: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
-//                   <div className="col-md-3">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="pH measured" 
-//                       value={newPond.pH} 
-//                       onChange={e => setNewPond({ ...newPond, pH: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
-//                   <div className="col-md-3">
-//                     <input 
-//                       className="form-control" 
-//                       placeholder="DO measured" 
-//                       value={newPond.DO} 
-//                       onChange={e => setNewPond({ ...newPond, DO: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
-//                   <div className="col-md-3">
-//                     <label>Ammonia (NH₃) Level</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.ammoniaLevel} 
-//                       onChange={e => setNewPond({ ...newPond, ammoniaLevel: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
-//                     </select>
-//                   </div>
+              {/* Water Quality */}
+              <div className="modal-section">
+                <h6>Water Quality</h6>
+                <div className="row g-2">
+                  <div className="col-md-3">
+                    <input 
+                      className="form-control" 
+                      placeholder="Water Temp (°C)" 
+                      value={newPond.waterTemperature} 
+                      onChange={e => setNewPond({ ...newPond, waterTemperature: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <input 
+                      className="form-control" 
+                      placeholder="pH measured" 
+                      value={newPond.pH} 
+                      onChange={e => setNewPond({ ...newPond, pH: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <input 
+                      className="form-control" 
+                      placeholder="DO measured" 
+                      value={newPond.DO} 
+                      onChange={e => setNewPond({ ...newPond, DO: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label>Ammonia (NH₃) Level</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.ammoniaLevel} 
+                      onChange={e => setNewPond({ ...newPond, ammoniaLevel: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-3">
-//                     <label>Phytoplankton Levels</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.phytoplanktonLevel} 
-//                       onChange={e => setNewPond({ ...newPond, phytoplanktonLevel: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-3">
+                    <label>Phytoplankton Levels</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.phytoplanktonLevel} 
+                      onChange={e => setNewPond({ ...newPond, phytoplanktonLevel: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-3">
-//                     <label>Water Hardness</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.waterHardness} 
-//                       onChange={e => setNewPond({ ...newPond, waterHardness: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-3">
+                    <label>Water Hardness</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.waterHardness} 
+                      onChange={e => setNewPond({ ...newPond, waterHardness: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-3">
-//                     <label>Any visible algae bloom?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.algaeBloom} 
-//                       onChange={e => setNewPond({ ...newPond, algaeBloom: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option><option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-3">
+                    <label>Any visible algae bloom?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.algaeBloom} 
+                      onChange={e => setNewPond({ ...newPond, algaeBloom: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option><option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-3">
-//                     <label>Pond Water Colour</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.pondWaterColor} 
-//                       onChange={e => setNewPond({ ...newPond, pondWaterColor: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Light Green</option><option>Dark Green</option><option>Yellowish Green</option>
-//                       <option>Brownish Green</option><option>Yellow</option><option>Muddy Brown</option>
-//                       <option>Black</option><option>Other</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-3">
+                    <label>Pond Water Colour</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.pondWaterColor} 
+                      onChange={e => setNewPond({ ...newPond, pondWaterColor: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Light Green</option><option>Dark Green</option><option>Yellowish Green</option>
+                      <option>Brownish Green</option><option>Yellow</option><option>Muddy Brown</option>
+                      <option>Black</option><option>Other</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Source of Water</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.sourceOfWater} 
-//                       onChange={e => setNewPond({ ...newPond, sourceOfWater: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Rainwater</option><option>Pump</option><option>River</option><option>Other</option>
-//                     </select>
-//                   </div>
-//                 </div>
-//               </div>
+                  <div className="col-md-6">
+                    <label>Source of Water</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.sourceOfWater} 
+                      onChange={e => setNewPond({ ...newPond, sourceOfWater: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Rainwater</option><option>Pump</option><option>River</option><option>Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-//               {/* Disease & Symptoms */}
-//               <div className="modal-section">
-//                 <h6>Disease & Symptoms</h6>
-//                 <div className="row g-2">
-//                   <div className="col-md-3">
-//                     <label>Any disease symptoms?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.diseaseSymptoms} 
-//                       onChange={e => setNewPond({ ...newPond, diseaseSymptoms: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option><option>No</option>
-//                     </select>
-//                   </div>
+              {/* Disease & Symptoms */}
+              <div className="modal-section">
+                <h6>Disease & Symptoms</h6>
+                <div className="row g-2">
+                  <div className="col-md-3">
+                    <label>Any disease symptoms?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.diseaseSymptoms} 
+                      onChange={e => setNewPond({ ...newPond, diseaseSymptoms: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option><option>No</option>
+                    </select>
+                  </div>
 
-//                   {/* UPDATED SYMPTOMS SECTION */}
-//                   <div className="col-md-12">
-//                     <label>Symptoms observed (check / or type)</label>
-//                     <div className="symptoms-grid">
-//                       {SYMPTOMS_LIST.map(s => (
-//                         <label key={s} className="symptom-checkbox">
-//                           <input 
-//                             type="checkbox" 
-//                             checked={newPond.symptoms?.includes(s)} 
-//                             onChange={() => toggleSymptom(s)} 
-//                             disabled={loading.addPond || loading.updatePond}
-//                           /> 
-//                           <span>{s}</span>
-//                         </label>
-//                       ))}
-//                     </div>
-//                     <div style={{ marginTop: 8 }}>
-//                       <input 
-//                         className="form-control" 
-//                         placeholder="Or type symptoms comma separated" 
-//                         value={newPond.symptomsObserved} 
-//                         onChange={e => setNewPond({ ...newPond, symptomsObserved: e.target.value })}
-//                         disabled={loading.addPond || loading.updatePond}
-//                       />
-//                     </div>
-//                   </div>
+                  {/* UPDATED SYMPTOMS SECTION */}
+                  <div className="col-md-12">
+                    <label>Symptoms observed (check / or type)</label>
+                    <div className="symptoms-grid">
+                      {SYMPTOMS_LIST.map(s => (
+                        <label key={s} className="symptom-checkbox">
+                          <input 
+                            type="checkbox" 
+                            checked={newPond.symptoms?.includes(s)} 
+                            onChange={() => toggleSymptom(s)} 
+                            disabled={loading.addPond || loading.updatePond}
+                          /> 
+                          <span>{s}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <div style={{ marginTop: 8 }}>
+                      <input 
+                        className="form-control" 
+                        placeholder="Or type symptoms comma separated" 
+                        value={newPond.symptomsObserved} 
+                        onChange={e => setNewPond({ ...newPond, symptomsObserved: e.target.value })}
+                        disabled={loading.addPond || loading.updatePond}
+                      />
+                    </div>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <input 
-//                       type="number" 
-//                       className="form-control" 
-//                       placeholder="How many fish have died (cumulative)?" 
-//                       value={newPond.fishDeaths} 
-//                       onChange={e => setNewPond({ ...newPond, fishDeaths: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+                  <div className="col-md-6">
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      placeholder="How many fish have died (cumulative)?" 
+                      value={newPond.fishDeaths} 
+                      onChange={e => setNewPond({ ...newPond, fishDeaths: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Are symptoms affecting all fish or only a few?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.symptomsAffect} 
-//                       onChange={e => setNewPond({ ...newPond, symptomsAffect: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>All</option><option>Few</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-6">
+                    <label>Are symptoms affecting all fish or only a few?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.symptomsAffect} 
+                      onChange={e => setNewPond({ ...newPond, symptomsAffect: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>All</option><option>Few</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-6">
-//                     <label>Upload fish images/videos (up to 5)</label>
-//                     <input 
-//                       type="file" 
-//                       className="form-control" 
-//                       multiple 
-//                       onChange={e => setNewPond({ ...newPond, fishFiles: Array.from(e.target.files) })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                     {renderExistingFiles(newPond.fishFilesExisting)}
-//                   </div>
-//                 </div>
-//               </div>
+                  <div className="col-md-6">
+                    <label>Upload fish images/videos (up to 5)</label>
+                    <input 
+                      type="file" 
+                      className="form-control" 
+                      multiple 
+                      onChange={e => setNewPond({ ...newPond, fishFiles: Array.from(e.target.files) })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                    {renderExistingFiles(newPond.fishFilesExisting)}
+                  </div>
+                </div>
+              </div>
 
-//               {/* Observation & Misc */}
-//               <div className="modal-section">
-//                 <h6>Observation & Misc</h6>
-//                 <div className="row g-2">
-//                   <div className="col-md-4">
-//                     <label>Date of Farm Observed</label>
-//                     <input 
-//                       type="date" 
-//                       className="form-control" 
-//                       value={newPond.farmObservedDate} 
-//                       onChange={e => setNewPond({ ...newPond, farmObservedDate: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
-//                   <div className="col-md-4">
-//                     <label>Time of Farm Observed</label>
-//                     <input 
-//                       type="time" 
-//                       className="form-control" 
-//                       value={newPond.farmObservedTime} 
-//                       onChange={e => setNewPond({ ...newPond, farmObservedTime: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+              {/* Observation & Misc */}
+              <div className="modal-section">
+                <h6>Observation & Misc</h6>
+                <div className="row g-2">
+                  <div className="col-md-4">
+                    <label>Date of Farm Observed</label>
+                    <input 
+                      type="date" 
+                      className="form-control" 
+                      value={newPond.farmObservedDate} 
+                      onChange={e => setNewPond({ ...newPond, farmObservedDate: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label>Time of Farm Observed</label>
+                    <input 
+                      type="time" 
+                      className="form-control" 
+                      value={newPond.farmObservedTime} 
+                      onChange={e => setNewPond({ ...newPond, farmObservedTime: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-4">
-//                     <label>Which species farmer cultured last time?</label>
-//                     <input 
-//                       className="form-control" 
-//                       value={newPond.lastSpecies} 
-//                       onChange={e => setNewPond({ ...newPond, lastSpecies: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     />
-//                   </div>
+                  <div className="col-md-4">
+                    <label>Which species farmer cultured last time?</label>
+                    <input 
+                      className="form-control" 
+                      value={newPond.lastSpecies} 
+                      onChange={e => setNewPond({ ...newPond, lastSpecies: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    />
+                  </div>
 
-//                   <div className="col-md-4">
-//                     <label>Does farmer completely harvest the last crop?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.lastHarvestComplete} 
-//                       onChange={e => setNewPond({ ...newPond, lastHarvestComplete: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option><option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-4">
+                    <label>Does farmer completely harvest the last crop?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.lastHarvestComplete} 
+                      onChange={e => setNewPond({ ...newPond, lastHarvestComplete: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option><option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-4">
-//                     <label>Any recent heavy rains or floods?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.recentRainFlood} 
-//                       onChange={e => setNewPond({ ...newPond, recentRainFlood: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option><option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-4">
+                    <label>Any recent heavy rains or floods?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.recentRainFlood} 
+                      onChange={e => setNewPond({ ...newPond, recentRainFlood: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option><option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-4">
-//                     <label>Any pesticide/chemical runoff near pond?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.pesticideRunoff} 
-//                       onChange={e => setNewPond({ ...newPond, pesticideRunoff: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option><option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-4">
+                    <label>Any pesticide/chemical runoff near pond?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.pesticideRunoff} 
+                      onChange={e => setNewPond({ ...newPond, pesticideRunoff: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option><option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-4">
-//                     <label>Any construction/activity near pond?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.constructionNear} 
-//                       onChange={e => setNewPond({ ...newPond, constructionNear: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option><option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-4">
+                    <label>Any construction/activity near pond?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.constructionNear} 
+                      onChange={e => setNewPond({ ...newPond, constructionNear: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option><option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-4">
-//                     <label>Any sudden temperature change recently?</label>
-//                     <select 
-//                       className="form-control" 
-//                       value={newPond.suddenTempChange} 
-//                       onChange={e => setNewPond({ ...newPond, suddenTempChange: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     >
-//                       <option>Yes</option><option>No</option>
-//                     </select>
-//                   </div>
+                  <div className="col-md-4">
+                    <label>Any sudden temperature change recently?</label>
+                    <select 
+                      className="form-control" 
+                      value={newPond.suddenTempChange} 
+                      onChange={e => setNewPond({ ...newPond, suddenTempChange: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    >
+                      <option>Yes</option><option>No</option>
+                    </select>
+                  </div>
 
-//                   <div className="col-md-12">
-//                     <label>Notes / Remarks</label>
-//                     <textarea 
-//                       className="form-control" 
-//                       rows={3} 
-//                       value={newPond.notes} 
-//                       onChange={e => setNewPond({ ...newPond, notes: e.target.value })}
-//                       disabled={loading.addPond || loading.updatePond}
-//                     ></textarea>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
+                  <div className="col-md-12">
+                    <label>Notes / Remarks</label>
+                    <textarea 
+                      className="form-control" 
+                      rows={3} 
+                      value={newPond.notes} 
+                      onChange={e => setNewPond({ ...newPond, notes: e.target.value })}
+                      disabled={loading.addPond || loading.updatePond}
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-//             <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-//               {editingPondId ? (
-//                 <>
-//                   <button 
-//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-//                     onClick={updatePond}
-//                     disabled={loading.updatePond}
-//                   >
-//                     {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
-//                   </button>
-//                   <button 
-//                     className="btn btn-secondary flex-grow-1" 
-//                     onClick={() => { 
-//                       setShowPondForm(false); 
-//                       setNewPond(emptyPond);
-//                       setCurrentFarmerId(null);
-//                       setEditingPondId(null);
-//                     }}
-//                     disabled={loading.updatePond}
-//                   >
-//                     Cancel
-//                   </button>
-//                 </>
-//               ) : (
-//                 <>
-//                   <button 
-//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-//                     onClick={addPond}
-//                     disabled={loading.addPond}
-//                   >
-//                     {loading.addPond ? <ButtonLoader /> : "Add Pond"}
-//                   </button>
-//                   <button 
-//                     className="btn btn-secondary flex-grow-1" 
-//                     onClick={() => { 
-//                       setShowPondForm(false); 
-//                       setNewPond(emptyPond);
-//                       setCurrentFarmerId(null);
-//                     }}
-//                     disabled={loading.addPond}
-//                   >
-//                     Cancel
-//                   </button>
-//                 </>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+              {editingPondId ? (
+                <>
+                  <button 
+                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+                    onClick={updatePond}
+                    disabled={loading.updatePond}
+                  >
+                    {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
+                  </button>
+                  <button 
+                    className="btn btn-secondary flex-grow-1" 
+                    onClick={() => { 
+                      setShowPondForm(false); 
+                      setNewPond(emptyPond);
+                      setCurrentFarmerId(null);
+                      setEditingPondId(null);
+                    }}
+                    disabled={loading.updatePond}
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button 
+                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+                    onClick={addPond}
+                    disabled={loading.addPond}
+                  >
+                    {loading.addPond ? <ButtonLoader /> : "Add Pond"}
+                  </button>
+                  <button 
+                    className="btn btn-secondary flex-grow-1" 
+                    onClick={() => { 
+                      setShowPondForm(false); 
+                      setNewPond(emptyPond);
+                      setCurrentFarmerId(null);
+                    }}
+                    disabled={loading.addPond}
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
-// export default MainPage;
+export default MainPage;
 
 
 
@@ -10630,2547 +10630,2547 @@
 
 
 
-import React, { useState, useEffect, useRef } from "react";
-import api, { getImageUrl } from "../utils/api";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./mainPage.css";
+// import React, { useState, useEffect, useRef } from "react";
+// import api, { getImageUrl } from "../utils/api";
+// import { Link } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "./mainPage.css";
 
-// Import Lucide icons
-import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2, Camera, Image, Video, XCircle } from "lucide-react";
+// // Import Lucide icons
+// import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2, Camera, Image, Video, XCircle } from "lucide-react";
 
-function timeAgo(dateStr, t) {
-  if (!dateStr) return t('notUpdated');
-  const now = new Date();
-  const d = new Date(dateStr);
-  const diffMs = now - d;
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  if (days === 0) return t('today');
-  if (days === 1) return t('oneDayAgo');
-  return t('daysAgo', { count: days });
-}
+// function timeAgo(dateStr, t) {
+//   if (!dateStr) return t('notUpdated');
+//   const now = new Date();
+//   const d = new Date(dateStr);
+//   const diffMs = now - d;
+//   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+//   if (days === 0) return t('today');
+//   if (days === 1) return t('oneDayAgo');
+//   return t('daysAgo', { count: days });
+// }
 
-const SYMPTOMS_LIST = [
-  "Erratic swimming", 
-  "Loss of appetite",
-  "Gasping at surface",
-  "Lesions or ulcers",
-  "Fin rot",
-  "Fish Lice",
-  "Discoloration or white patches",
-  "Scale loss",
-  "Swollen abdomen",
-  "Fungal/cotton-like growth",
-  "Flared gills",
-  "Mucus secretion",
-  "Blood spots",
-  "Other"
-];
+// const SYMPTOMS_LIST = [
+//   "Erratic swimming", 
+//   "Loss of appetite",
+//   "Gasping at surface",
+//   "Lesions or ulcers",
+//   "Fin rot",
+//   "Fish Lice",
+//   "Discoloration or white patches",
+//   "Scale loss",
+//   "Swollen abdomen",
+//   "Fungal/cotton-like growth",
+//   "Flared gills",
+//   "Mucus secretion",
+//   "Blood spots",
+//   "Other"
+// ];
 
-// Helper functions
-const getFarmerImage = (farmer) => {
-  if (!farmer || !farmer.photo) return "/profile.png";
-  return getImageUrl(farmer.photo);
-};
+// // Helper functions
+// const getFarmerImage = (farmer) => {
+//   if (!farmer || !farmer.photo) return "/profile.png";
+//   return getImageUrl(farmer.photo);
+// };
 
-// Media capture utility
-const useMediaCapture = () => {
-  const [capturing, setCapturing] = useState(false);
-  const [isVideo, setIsVideo] = useState(false);
-  const videoRef = useRef(null);
-  const streamRef = useRef(null);
-  const mediaRecorderRef = useRef(null);
-  const recordedChunksRef = useRef([]);
+// // Media capture utility
+// const useMediaCapture = () => {
+//   const [capturing, setCapturing] = useState(false);
+//   const [isVideo, setIsVideo] = useState(false);
+//   const videoRef = useRef(null);
+//   const streamRef = useRef(null);
+//   const mediaRecorderRef = useRef(null);
+//   const recordedChunksRef = useRef([]);
 
-  const startCamera = async (type = 'image') => {
-    try {
-      setIsVideo(type === 'video');
-      setCapturing(true);
-      const constraints = {
-        video: {
-          facingMode: 'environment',
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        },
-        audio: type === 'video'
-      };
+//   const startCamera = async (type = 'image') => {
+//     try {
+//       setIsVideo(type === 'video');
+//       setCapturing(true);
+//       const constraints = {
+//         video: {
+//           facingMode: 'environment',
+//           width: { ideal: 1280 },
+//           height: { ideal: 720 }
+//         },
+//         audio: type === 'video'
+//       };
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      streamRef.current = stream;
+//       const stream = await navigator.mediaDevices.getUserMedia(constraints);
+//       streamRef.current = stream;
       
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
+//       if (videoRef.current) {
+//         videoRef.current.srcObject = stream;
+//         videoRef.current.play();
+//       }
 
-      // Setup media recorder for video
-      if (type === 'video') {
-        recordedChunksRef.current = [];
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
+//       // Setup media recorder for video
+//       if (type === 'video') {
+//         recordedChunksRef.current = [];
+//         const mediaRecorder = new MediaRecorder(stream);
+//         mediaRecorderRef.current = mediaRecorder;
         
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            recordedChunksRef.current.push(event.data);
-          }
-        };
-      }
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-      alert("Camera access denied or not available");
-      stopCamera();
-    }
-  };
+//         mediaRecorder.ondataavailable = (event) => {
+//           if (event.data.size > 0) {
+//             recordedChunksRef.current.push(event.data);
+//           }
+//         };
+//       }
+//     } catch (error) {
+//       console.error("Error accessing camera:", error);
+//       alert("Camera access denied or not available");
+//       stopCamera();
+//     }
+//   };
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.stop();
-    }
-    setCapturing(false);
-    setIsVideo(false);
-  };
+//   const stopCamera = () => {
+//     if (streamRef.current) {
+//       streamRef.current.getTracks().forEach(track => track.stop());
+//       streamRef.current = null;
+//     }
+//     if (videoRef.current) {
+//       videoRef.current.srcObject = null;
+//     }
+//     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+//       mediaRecorderRef.current.stop();
+//     }
+//     setCapturing(false);
+//     setIsVideo(false);
+//   };
 
-  const captureMedia = () => {
-    return new Promise((resolve) => {
-      if (!videoRef.current) {
-        resolve(null);
-        return;
-      }
+//   const captureMedia = () => {
+//     return new Promise((resolve) => {
+//       if (!videoRef.current) {
+//         resolve(null);
+//         return;
+//       }
 
-      const canvas = document.createElement('canvas');
-      const video = videoRef.current;
+//       const canvas = document.createElement('canvas');
+//       const video = videoRef.current;
       
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+//       canvas.width = video.videoWidth;
+//       canvas.height = video.videoHeight;
       
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+//       const ctx = canvas.getContext('2d');
+//       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const file = new File([blob], `capture_${Date.now()}.jpg`, {
-            type: 'image/jpeg'
-          });
-          resolve(file);
-        } else {
-          resolve(null);
-        }
-      }, 'image/jpeg', 0.8);
+//       canvas.toBlob((blob) => {
+//         if (blob) {
+//           const file = new File([blob], `capture_${Date.now()}.jpg`, {
+//             type: 'image/jpeg'
+//           });
+//           resolve(file);
+//         } else {
+//           resolve(null);
+//         }
+//       }, 'image/jpeg', 0.8);
       
-      stopCamera();
-    });
-  };
+//       stopCamera();
+//     });
+//   };
 
-  const startVideoRecording = () => {
-    if (mediaRecorderRef.current && recordedChunksRef.current) {
-      recordedChunksRef.current = [];
-      mediaRecorderRef.current.start();
-      setTimeout(() => {
-        stopVideoRecording();
-      }, 10000); // Record for 10 seconds
-    }
-  };
+//   const startVideoRecording = () => {
+//     if (mediaRecorderRef.current && recordedChunksRef.current) {
+//       recordedChunksRef.current = [];
+//       mediaRecorderRef.current.start();
+//       setTimeout(() => {
+//         stopVideoRecording();
+//       }, 10000); // Record for 10 seconds
+//     }
+//   };
 
-  const stopVideoRecording = () => {
-    return new Promise((resolve) => {
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-        mediaRecorderRef.current.onstop = () => {
-          const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
-          const file = new File([blob], `video_${Date.now()}.webm`, {
-            type: 'video/webm'
-          });
-          resolve(file);
-          stopCamera();
-        };
-        mediaRecorderRef.current.stop();
-      } else {
-        resolve(null);
-        stopCamera();
-      }
-    });
-  };
+//   const stopVideoRecording = () => {
+//     return new Promise((resolve) => {
+//       if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+//         mediaRecorderRef.current.onstop = () => {
+//           const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+//           const file = new File([blob], `video_${Date.now()}.webm`, {
+//             type: 'video/webm'
+//           });
+//           resolve(file);
+//           stopCamera();
+//         };
+//         mediaRecorderRef.current.stop();
+//       } else {
+//         resolve(null);
+//         stopCamera();
+//       }
+//     });
+//   };
 
-  const openGallery = (accept = "image/*", multiple = false) => {
-    return new Promise((resolve) => {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = accept;
-      input.multiple = multiple;
-      input.style.display = 'none';
+//   const openGallery = (accept = "image/*", multiple = false) => {
+//     return new Promise((resolve) => {
+//       const input = document.createElement('input');
+//       input.type = 'file';
+//       input.accept = accept;
+//       input.multiple = multiple;
+//       input.style.display = 'none';
       
-      input.onchange = (e) => {
-        const files = Array.from(e.target.files);
-        resolve(files);
-        document.body.removeChild(input);
-      };
+//       input.onchange = (e) => {
+//         const files = Array.from(e.target.files);
+//         resolve(files);
+//         document.body.removeChild(input);
+//       };
       
-      input.oncancel = () => {
-        resolve([]);
-        document.body.removeChild(input);
-      };
+//       input.oncancel = () => {
+//         resolve([]);
+//         document.body.removeChild(input);
+//       };
       
-      document.body.appendChild(input);
-      input.click();
-    });
-  };
+//       document.body.appendChild(input);
+//       input.click();
+//     });
+//   };
 
-  return {
-    capturing,
-    isVideo,
-    videoRef,
-    startCamera,
-    stopCamera,
-    captureMedia,
-    startVideoRecording,
-    stopVideoRecording,
-    openGallery
-  };
-};
+//   return {
+//     capturing,
+//     isVideo,
+//     videoRef,
+//     startCamera,
+//     stopCamera,
+//     captureMedia,
+//     startVideoRecording,
+//     stopVideoRecording,
+//     openGallery
+//   };
+// };
 
-function MainPage() {
-  const { t, i18n } = useTranslation();
-  const username = localStorage.getItem("username") || "User";
-  const photo = localStorage.getItem("photo") || "/profile.png";
-  const userId = localStorage.getItem("userId");
+// function MainPage() {
+//   const { t, i18n } = useTranslation();
+//   const username = localStorage.getItem("username") || "User";
+//   const photo = localStorage.getItem("photo") || "/profile.png";
+//   const userId = localStorage.getItem("userId");
 
-  const [farmers, setFarmers] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [showPondForm, setShowPondForm] = useState(false);
-  const [editingFarmerId, setEditingFarmerId] = useState(null);
-  const [editingPondId, setEditingPondId] = useState(null);
-  const [currentFarmerId, setCurrentFarmerId] = useState(null);
-  const [welcomeMsg, setWelcomeMsg] = useState("");
-  const [isUpdateMode, setIsUpdateMode] = useState(false);
+//   const [farmers, setFarmers] = useState([]);
+//   const [showForm, setShowForm] = useState(false);
+//   const [showPondForm, setShowPondForm] = useState(false);
+//   const [editingFarmerId, setEditingFarmerId] = useState(null);
+//   const [editingPondId, setEditingPondId] = useState(null);
+//   const [currentFarmerId, setCurrentFarmerId] = useState(null);
+//   const [welcomeMsg, setWelcomeMsg] = useState("");
+//   const [isUpdateMode, setIsUpdateMode] = useState(false);
   
-  // Error states
-  const [farmerError, setFarmerError] = useState("");
-  const [pondError, setPondError] = useState("");
+//   // Error states
+//   const [farmerError, setFarmerError] = useState("");
+//   const [pondError, setPondError] = useState("");
   
-  // Loading states
-  const [loading, setLoading] = useState({
-    fetchFarmers: false,
-    addFarmer: false,
-    updateFarmer: false,
-    addPond: false,
-    updatePond: false,
-    deleteFarmer: false,
-    deletePond: false,
-    search: false
-  });
+//   // Loading states
+//   const [loading, setLoading] = useState({
+//     fetchFarmers: false,
+//     addFarmer: false,
+//     updateFarmer: false,
+//     addPond: false,
+//     updatePond: false,
+//     deleteFarmer: false,
+//     deletePond: false,
+//     search: false
+//   });
   
-  // Mobile sidebar states
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+//   // Mobile sidebar states
+//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+//   const [isMobile, setIsMobile] = useState(false);
 
-  // Media capture hooks for different fields
-  const farmerPhotoMedia = useMediaCapture();
-  const pondImageMedia = useMediaCapture();
-  const pondFilesMedia = useMediaCapture();
-  const fishFilesMedia = useMediaCapture();
+//   // Media capture hooks for different fields
+//   const farmerPhotoMedia = useMediaCapture();
+//   const pondImageMedia = useMediaCapture();
+//   const pondFilesMedia = useMediaCapture();
+//   const fishFilesMedia = useMediaCapture();
 
-  // Which media field is currently active
-  const [activeMediaField, setActiveMediaField] = useState(null);
+//   // Which media field is currently active
+//   const [activeMediaField, setActiveMediaField] = useState(null);
 
-  // Farmer form empty state
-  const emptyFarmer = {
-    name: "", contact: "", age: "", gender: "", village: "",
-    pondCount: "", adhar: "", familyMembers: "", familyOccupation: "",
-    photo: null,
-    photoExisting: ""
-  };
+//   // Farmer form empty state
+//   const emptyFarmer = {
+//     name: "", contact: "", age: "", gender: "", village: "",
+//     pondCount: "", adhar: "", familyMembers: "", familyOccupation: "",
+//     photo: null,
+//     photoExisting: ""
+//   };
 
-  // Pond form empty state - ALL FIELDS AS REQUIRED
-  const emptyPond = {
-    // Pond Details
-    pondArea: "", pondAreaUnit: "acre", pondDepth: "", pondImage: null,
-    overflow: "No", receivesSunlight: "Yes", treesOnBanks: "No",
-    neighbourhood: "Agriculture Farm", wastewaterEnters: "No",
-    // Species & files
-    species: "",
-    pondFiles: [],
-    fishFiles: [],
-    // Stocking & quantities
-    dateOfStocking: "", qtySeedInitially: "", currentQty: "", avgSize: ">200gram",
-    // Feed
-    feedType: "Market Feed", feedOther: "", feedFreq: "Once a day", 
-    feedQtyPerDay: "", feedTime: "6:00 am-10:00am",
-    recentFeedChanges: "", reducedAppetite: "No",
-    // Water quality
-    waterTemperature: "", pH: "", DO: "", ammoniaLevel: "Medium", 
-    phytoplanktonLevel: "Medium", waterHardness: "1",
-    algaeBloom: "No", pondWaterColor: "Light Green", sourceOfWater: "Rainwater",
-    // Disease / symptoms
-    diseaseSymptoms: "No", symptomsObserved: "", symptoms: [],
-    symptomsAffect: "All",
-    fishDeaths: "",
-    // Observation
-    farmObservedDate: "", farmObservedTime: "",
-    // misc
-    notes: "",
-    lastSpecies: "", lastHarvestComplete: "Yes", recentRainFlood: "No",
-    pesticideRunoff: "No", constructionNear: "No", suddenTempChange: "No"
-  };
+//   // Pond form empty state - ALL FIELDS AS REQUIRED
+//   const emptyPond = {
+//     // Pond Details
+//     pondArea: "", pondAreaUnit: "acre", pondDepth: "", pondImage: null,
+//     overflow: "No", receivesSunlight: "Yes", treesOnBanks: "No",
+//     neighbourhood: "Agriculture Farm", wastewaterEnters: "No",
+//     // Species & files
+//     species: "",
+//     pondFiles: [],
+//     fishFiles: [],
+//     // Stocking & quantities
+//     dateOfStocking: "", qtySeedInitially: "", currentQty: "", avgSize: ">200gram",
+//     // Feed
+//     feedType: "Market Feed", feedOther: "", feedFreq: "Once a day", 
+//     feedQtyPerDay: "", feedTime: "6:00 am-10:00am",
+//     recentFeedChanges: "", reducedAppetite: "No",
+//     // Water quality
+//     waterTemperature: "", pH: "", DO: "", ammoniaLevel: "Medium", 
+//     phytoplanktonLevel: "Medium", waterHardness: "1",
+//     algaeBloom: "No", pondWaterColor: "Light Green", sourceOfWater: "Rainwater",
+//     // Disease / symptoms
+//     diseaseSymptoms: "No", symptomsObserved: "", symptoms: [],
+//     symptomsAffect: "All",
+//     fishDeaths: "",
+//     // Observation
+//     farmObservedDate: "", farmObservedTime: "",
+//     // misc
+//     notes: "",
+//     lastSpecies: "", lastHarvestComplete: "Yes", recentRainFlood: "No",
+//     pesticideRunoff: "No", constructionNear: "No", suddenTempChange: "No"
+//   };
 
-  const [newFarmer, setNewFarmer] = useState(emptyFarmer);
-  const [newPond, setNewPond] = useState(emptyPond);
+//   const [newFarmer, setNewFarmer] = useState(emptyFarmer);
+//   const [newPond, setNewPond] = useState(emptyPond);
 
-  // Check if mobile view
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 991);
-    };
+//   // Check if mobile view
+//   useEffect(() => {
+//     const checkMobile = () => {
+//       setIsMobile(window.innerWidth <= 991);
+//     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+//     checkMobile();
+//     window.addEventListener('resize', checkMobile);
     
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+//     return () => window.removeEventListener('resize', checkMobile);
+//   }, []);
 
-  // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isMobile && isSidebarOpen && 
-          !event.target.closest('.sidebar') && 
-          !event.target.closest('.mobile-menu-toggle')) {
-        setIsSidebarOpen(false);
-      }
-    };
+//   // Close sidebar when clicking outside on mobile
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (isMobile && isSidebarOpen && 
+//           !event.target.closest('.sidebar') && 
+//           !event.target.closest('.mobile-menu-toggle')) {
+//         setIsSidebarOpen(false);
+//       }
+//     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [isMobile, isSidebarOpen]);
+//     document.addEventListener('click', handleClickOutside);
+//     return () => document.removeEventListener('click', handleClickOutside);
+//   }, [isMobile, isSidebarOpen]);
 
-  // Fetch data
-  useEffect(() => {
-    if (!userId) return console.error("UserId not found in localStorage");
-    fetchFarmers();
-    const savedLang = localStorage.getItem("lang");
-    if (savedLang) i18n.changeLanguage(savedLang);
-  }, []);
+//   // Fetch data
+//   useEffect(() => {
+//     if (!userId) return console.error("UserId not found in localStorage");
+//     fetchFarmers();
+//     const savedLang = localStorage.getItem("lang");
+//     if (savedLang) i18n.changeLanguage(savedLang);
+//   }, []);
 
-  // Close sidebar when route changes
-  useEffect(() => {
-    setIsSidebarOpen(false);
-  }, [window.location.pathname]);
+//   // Close sidebar when route changes
+//   useEffect(() => {
+//     setIsSidebarOpen(false);
+//   }, [window.location.pathname]);
 
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang);
-    localStorage.setItem("lang", lang);
-  };
+//   const changeLanguage = (lang) => {
+//     i18n.changeLanguage(lang);
+//     localStorage.setItem("lang", lang);
+//   };
 
-  const fetchFarmers = async () => {
-    try {
-      setLoading(prev => ({ ...prev, fetchFarmers: true }));
-      const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
-      setFarmers(res.data || []);
-    } catch (err) {
-      console.log("Fetch Farmers Error:", err);
-    } finally {
-      setLoading(prev => ({ ...prev, fetchFarmers: false }));
-    }
-  };
+//   const fetchFarmers = async () => {
+//     try {
+//       setLoading(prev => ({ ...prev, fetchFarmers: true }));
+//       const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
+//       setFarmers(res.data || []);
+//     } catch (err) {
+//       console.log("Fetch Farmers Error:", err);
+//     } finally {
+//       setLoading(prev => ({ ...prev, fetchFarmers: false }));
+//     }
+//   };
 
-  // Add Farmer
-  const addFarmer = async () => {
-    setFarmerError("");
+//   // Add Farmer
+//   const addFarmer = async () => {
+//     setFarmerError("");
     
-    const requiredFields = ['name', 'contact', 'age', 'gender', 'village', 'adhar', 'familyMembers', 'familyOccupation'];
-    const missingFields = [];
+//     const requiredFields = ['name', 'contact', 'age', 'gender', 'village', 'adhar', 'familyMembers', 'familyOccupation'];
+//     const missingFields = [];
     
-    requiredFields.forEach(field => {
-      if (!newFarmer[field] || newFarmer[field].toString().trim() === '') {
-        missingFields.push(field);
-      }
-    });
+//     requiredFields.forEach(field => {
+//       if (!newFarmer[field] || newFarmer[field].toString().trim() === '') {
+//         missingFields.push(field);
+//       }
+//     });
     
-    if (missingFields.length > 0) {
-      setFarmerError(`Please fill all required fields: ${missingFields.join(', ')}`);
-      return;
-    }
+//     if (missingFields.length > 0) {
+//       setFarmerError(`Please fill all required fields: ${missingFields.join(', ')}`);
+//       return;
+//     }
     
-    if (newFarmer.adhar) {
-      const adharStr = newFarmer.adhar.toString().trim();
-      if (adharStr.length !== 12 || !/^\d+$/.test(adharStr)) {
-        setFarmerError("Aadhar number must be exactly 12 digits");
-        return;
-      }
-    }
+//     if (newFarmer.adhar) {
+//       const adharStr = newFarmer.adhar.toString().trim();
+//       if (adharStr.length !== 12 || !/^\d+$/.test(adharStr)) {
+//         setFarmerError("Aadhar number must be exactly 12 digits");
+//         return;
+//       }
+//     }
     
-    const formData = new FormData();
+//     const formData = new FormData();
     
-    for (let key in newFarmer) {
-      if (key === "photo" || key === "photoExisting") continue;
-      formData.append(key, newFarmer[key] ?? "");
-    }
+//     for (let key in newFarmer) {
+//       if (key === "photo" || key === "photoExisting") continue;
+//       formData.append(key, newFarmer[key] ?? "");
+//     }
     
-    formData.append("userId", userId);
+//     formData.append("userId", userId);
     
-    if (newFarmer.photo instanceof File) {
-      formData.append("photo", newFarmer.photo);
-    }
+//     if (newFarmer.photo instanceof File) {
+//       formData.append("photo", newFarmer.photo);
+//     }
 
-    try {
-      setLoading(prev => ({ ...prev, addFarmer: true }));
-      const res = await api.post(`/api/farmers/add`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-      setFarmers([...farmers, res.data]);
-      setShowForm(false);
-      setNewFarmer(emptyFarmer);
-      setFarmerError("");
-    } catch (err) {
-      console.error("Add Farmer Error:", err);
-      const errorMsg = err.response?.data?.error || "Server error. Please try again.";
-      setFarmerError(errorMsg);
-      alert(errorMsg);
-    } finally {
-      setLoading(prev => ({ ...prev, addFarmer: false }));
-    }
-  };
+//     try {
+//       setLoading(prev => ({ ...prev, addFarmer: true }));
+//       const res = await api.post(`/api/farmers/add`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
+//       setFarmers([...farmers, res.data]);
+//       setShowForm(false);
+//       setNewFarmer(emptyFarmer);
+//       setFarmerError("");
+//     } catch (err) {
+//       console.error("Add Farmer Error:", err);
+//       const errorMsg = err.response?.data?.error || "Server error. Please try again.";
+//       setFarmerError(errorMsg);
+//       alert(errorMsg);
+//     } finally {
+//       setLoading(prev => ({ ...prev, addFarmer: false }));
+//     }
+//   };
 
-  // Update Farmer
-  const updateFarmer = async () => {
-    setFarmerError("");
+//   // Update Farmer
+//   const updateFarmer = async () => {
+//     setFarmerError("");
     
-    if (!editingFarmerId) return;
+//     if (!editingFarmerId) return;
     
-    const requiredFields = ['name', 'contact', 'age', 'gender', 'village', 'adhar', 'familyMembers', 'familyOccupation'];
-    const missingFields = [];
+//     const requiredFields = ['name', 'contact', 'age', 'gender', 'village', 'adhar', 'familyMembers', 'familyOccupation'];
+//     const missingFields = [];
     
-    requiredFields.forEach(field => {
-      if (!newFarmer[field] || newFarmer[field].toString().trim() === '') {
-        missingFields.push(field);
-      }
-    });
+//     requiredFields.forEach(field => {
+//       if (!newFarmer[field] || newFarmer[field].toString().trim() === '') {
+//         missingFields.push(field);
+//       }
+//     });
     
-    if (missingFields.length > 0) {
-      setFarmerError(`Please fill all required fields: ${missingFields.join(', ')}`);
-      return;
-    }
+//     if (missingFields.length > 0) {
+//       setFarmerError(`Please fill all required fields: ${missingFields.join(', ')}`);
+//       return;
+//     }
     
-    if (newFarmer.adhar) {
-      const adharStr = newFarmer.adhar.toString().trim();
-      if (adharStr.length !== 12 || !/^\d+$/.test(adharStr)) {
-        setFarmerError("Aadhar number must be exactly 12 digits");
-        return;
-      }
-    }
+//     if (newFarmer.adhar) {
+//       const adharStr = newFarmer.adhar.toString().trim();
+//       if (adharStr.length !== 12 || !/^\d+$/.test(adharStr)) {
+//         setFarmerError("Aadhar number must be exactly 12 digits");
+//         return;
+//       }
+//     }
     
-    const formData = new FormData();
+//     const formData = new FormData();
     
-    for (let key in newFarmer) {
-      if (key === "photo" || key === "photoExisting") continue;
-      formData.append(key, newFarmer[key] ?? "");
-    }
+//     for (let key in newFarmer) {
+//       if (key === "photo" || key === "photoExisting") continue;
+//       formData.append(key, newFarmer[key] ?? "");
+//     }
     
-    formData.append("userId", userId);
+//     formData.append("userId", userId);
     
-    if (newFarmer.photo instanceof File) {
-      formData.append("photo", newFarmer.photo);
-    }
+//     if (newFarmer.photo instanceof File) {
+//       formData.append("photo", newFarmer.photo);
+//     }
 
-    try {
-      setLoading(prev => ({ ...prev, updateFarmer: true }));
-      const res = await api.put(`/api/farmers/update/${editingFarmerId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+//     try {
+//       setLoading(prev => ({ ...prev, updateFarmer: true }));
+//       const res = await api.put(`/api/farmers/update/${editingFarmerId}`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
       
-      setFarmers(farmers.map(f =>
-        f._id === res.data._id
-          ? { ...res.data, photo: res.data.photo || f.photo }
-          : f
-      ));
+//       setFarmers(farmers.map(f =>
+//         f._id === res.data._id
+//           ? { ...res.data, photo: res.data.photo || f.photo }
+//           : f
+//       ));
       
-      setShowForm(false);
-      setEditingFarmerId(null);
-      setNewFarmer(emptyFarmer);
-      setIsUpdateMode(false);
-      setFarmerError("");
-    } catch (err) {
-      console.error("Update Farmer Error:", err);
-      const errorMsg = err.response?.data?.error || "Server error. Please try again.";
-      setFarmerError(errorMsg);
-      alert(errorMsg);
-    } finally {
-      setLoading(prev => ({ ...prev, updateFarmer: false }));
-    }
-  };
+//       setShowForm(false);
+//       setEditingFarmerId(null);
+//       setNewFarmer(emptyFarmer);
+//       setIsUpdateMode(false);
+//       setFarmerError("");
+//     } catch (err) {
+//       console.error("Update Farmer Error:", err);
+//       const errorMsg = err.response?.data?.error || "Server error. Please try again.";
+//       setFarmerError(errorMsg);
+//       alert(errorMsg);
+//     } finally {
+//       setLoading(prev => ({ ...prev, updateFarmer: false }));
+//     }
+//   };
 
-  // Add Pond to Farmer - WITH VALIDATION
-  const addPond = async () => {
-    setPondError("");
+//   // Add Pond to Farmer - WITH VALIDATION
+//   const addPond = async () => {
+//     setPondError("");
     
-    if (!currentFarmerId) {
-      setPondError("Farmer ID missing");
-      return;
-    }
+//     if (!currentFarmerId) {
+//       setPondError("Farmer ID missing");
+//       return;
+//     }
     
-    // POND REQUIRED FIELDS VALIDATION
-    const pondRequiredFields = [
-      'pondArea', 'pondDepth', 'species', 'dateOfStocking',
-      'qtySeedInitially', 'currentQty', 'waterTemperature',
-      'pH', 'DO', 'sourceOfWater'
-    ];
+//     // POND REQUIRED FIELDS VALIDATION
+//     const pondRequiredFields = [
+//       'pondArea', 'pondDepth', 'species', 'dateOfStocking',
+//       'qtySeedInitially', 'currentQty', 'waterTemperature',
+//       'pH', 'DO', 'sourceOfWater'
+//     ];
     
-    const missingPondFields = [];
-    pondRequiredFields.forEach(field => {
-      if (!newPond[field] || newPond[field].toString().trim() === '') {
-        missingPondFields.push(field);
-      }
-    });
+//     const missingPondFields = [];
+//     pondRequiredFields.forEach(field => {
+//       if (!newPond[field] || newPond[field].toString().trim() === '') {
+//         missingPondFields.push(field);
+//       }
+//     });
     
-    if (missingPondFields.length > 0) {
-      setPondError(`Please fill all required pond fields: ${missingPondFields.join(', ')}`);
-      return;
-    }
+//     if (missingPondFields.length > 0) {
+//       setPondError(`Please fill all required pond fields: ${missingPondFields.join(', ')}`);
+//       return;
+//     }
     
-    // NUMERIC VALIDATION
-    if (newPond.pondArea && isNaN(parseFloat(newPond.pondArea))) {
-      setPondError("Pond area must be a number");
-      return;
-    }
+//     // NUMERIC VALIDATION
+//     if (newPond.pondArea && isNaN(parseFloat(newPond.pondArea))) {
+//       setPondError("Pond area must be a number");
+//       return;
+//     }
     
-    if (newPond.pondDepth && isNaN(parseFloat(newPond.pondDepth))) {
-      setPondError("Pond depth must be a number");
-      return;
-    }
+//     if (newPond.pondDepth && isNaN(parseFloat(newPond.pondDepth))) {
+//       setPondError("Pond depth must be a number");
+//       return;
+//     }
     
-    if (newPond.qtySeedInitially && isNaN(parseInt(newPond.qtySeedInitially))) {
-      setPondError("Initial seed quantity must be a number");
-      return;
-    }
+//     if (newPond.qtySeedInitially && isNaN(parseInt(newPond.qtySeedInitially))) {
+//       setPondError("Initial seed quantity must be a number");
+//       return;
+//     }
     
-    if (newPond.currentQty && isNaN(parseInt(newPond.currentQty))) {
-      setPondError("Current quantity must be a number");
-      return;
-    }
+//     if (newPond.currentQty && isNaN(parseInt(newPond.currentQty))) {
+//       setPondError("Current quantity must be a number");
+//       return;
+//     }
     
-    if (newPond.waterTemperature && isNaN(parseFloat(newPond.waterTemperature))) {
-      setPondError("Water temperature must be a number");
-      return;
-    }
+//     if (newPond.waterTemperature && isNaN(parseFloat(newPond.waterTemperature))) {
+//       setPondError("Water temperature must be a number");
+//       return;
+//     }
     
-    if (newPond.pH && isNaN(parseFloat(newPond.pH))) {
-      setPondError("pH must be a number");
-      return;
-    }
+//     if (newPond.pH && isNaN(parseFloat(newPond.pH))) {
+//       setPondError("pH must be a number");
+//       return;
+//     }
     
-    if (newPond.DO && isNaN(parseFloat(newPond.DO))) {
-      setPondError("DO must be a number");
-      return;
-    }
+//     if (newPond.DO && isNaN(parseFloat(newPond.DO))) {
+//       setPondError("DO must be a number");
+//       return;
+//     }
     
-    const formData = new FormData();
-    const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
-      ? newPond.symptoms.join(", ")
-      : (newPond.symptomsObserved || "");
+//     const formData = new FormData();
+//     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
+//       ? newPond.symptoms.join(", ")
+//       : (newPond.symptomsObserved || "");
 
-    const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
-    for (let key in newPond) {
-      if (skipFiles.includes(key)) continue;
-      formData.append(key, newPond[key] ?? "");
-    }
-    formData.set("symptomsObserved", symptomsStr);
+//     const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
+//     for (let key in newPond) {
+//       if (skipFiles.includes(key)) continue;
+//       formData.append(key, newPond[key] ?? "");
+//     }
+//     formData.set("symptomsObserved", symptomsStr);
 
-    if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
-    if (newPond.pondFiles && newPond.pondFiles.length > 0) {
-      newPond.pondFiles.forEach((f) => {
-        if (f instanceof File) formData.append("pondFiles", f);
-      });
-    }
-    if (newPond.fishFiles && newPond.fishFiles.length > 0) {
-      newPond.fishFiles.forEach((f) => {
-        if (f instanceof File) formData.append("fishFiles", f);
-      });
-    }
+//     if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+//     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
+//       newPond.pondFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("pondFiles", f);
+//       });
+//     }
+//     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
+//       newPond.fishFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("fishFiles", f);
+//       });
+//     }
 
-    try {
-      setLoading(prev => ({ ...prev, addPond: true }));
-      const res = await api.post(`/api/farmers/add-pond/${currentFarmerId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+//     try {
+//       setLoading(prev => ({ ...prev, addPond: true }));
+//       const res = await api.post(`/api/farmers/add-pond/${currentFarmerId}`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
       
-      setFarmers(farmers.map(f => 
-        f._id === currentFarmerId ? res.data.farmer : f
-      ));
-      setShowPondForm(false);
-      setNewPond(emptyPond);
-      setCurrentFarmerId(null);
-      setPondError("");
-    } catch (err) {
-      console.error("Add Pond Error:", err);
-      const errorMsg = err.response?.data?.error || "Server error. Please try again.";
-      setPondError(errorMsg);
-      alert(errorMsg);
-    } finally {
-      setLoading(prev => ({ ...prev, addPond: false }));
-    }
-  };
+//       setFarmers(farmers.map(f => 
+//         f._id === currentFarmerId ? res.data.farmer : f
+//       ));
+//       setShowPondForm(false);
+//       setNewPond(emptyPond);
+//       setCurrentFarmerId(null);
+//       setPondError("");
+//     } catch (err) {
+//       console.error("Add Pond Error:", err);
+//       const errorMsg = err.response?.data?.error || "Server error. Please try again.";
+//       setPondError(errorMsg);
+//       alert(errorMsg);
+//     } finally {
+//       setLoading(prev => ({ ...prev, addPond: false }));
+//     }
+//   };
 
-  // Update Pond - WITH VALIDATION
-  const updatePond = async () => {
-    setPondError("");
+//   // Update Pond - WITH VALIDATION
+//   const updatePond = async () => {
+//     setPondError("");
     
-    if (!currentFarmerId || !editingPondId) {
-      setPondError("Farmer ID or Pond ID missing");
-      return;
-    }
+//     if (!currentFarmerId || !editingPondId) {
+//       setPondError("Farmer ID or Pond ID missing");
+//       return;
+//     }
     
-    // POND REQUIRED FIELDS VALIDATION
-    const pondRequiredFields = [
-      'pondArea', 'pondDepth', 'species', 'dateOfStocking',
-      'qtySeedInitially', 'currentQty', 'waterTemperature',
-      'pH', 'DO', 'sourceOfWater'
-    ];
+//     // POND REQUIRED FIELDS VALIDATION
+//     const pondRequiredFields = [
+//       'pondArea', 'pondDepth', 'species', 'dateOfStocking',
+//       'qtySeedInitially', 'currentQty', 'waterTemperature',
+//       'pH', 'DO', 'sourceOfWater'
+//     ];
     
-    const missingPondFields = [];
-    pondRequiredFields.forEach(field => {
-      if (!newPond[field] || newPond[field].toString().trim() === '') {
-        missingPondFields.push(field);
-      }
-    });
+//     const missingPondFields = [];
+//     pondRequiredFields.forEach(field => {
+//       if (!newPond[field] || newPond[field].toString().trim() === '') {
+//         missingPondFields.push(field);
+//       }
+//     });
     
-    if (missingPondFields.length > 0) {
-      setPondError(`Please fill all required pond fields: ${missingPondFields.join(', ')}`);
-      return;
-    }
+//     if (missingPondFields.length > 0) {
+//       setPondError(`Please fill all required pond fields: ${missingPondFields.join(', ')}`);
+//       return;
+//     }
     
-    // NUMERIC VALIDATION
-    if (newPond.pondArea && isNaN(parseFloat(newPond.pondArea))) {
-      setPondError("Pond area must be a number");
-      return;
-    }
+//     // NUMERIC VALIDATION
+//     if (newPond.pondArea && isNaN(parseFloat(newPond.pondArea))) {
+//       setPondError("Pond area must be a number");
+//       return;
+//     }
     
-    if (newPond.pondDepth && isNaN(parseFloat(newPond.pondDepth))) {
-      setPondError("Pond depth must be a number");
-      return;
-    }
+//     if (newPond.pondDepth && isNaN(parseFloat(newPond.pondDepth))) {
+//       setPondError("Pond depth must be a number");
+//       return;
+//     }
     
-    if (newPond.qtySeedInitially && isNaN(parseInt(newPond.qtySeedInitially))) {
-      setPondError("Initial seed quantity must be a number");
-      return;
-    }
+//     if (newPond.qtySeedInitially && isNaN(parseInt(newPond.qtySeedInitially))) {
+//       setPondError("Initial seed quantity must be a number");
+//       return;
+//     }
     
-    if (newPond.currentQty && isNaN(parseInt(newPond.currentQty))) {
-      setPondError("Current quantity must be a number");
-      return;
-    }
+//     if (newPond.currentQty && isNaN(parseInt(newPond.currentQty))) {
+//       setPondError("Current quantity must be a number");
+//       return;
+//     }
     
-    if (newPond.waterTemperature && isNaN(parseFloat(newPond.waterTemperature))) {
-      setPondError("Water temperature must be a number");
-      return;
-    }
+//     if (newPond.waterTemperature && isNaN(parseFloat(newPond.waterTemperature))) {
+//       setPondError("Water temperature must be a number");
+//       return;
+//     }
     
-    if (newPond.pH && isNaN(parseFloat(newPond.pH))) {
-      setPondError("pH must be a number");
-      return;
-    }
+//     if (newPond.pH && isNaN(parseFloat(newPond.pH))) {
+//       setPondError("pH must be a number");
+//       return;
+//     }
     
-    if (newPond.DO && isNaN(parseFloat(newPond.DO))) {
-      setPondError("DO must be a number");
-      return;
-    }
+//     if (newPond.DO && isNaN(parseFloat(newPond.DO))) {
+//       setPondError("DO must be a number");
+//       return;
+//     }
     
-    const formData = new FormData();
-    const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
-      ? newPond.symptoms.join(", ")
-      : (newPond.symptomsObserved || "");
+//     const formData = new FormData();
+//     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
+//       ? newPond.symptoms.join(", ")
+//       : (newPond.symptomsObserved || "");
 
-    const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
-    for (let key in newPond) {
-      if (skipFiles.includes(key)) continue;
-      formData.append(key, newPond[key] ?? "");
-    }
-    formData.set("symptomsObserved", symptomsStr);
+//     const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
+//     for (let key in newPond) {
+//       if (skipFiles.includes(key)) continue;
+//       formData.append(key, newPond[key] ?? "");
+//     }
+//     formData.set("symptomsObserved", symptomsStr);
 
-    if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
-    if (newPond.pondFiles && newPond.pondFiles.length > 0) {
-      newPond.pondFiles.forEach((f) => {
-        if (f instanceof File) formData.append("pondFiles", f);
-      });
-    }
-    if (newPond.fishFiles && newPond.fishFiles.length > 0) {
-      newPond.fishFiles.forEach((f) => {
-        if (f instanceof File) formData.append("fishFiles", f);
-      });
-    }
+//     if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+//     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
+//       newPond.pondFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("pondFiles", f);
+//       });
+//     }
+//     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
+//       newPond.fishFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("fishFiles", f);
+//       });
+//     }
 
-    try {
-      setLoading(prev => ({ ...prev, updatePond: true }));
-      const res = await api.put(`/api/farmers/update-pond/${currentFarmerId}/${editingPondId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+//     try {
+//       setLoading(prev => ({ ...prev, updatePond: true }));
+//       const res = await api.put(`/api/farmers/update-pond/${currentFarmerId}/${editingPondId}`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
       
-      setFarmers(farmers.map(f => 
-        f._id === currentFarmerId ? res.data.farmer : f
-      ));
-      setShowPondForm(false);
-      setNewPond(emptyPond);
-      setCurrentFarmerId(null);
-      setEditingPondId(null);
-      setPondError("");
-    } catch (err) {
-      console.error("Update Pond Error:", err);
-      const errorMsg = err.response?.data?.error || "Server error. Please try again.";
-      setPondError(errorMsg);
-      alert(errorMsg);
-    } finally {
-      setLoading(prev => ({ ...prev, updatePond: false }));
-    }
-  };
+//       setFarmers(farmers.map(f => 
+//         f._id === currentFarmerId ? res.data.farmer : f
+//       ));
+//       setShowPondForm(false);
+//       setNewPond(emptyPond);
+//       setCurrentFarmerId(null);
+//       setEditingPondId(null);
+//       setPondError("");
+//     } catch (err) {
+//       console.error("Update Pond Error:", err);
+//       const errorMsg = err.response?.data?.error || "Server error. Please try again.";
+//       setPondError(errorMsg);
+//       alert(errorMsg);
+//     } finally {
+//       setLoading(prev => ({ ...prev, updatePond: false }));
+//     }
+//   };
 
-  // Edit Farmer
-  const openEdit = (farmer) => {
-    setFarmerError("");
-    setIsUpdateMode(true);
-    const pre = { ...emptyFarmer };
-    Object.keys(pre).forEach(k => {
-      if (farmer[k] !== undefined && farmer[k] !== null) {
-        pre[k] = farmer[k];
-      }
-    });
+//   // Edit Farmer
+//   const openEdit = (farmer) => {
+//     setFarmerError("");
+//     setIsUpdateMode(true);
+//     const pre = { ...emptyFarmer };
+//     Object.keys(pre).forEach(k => {
+//       if (farmer[k] !== undefined && farmer[k] !== null) {
+//         pre[k] = farmer[k];
+//       }
+//     });
 
-    pre.photo = null;
-    pre.photoExisting = farmer.photo || "";
+//     pre.photo = null;
+//     pre.photoExisting = farmer.photo || "";
 
-    setNewFarmer(pre);
-    setEditingFarmerId(farmer._id);
-    setShowForm(true);
-  };
+//     setNewFarmer(pre);
+//     setEditingFarmerId(farmer._id);
+//     setShowForm(true);
+//   };
 
-  // Open Add Pond Form
-  const openAddPond = (farmerId) => {
-    setCurrentFarmerId(farmerId);
-    setEditingPondId(null);
-    setNewPond(emptyPond);
-    setShowPondForm(true);
-    setPondError("");
-  };
+//   // Open Add Pond Form
+//   const openAddPond = (farmerId) => {
+//     setCurrentFarmerId(farmerId);
+//     setEditingPondId(null);
+//     setNewPond(emptyPond);
+//     setShowPondForm(true);
+//     setPondError("");
+//   };
 
-  // Open Edit Pond Form
-  const openEditPond = (farmerId, pond) => {
-    setCurrentFarmerId(farmerId);
-    setEditingPondId(pond.pondId);
+//   // Open Edit Pond Form
+//   const openEditPond = (farmerId, pond) => {
+//     setCurrentFarmerId(farmerId);
+//     setEditingPondId(pond.pondId);
     
-    const pre = { ...emptyPond };
-    Object.keys(pre).forEach(k => {
-      if (pond[k] !== undefined && pond[k] !== null) {
-        pre[k] = pond[k];
-      }
-    });
+//     const pre = { ...emptyPond };
+//     Object.keys(pre).forEach(k => {
+//       if (pond[k] !== undefined && pond[k] !== null) {
+//         pre[k] = pond[k];
+//       }
+//     });
 
-    if (typeof pond.symptomsObserved === "string" && pond.symptomsObserved.trim() !== "") {
-      pre.symptoms = pond.symptomsObserved.split(",").map(s => s.trim()).filter(Boolean);
-      pre.symptomsObserved = pond.symptomsObserved;
-    }
+//     if (typeof pond.symptomsObserved === "string" && pond.symptomsObserved.trim() !== "") {
+//       pre.symptoms = pond.symptomsObserved.split(",").map(s => s.trim()).filter(Boolean);
+//       pre.symptomsObserved = pond.symptomsObserved;
+//     }
 
-    pre.pondFiles = [];
-    pre.fishFiles = [];
-    pre.pondImage = null;
+//     pre.pondFiles = [];
+//     pre.fishFiles = [];
+//     pre.pondImage = null;
     
-    pre.pondFilesExisting = pond.pondFiles || [];
-    pre.fishFilesExisting = pond.fishFiles || [];
-    pre.pondImageExisting = pond.pondImage || "";
+//     pre.pondFilesExisting = pond.pondFiles || [];
+//     pre.fishFilesExisting = pond.fishFiles || [];
+//     pre.pondImageExisting = pond.pondImage || "";
 
-    setNewPond(pre);
-    setShowPondForm(true);
-    setPondError("");
-  };
+//     setNewPond(pre);
+//     setShowPondForm(true);
+//     setPondError("");
+//   };
 
-  const toggleSymptom = (s) => {
-    const arr = newPond.symptoms ? [...newPond.symptoms] : [];
-    const idx = arr.indexOf(s);
-    if (idx === -1) arr.push(s); else arr.splice(idx, 1);
-    setNewPond({ ...newPond, symptoms: arr, symptomsObserved: arr.join(", ") });
-  };
+//   const toggleSymptom = (s) => {
+//     const arr = newPond.symptoms ? [...newPond.symptoms] : [];
+//     const idx = arr.indexOf(s);
+//     if (idx === -1) arr.push(s); else arr.splice(idx, 1);
+//     setNewPond({ ...newPond, symptoms: arr, symptomsObserved: arr.join(", ") });
+//   };
 
-  useEffect(() => {
-    const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
+//   useEffect(() => {
+//     const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
 
-    const message = isFirstLogin
-      ? `Welcome, ${username}`
-      : `Welcome Back, ${username}`;
+//     const message = isFirstLogin
+//       ? `Welcome, ${username}`
+//       : `Welcome Back, ${username}`;
 
-    setWelcomeMsg(message);
+//     setWelcomeMsg(message);
 
-    if (isFirstLogin) {
-      localStorage.setItem("isFirstLogin", "false");
-    }
-  }, [username]);
+//     if (isFirstLogin) {
+//       localStorage.setItem("isFirstLogin", "false");
+//     }
+//   }, [username]);
 
-  const renderExistingFiles = (list) => {
-    if (!list || list.length === 0) return null;
-    return (
-      <div style={{ marginTop: 6 }}>
-        {list.map((fn, i) => (
-          <div key={i}>
-            <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
-              {fn.split('/').pop()}
-            </a>
-          </div>
-        ))}
-      </div>
-    );
-  };
+//   const renderExistingFiles = (list) => {
+//     if (!list || list.length === 0) return null;
+//     return (
+//       <div style={{ marginTop: 6 }}>
+//         {list.map((fn, i) => (
+//           <div key={i}>
+//             <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
+//               {fn.split('/').pop()}
+//             </a>
+//           </div>
+//         ))}
+//       </div>
+//     );
+//   };
 
-  const totalFarmers = farmers.length;
-  const totalPonds = farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0);
+//   const totalFarmers = farmers.length;
+//   const totalPonds = farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0);
 
-  const [searchId, setSearchId] = useState("");
+//   const [searchId, setSearchId] = useState("");
 
-  const handleSearch = async () => {
-    if (!searchId) {
-      await fetchFarmers();
-      return;
-    }
+//   const handleSearch = async () => {
+//     if (!searchId) {
+//       await fetchFarmers();
+//       return;
+//     }
 
-    setLoading(prev => ({ ...prev, search: true }));
-    try {
-      const searchValue = searchId.trim().toLowerCase();
-      const filtered = farmers.filter(f =>
-        (f.farmerId || "").toLowerCase().includes(searchValue)
-      );
+//     setLoading(prev => ({ ...prev, search: true }));
+//     try {
+//       const searchValue = searchId.trim().toLowerCase();
+//       const filtered = farmers.filter(f =>
+//         (f.farmerId || "").toLowerCase().includes(searchValue)
+//       );
 
-      if (filtered.length > 0) {
-        const remaining = farmers.filter(f => !filtered.includes(f));
-        setFarmers([...filtered, ...remaining]);
-      } else {
-        await fetchFarmers();
-      }
-    } finally {
-      setLoading(prev => ({ ...prev, search: false }));
-    }
-  };
+//       if (filtered.length > 0) {
+//         const remaining = farmers.filter(f => !filtered.includes(f));
+//         setFarmers([...filtered, ...remaining]);
+//       } else {
+//         await fetchFarmers();
+//       }
+//     } finally {
+//       setLoading(prev => ({ ...prev, search: false }));
+//     }
+//   };
 
-  // Media handling functions
-  const handleMediaSelection = async (field, type = 'image', multiple = false) => {
-    setActiveMediaField(field);
+//   // Media handling functions
+//   const handleMediaSelection = async (field, type = 'image', multiple = false) => {
+//     setActiveMediaField(field);
     
-    // Create custom file input
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = type === 'image' ? 'image/*' : type === 'video' ? 'video/*' : 'image/*,video/*';
-    input.multiple = multiple;
-    input.style.display = 'none';
+//     // Create custom file input
+//     const input = document.createElement('input');
+//     input.type = 'file';
+//     input.accept = type === 'image' ? 'image/*' : type === 'video' ? 'video/*' : 'image/*,video/*';
+//     input.multiple = multiple;
+//     input.style.display = 'none';
     
-    // Add to body
-    document.body.appendChild(input);
+//     // Add to body
+//     document.body.appendChild(input);
     
-    // Trigger click
-    input.click();
+//     // Trigger click
+//     input.click();
     
-    // Handle file selection
-    input.addEventListener('change', async (e) => {
-      const files = Array.from(e.target.files);
-      if (files.length > 0) {
-        if (field === 'farmerPhoto') {
-          setNewFarmer({ ...newFarmer, photo: files[0] });
-        } else if (field === 'pondImage') {
-          setNewPond({ ...newPond, pondImage: files[0] });
-        } else if (field === 'pondFiles') {
-          setNewPond({ ...newPond, pondFiles: [...(newPond.pondFiles || []), ...files] });
-        } else if (field === 'fishFiles') {
-          setNewPond({ ...newPond, fishFiles: [...(newPond.fishFiles || []), ...files] });
-        }
-      }
+//     // Handle file selection
+//     input.addEventListener('change', async (e) => {
+//       const files = Array.from(e.target.files);
+//       if (files.length > 0) {
+//         if (field === 'farmerPhoto') {
+//           setNewFarmer({ ...newFarmer, photo: files[0] });
+//         } else if (field === 'pondImage') {
+//           setNewPond({ ...newPond, pondImage: files[0] });
+//         } else if (field === 'pondFiles') {
+//           setNewPond({ ...newPond, pondFiles: [...(newPond.pondFiles || []), ...files] });
+//         } else if (field === 'fishFiles') {
+//           setNewPond({ ...newPond, fishFiles: [...(newPond.fishFiles || []), ...files] });
+//         }
+//       }
       
-      // Clean up
-      document.body.removeChild(input);
-      setActiveMediaField(null);
-    });
+//       // Clean up
+//       document.body.removeChild(input);
+//       setActiveMediaField(null);
+//     });
     
-    // Handle cancel
-    input.addEventListener('cancel', () => {
-      document.body.removeChild(input);
-      setActiveMediaField(null);
-    });
-  };
+//     // Handle cancel
+//     input.addEventListener('cancel', () => {
+//       document.body.removeChild(input);
+//       setActiveMediaField(null);
+//     });
+//   };
 
-  const handleCameraCapture = async (field, type = 'image') => {
-    setActiveMediaField(field);
+//   const handleCameraCapture = async (field, type = 'image') => {
+//     setActiveMediaField(field);
     
-    let mediaHook;
-    if (field === 'farmerPhoto') {
-      mediaHook = farmerPhotoMedia;
-    } else if (field === 'pondImage') {
-      mediaHook = pondImageMedia;
-    } else if (field === 'pondFiles') {
-      mediaHook = pondFilesMedia;
-    } else if (field === 'fishFiles') {
-      mediaHook = fishFilesMedia;
-    } else {
-      return;
-    }
+//     let mediaHook;
+//     if (field === 'farmerPhoto') {
+//       mediaHook = farmerPhotoMedia;
+//     } else if (field === 'pondImage') {
+//       mediaHook = pondImageMedia;
+//     } else if (field === 'pondFiles') {
+//       mediaHook = pondFilesMedia;
+//     } else if (field === 'fishFiles') {
+//       mediaHook = fishFilesMedia;
+//     } else {
+//       return;
+//     }
     
-    await mediaHook.startCamera(type);
-  };
+//     await mediaHook.startCamera(type);
+//   };
 
-  const handleCapturePhoto = async (field) => {
-    let mediaHook;
-    let file;
+//   const handleCapturePhoto = async (field) => {
+//     let mediaHook;
+//     let file;
     
-    if (field === 'farmerPhoto') {
-      mediaHook = farmerPhotoMedia;
-      file = await mediaHook.captureMedia();
-      if (file) {
-        setNewFarmer({ ...newFarmer, photo: file });
-      }
-    } else if (field === 'pondImage') {
-      mediaHook = pondImageMedia;
-      file = await mediaHook.captureMedia();
-      if (file) {
-        setNewPond({ ...newPond, pondImage: file });
-      }
-    }
+//     if (field === 'farmerPhoto') {
+//       mediaHook = farmerPhotoMedia;
+//       file = await mediaHook.captureMedia();
+//       if (file) {
+//         setNewFarmer({ ...newFarmer, photo: file });
+//       }
+//     } else if (field === 'pondImage') {
+//       mediaHook = pondImageMedia;
+//       file = await mediaHook.captureMedia();
+//       if (file) {
+//         setNewPond({ ...newPond, pondImage: file });
+//       }
+//     }
     
-    setActiveMediaField(null);
-  };
+//     setActiveMediaField(null);
+//   };
 
-  const handleCaptureVideo = async (field) => {
-    let mediaHook;
-    let file;
+//   const handleCaptureVideo = async (field) => {
+//     let mediaHook;
+//     let file;
     
-    if (field === 'pondFiles') {
-      mediaHook = pondFilesMedia;
-      await mediaHook.startVideoRecording();
-      file = await mediaHook.stopVideoRecording();
-      if (file) {
-        setNewPond({ ...newPond, pondFiles: [...(newPond.pondFiles || []), file] });
-      }
-    } else if (field === 'fishFiles') {
-      mediaHook = fishFilesMedia;
-      await mediaHook.startVideoRecording();
-      file = await mediaHook.stopVideoRecording();
-      if (file) {
-        setNewPond({ ...newPond, fishFiles: [...(newPond.fishFiles || []), file] });
-      }
-    }
+//     if (field === 'pondFiles') {
+//       mediaHook = pondFilesMedia;
+//       await mediaHook.startVideoRecording();
+//       file = await mediaHook.stopVideoRecording();
+//       if (file) {
+//         setNewPond({ ...newPond, pondFiles: [...(newPond.pondFiles || []), file] });
+//       }
+//     } else if (field === 'fishFiles') {
+//       mediaHook = fishFilesMedia;
+//       await mediaHook.startVideoRecording();
+//       file = await mediaHook.stopVideoRecording();
+//       if (file) {
+//         setNewPond({ ...newPond, fishFiles: [...(newPond.fishFiles || []), file] });
+//       }
+//     }
     
-    setActiveMediaField(null);
-  };
+//     setActiveMediaField(null);
+//   };
 
-  // Loader component for buttons
-  const ButtonLoader = () => (
-    <Loader2 className="spin-loader" size={16} />
-  );
+//   // Loader component for buttons
+//   const ButtonLoader = () => (
+//     <Loader2 className="spin-loader" size={16} />
+//   );
 
-  // Custom File Input Component
-  const CustomFileInput = ({ 
-    field, 
-    label, 
-    accept = "image/*", 
-    multiple = false,
-    existingFiles = [],
-    selectedFiles = [],
-    onRemoveFile,
-    onFileChange
-  }) => {
-    const fileInputRef = useRef(null);
+//   // Custom File Input Component
+//   const CustomFileInput = ({ 
+//     field, 
+//     label, 
+//     accept = "image/*", 
+//     multiple = false,
+//     existingFiles = [],
+//     selectedFiles = [],
+//     onRemoveFile,
+//     onFileChange
+//   }) => {
+//     const fileInputRef = useRef(null);
     
-    const handleButtonClick = () => {
-      if (fileInputRef.current) {
-        fileInputRef.current.click();
-      }
-    };
+//     const handleButtonClick = () => {
+//       if (fileInputRef.current) {
+//         fileInputRef.current.click();
+//       }
+//     };
     
-    const handleFileChange = (e) => {
-      const files = Array.from(e.target.files);
-      if (files.length > 0) {
-        onFileChange(files);
-      }
-    };
+//     const handleFileChange = (e) => {
+//       const files = Array.from(e.target.files);
+//       if (files.length > 0) {
+//         onFileChange(files);
+//       }
+//     };
     
-    return (
-      <div className="custom-file-input">
-        <label>{label}</label>
+//     return (
+//       <div className="custom-file-input">
+//         <label>{label}</label>
         
-        {/* Hidden file input */}
-        <input
-          type="file"
-          ref={fileInputRef}
-          accept={accept}
-          multiple={multiple}
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
+//         {/* Hidden file input */}
+//         <input
+//           type="file"
+//           ref={fileInputRef}
+//           accept={accept}
+//           multiple={multiple}
+//           onChange={handleFileChange}
+//           style={{ display: 'none' }}
+//         />
         
-        {/* Custom buttons */}
-        <div className="file-input-buttons">
-          <button 
-            type="button"
-            className="btn btn-outline-primary btn-sm"
-            onClick={() => handleCameraCapture(field, accept.includes('video') ? 'image' : 'image')}
-            disabled={loading.addPond || loading.updatePond}
-          >
-            <Camera size={16} /> Camera
-          </button>
+//         {/* Custom buttons */}
+//         <div className="file-input-buttons">
+//           <button 
+//             type="button"
+//             className="btn btn-outline-primary btn-sm"
+//             onClick={() => handleCameraCapture(field, accept.includes('video') ? 'image' : 'image')}
+//             disabled={loading.addPond || loading.updatePond}
+//           >
+//             <Camera size={16} /> Camera
+//           </button>
           
-          <button 
-            type="button"
-            className="btn btn-outline-secondary btn-sm"
-            onClick={handleButtonClick}
-            disabled={loading.addPond || loading.updatePond}
-          >
-            <Image size={16} /> Gallery
-          </button>
+//           <button 
+//             type="button"
+//             className="btn btn-outline-secondary btn-sm"
+//             onClick={handleButtonClick}
+//             disabled={loading.addPond || loading.updatePond}
+//           >
+//             <Image size={16} /> Gallery
+//           </button>
           
-          {accept.includes('video') && (
-            <button 
-              type="button"
-              className="btn btn-outline-info btn-sm"
-              onClick={() => handleCameraCapture(field, 'video')}
-              disabled={loading.addPond || loading.updatePond}
-            >
-              <Video size={16} /> Record Video
-            </button>
-          )}
-        </div>
+//           {accept.includes('video') && (
+//             <button 
+//               type="button"
+//               className="btn btn-outline-info btn-sm"
+//               onClick={() => handleCameraCapture(field, 'video')}
+//               disabled={loading.addPond || loading.updatePond}
+//             >
+//               <Video size={16} /> Record Video
+//             </button>
+//           )}
+//         </div>
         
-        {/* Selected files preview */}
-        {selectedFiles && selectedFiles.length > 0 && (
-          <div className="selected-files-preview mt-2">
-            {selectedFiles.map((file, index) => (
-              <div key={index} className="selected-file-item">
-                {file.type.startsWith('image/') ? (
-                  <Image size={16} />
-                ) : file.type.startsWith('video/') ? (
-                  <Video size={16} />
-                ) : (
-                  <File size={16} />
-                )}
-                <span>{file.name}</span>
-                <button 
-                  type="button"
-                  className="btn btn-sm btn-outline-danger"
-                  onClick={() => onRemoveFile(index)}
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+//         {/* Selected files preview */}
+//         {selectedFiles && selectedFiles.length > 0 && (
+//           <div className="selected-files-preview mt-2">
+//             {selectedFiles.map((file, index) => (
+//               <div key={index} className="selected-file-item">
+//                 {file.type.startsWith('image/') ? (
+//                   <Image size={16} />
+//                 ) : file.type.startsWith('video/') ? (
+//                   <Video size={16} />
+//                 ) : (
+//                   <File size={16} />
+//                 )}
+//                 <span>{file.name}</span>
+//                 <button 
+//                   type="button"
+//                   className="btn btn-sm btn-outline-danger"
+//                   onClick={() => onRemoveFile(index)}
+//                 >
+//                   <X size={14} />
+//                 </button>
+//               </div>
+//             ))}
+//           </div>
+//         )}
         
-        {/* Existing files */}
-        {existingFiles && existingFiles.length > 0 && (
-          <div className="existing-files mt-2">
-            <small>Existing files:</small>
-            {existingFiles.map((fn, i) => (
-              <div key={i} className="existing-file-item">
-                <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
-                  {fn.split('/').pop()}
-                </a>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
+//         {/* Existing files */}
+//         {existingFiles && existingFiles.length > 0 && (
+//           <div className="existing-files mt-2">
+//             <small>Existing files:</small>
+//             {existingFiles.map((fn, i) => (
+//               <div key={i} className="existing-file-item">
+//                 <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
+//                   {fn.split('/').pop()}
+//                 </a>
+//               </div>
+//             ))}
+//           </div>
+//         )}
+//       </div>
+//     );
+//   };
 
-  return (
-    <div className="dashboard-container">
-      {/* ================= MOBILE NAVBAR ================= */}
-      {isMobile && (
-        <div className="mobile-navbar">
-          <button 
-            className="mobile-menu-toggle"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            aria-label="Toggle menu"
-            disabled={loading.fetchFarmers}
-          >
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+//   return (
+//     <div className="dashboard-container">
+//       {/* ================= MOBILE NAVBAR ================= */}
+//       {isMobile && (
+//         <div className="mobile-navbar">
+//           <button 
+//             className="mobile-menu-toggle"
+//             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+//             aria-label="Toggle menu"
+//             disabled={loading.fetchFarmers}
+//           >
+//             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+//           </button>
           
-          <div className="mobile-logo">
-            <h3>Dashboard</h3>
-          </div>
+//           <div className="mobile-logo">
+//             <h3>Dashboard</h3>
+//           </div>
           
-          <div className="mobile-profile">
-            <img
-              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
-              alt="User"
-              className="mobile-profile-pic"
-              onError={(e) => {
-                e.target.src = "/profile.png";
-                e.target.onerror = null;
-              }}
-            />
-          </div>
-        </div>
-      )}
+//           <div className="mobile-profile">
+//             <img
+//               src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+//               alt="User"
+//               className="mobile-profile-pic"
+//               onError={(e) => {
+//                 e.target.src = "/profile.png";
+//                 e.target.onerror = null;
+//               }}
+//             />
+//           </div>
+//         </div>
+//       )}
 
-      {/* ================= SIDEBAR ================= */}
-      <div className={`sidebar ${isMobile ? (isSidebarOpen ? 'mobile-open' : 'mobile-closed') : ''}`}>
-        <div className="sidebar-close-container">
-          <div className="profile-section text-center mb-4">
-            <img
-              src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
-              alt="User"
-              className="profile-pic"
-              onError={(e) => {
-                e.target.src = "/profile.png";
-                e.target.onerror = null;
-              }}
-            />
-            <h5>{username}</h5>
-          </div>
+//       {/* ================= SIDEBAR ================= */}
+//       <div className={`sidebar ${isMobile ? (isSidebarOpen ? 'mobile-open' : 'mobile-closed') : ''}`}>
+//         <div className="sidebar-close-container">
+//           <div className="profile-section text-center mb-4">
+//             <img
+//               src={userId ? getImageUrl(`/api/images/${userId}/profile`) : "/profile.png"}
+//               alt="User"
+//               className="profile-pic"
+//               onError={(e) => {
+//                 e.target.src = "/profile.png";
+//                 e.target.onerror = null;
+//               }}
+//             />
+//             <h5>{username}</h5>
+//           </div>
 
-          {isMobile && (
-            <button 
-              className="sidebar-close-btn"
-              onClick={() => setIsSidebarOpen(false)}
-              aria-label="Close menu"
-              disabled={loading.fetchFarmers}
-            >
-              <X size={20} />
-            </button>
-          )}
-        </div>
+//           {isMobile && (
+//             <button 
+//               className="sidebar-close-btn"
+//               onClick={() => setIsSidebarOpen(false)}
+//               aria-label="Close menu"
+//               disabled={loading.fetchFarmers}
+//             >
+//               <X size={20} />
+//             </button>
+//           )}
+//         </div>
 
-        <ul className="menu">
-          <li>
-            <Link to="/profile" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <User size={18} /> {t('profile')}
-            </Link>
-          </li>
-          <li>
-            <Link to="/dashboard" className="menu-btn active" onClick={() => setIsSidebarOpen(false)}>
-              <Home size={18} /> {t('dashboard')}
-            </Link>
-          </li>
-          <li>
-            <Link to="/helpcenter" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <HelpCircle size={18} /> {t('helpCenter')}
-            </Link>
-          </li>
-          <li>
-            <Link to="/dealers" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <ShoppingBag size={18} /> {t('dealers')}
-            </Link>
-          </li>
-          <li>
-            <Link to="/agents" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
-              <Users size={18} /> {t('agents')}
-            </Link>
-          </li>
-        </ul>
+//         <ul className="menu">
+//           <li>
+//             <Link to="/profile" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+//               <User size={18} /> {t('profile')}
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/dashboard" className="menu-btn active" onClick={() => setIsSidebarOpen(false)}>
+//               <Home size={18} /> {t('dashboard')}
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/helpcenter" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+//               <HelpCircle size={18} /> {t('helpCenter')}
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/dealers" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+//               <ShoppingBag size={18} /> {t('dealers')}
+//             </Link>
+//           </li>
+//           <li>
+//             <Link to="/agents" className="menu-btn" onClick={() => setIsSidebarOpen(false)}>
+//               <Users size={18} /> {t('agents')}
+//             </Link>
+//           </li>
+//         </ul>
 
-        {/* ================= LANGUAGE ================= */}
-        <div className="language-section mb-4">
-          <h6>{t("chooseLanguage")}</h6>
-          <select
-            className="form-select form-select-sm"
-            value={i18n.language}
-            onChange={(e) => changeLanguage(e.target.value)}
-            disabled={loading.fetchFarmers}
-          >
-            <option value="en">English</option>
-            <option value="hi">हिन्दी</option>
-            <option value="bn">बাংলা</option>
-            <option value="as">অসমীয়া</option>
-            <option value="ta">தமிழ்</option>
-            <option value="kn">ಕನ್ನಡ</option>
-            <option value="mr">मराठी</option>
-          </select>
-        </div>
-      </div>
+//         {/* ================= LANGUAGE ================= */}
+//         <div className="language-section mb-4">
+//           <h6>{t("chooseLanguage")}</h6>
+//           <select
+//             className="form-select form-select-sm"
+//             value={i18n.language}
+//             onChange={(e) => changeLanguage(e.target.value)}
+//             disabled={loading.fetchFarmers}
+//           >
+//             <option value="en">English</option>
+//             <option value="hi">हिन्दी</option>
+//             <option value="bn">बাংলা</option>
+//             <option value="as">অসমীয়া</option>
+//             <option value="ta">தமிழ்</option>
+//             <option value="kn">ಕನ್ನಡ</option>
+//             <option value="mr">मराठी</option>
+//           </select>
+//         </div>
+//       </div>
 
-      {/* ================= OVERLAY FOR MOBILE ================= */}
-      {isMobile && isSidebarOpen && (
-        <div 
-          className="sidebar-overlay"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
+//       {/* ================= OVERLAY FOR MOBILE ================= */}
+//       {isMobile && isSidebarOpen && (
+//         <div 
+//           className="sidebar-overlay"
+//           onClick={() => setIsSidebarOpen(false)}
+//         ></div>
+//       )}
 
-      {/* ================= RIGHT SECTION ================= */}
-      <div className={`right-section ${isMobile ? 'mobile-view' : ''}`}>
-        <div className="top-bar">
-          <h2>{welcomeMsg}</h2>
-          <button 
-            className="add-btn d-flex align-items-center gap-1"
-            onClick={() => { 
-              setFarmerError("");
-              setShowForm(true); 
-              setEditingFarmerId(null); 
-              setNewFarmer(emptyFarmer);
-              setIsUpdateMode(false);
-            }}
-            disabled={loading.fetchFarmers}
-          >
-            + <span>{t('addFarmer')}</span>
-          </button>
-        </div>
+//       {/* ================= RIGHT SECTION ================= */}
+//       <div className={`right-section ${isMobile ? 'mobile-view' : ''}`}>
+//         <div className="top-bar">
+//           <h2>{welcomeMsg}</h2>
+//           <button 
+//             className="add-btn d-flex align-items-center gap-1"
+//             onClick={() => { 
+//               setFarmerError("");
+//               setShowForm(true); 
+//               setEditingFarmerId(null); 
+//               setNewFarmer(emptyFarmer);
+//               setIsUpdateMode(false);
+//             }}
+//             disabled={loading.fetchFarmers}
+//           >
+//             + <span>{t('addFarmer')}</span>
+//           </button>
+//         </div>
 
-        {/* CARDS AND SEARCH SECTION */}
-        <div className="cards-and-search">
-          <div className="cards-section">
-            <div className="card">
-              <h5>{t('totalFarmers')}</h5>
-              <p className="display-6">
-                {loading.fetchFarmers ? <ButtonLoader /> : totalFarmers}
-              </p>
-            </div>
-            <div className="card">
-              <h5>{t('totalPonds')}</h5>
-              <p className="display-6">
-                {loading.fetchFarmers ? <ButtonLoader /> : totalPonds}
-              </p>
-            </div>
-          </div>
+//         {/* CARDS AND SEARCH SECTION */}
+//         <div className="cards-and-search">
+//           <div className="cards-section">
+//             <div className="card">
+//               <h5>{t('totalFarmers')}</h5>
+//               <p className="display-6">
+//                 {loading.fetchFarmers ? <ButtonLoader /> : totalFarmers}
+//               </p>
+//             </div>
+//             <div className="card">
+//               <h5>{t('totalPonds')}</h5>
+//               <p className="display-6">
+//                 {loading.fetchFarmers ? <ButtonLoader /> : totalPonds}
+//               </p>
+//             </div>
+//           </div>
 
-          <div className="search-section d-flex gap-2">
-            <input
-              type="text"
-              placeholder={t('farmerSearchById')}
-              className="form-control"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value.replace(/^\s+/, ""))}
-              disabled={loading.search}
-            />
+//           <div className="search-section d-flex gap-2">
+//             <input
+//               type="text"
+//               placeholder={t('farmerSearchById')}
+//               className="form-control"
+//               value={searchId}
+//               onChange={(e) => setSearchId(e.target.value.replace(/^\s+/, ""))}
+//               disabled={loading.search}
+//             />
 
-            <button
-              className="btn btn-sm btn-primary"
-              onClick={handleSearch}
-              disabled={loading.search}
-            >
-              {loading.search ? <ButtonLoader /> : "Search"}
-            </button>
-          </div>
-        </div>
+//             <button
+//               className="btn btn-sm btn-primary"
+//               onClick={handleSearch}
+//               disabled={loading.search}
+//             >
+//               {loading.search ? <ButtonLoader /> : "Search"}
+//             </button>
+//           </div>
+//         </div>
 
-        <div className="list-title">{t('farmersList')}</div>
-        <div className="farmers-list">
-          {loading.fetchFarmers ? (
-            <div className="text-center py-5">
-              <ButtonLoader />
-              <p>Loading farmers...</p>
-            </div>
-          ) : (
-            farmers.map(f => (
-              <div key={f._id} className="farmer-box">
-                <img
-                  src={getFarmerImage(f)}
-                  alt={f.name}
-                  className="profile-pic"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.src = "/profile.png";
-                    e.target.onerror = null;
-                  }}
-                />
+//         <div className="list-title">{t('farmersList')}</div>
+//         <div className="farmers-list">
+//           {loading.fetchFarmers ? (
+//             <div className="text-center py-5">
+//               <ButtonLoader />
+//               <p>Loading farmers...</p>
+//             </div>
+//           ) : (
+//             farmers.map(f => (
+//               <div key={f._id} className="farmer-box">
+//                 <img
+//                   src={getFarmerImage(f)}
+//                   alt={f.name}
+//                   className="profile-pic"
+//                   loading="lazy"
+//                   onError={(e) => {
+//                     e.target.src = "/profile.png";
+//                     e.target.onerror = null;
+//                   }}
+//                 />
 
-                <div style={{ flex: 1 }}>
-                  <p><b>{t('farmerName')}:</b> {f.name}</p>
-                  <p><b>{t('farmerId')}:</b> {f.farmerId}</p>
-                  <p><b>{t('contactNumber')}:</b> {f.contact}</p>
-                  <p><b>{t('pondCount')}:</b> {f.pondCount}</p>
-                  <p className="updated-text" style={{ fontSize: "0.85rem" }}>
-                    <b>{t('updated')}:</b> {timeAgo(f.updatedAt || f.createdAt, t)}
-                  </p>
-                </div>
+//                 <div style={{ flex: 1 }}>
+//                   <p><b>{t('farmerName')}:</b> {f.name}</p>
+//                   <p><b>{t('farmerId')}:</b> {f.farmerId}</p>
+//                   <p><b>{t('contactNumber')}:</b> {f.contact}</p>
+//                   <p><b>{t('pondCount')}:</b> {f.pondCount}</p>
+//                   <p className="updated-text" style={{ fontSize: "0.85rem" }}>
+//                     <b>{t('updated')}:</b> {timeAgo(f.updatedAt || f.createdAt, t)}
+//                   </p>
+//                 </div>
 
-                {/* Pond List with Update Buttons */}
-                {f.ponds && f.ponds.length > 0 && (
-                  <div style={{ marginTop: 10, width: "100%" }}>
-                    <h6>Pond List</h6>
-                    <button 
-                      className="btn btn-sm btn-success mb-2"
-                      onClick={() => openAddPond(f._id)}
-                      disabled={loading.addPond}
-                    >
-                      {loading.addPond ? <ButtonLoader /> : "+ Add Pond"}
-                    </button>
+//                 {/* Pond List with Update Buttons */}
+//                 {f.ponds && f.ponds.length > 0 && (
+//                   <div style={{ marginTop: 10, width: "100%" }}>
+//                     <h6>Pond List</h6>
+//                     <button 
+//                       className="btn btn-sm btn-success mb-2"
+//                       onClick={() => openAddPond(f._id)}
+//                       disabled={loading.addPond}
+//                     >
+//                       {loading.addPond ? <ButtonLoader /> : "+ Add Pond"}
+//                     </button>
                     
-                    {/* Desktop Table View */}
-                    <div className="table-container">
-                      <table className="table table-sm table-bordered">
-                        <thead>
-                          <tr>
-                            <th>Pond No.</th>
-                            <th>Pond ID</th>
-                            <th>Species</th>
-                            <th>Last Updated</th>
-                            <th>Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {f.ponds.map((pond, index) => (
-                            <tr key={pond.pondId}>
-                              <td>{pond.pondNumber || index + 1}</td>
-                              <td>{pond.pondId}</td>
-                              <td>{pond.species || "Not specified"}</td>
-                              <td>{timeAgo(pond.updatedAt || pond.createdAt, t)}</td>
-                              <td>
-                                <button 
-                                  className="btn btn-sm btn-primary"
-                                  onClick={() => openEditPond(f._id, pond)}
-                                  disabled={loading.updatePond}
-                                >
-                                  {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+//                     {/* Desktop Table View */}
+//                     <div className="table-container">
+//                       <table className="table table-sm table-bordered">
+//                         <thead>
+//                           <tr>
+//                             <th>Pond No.</th>
+//                             <th>Pond ID</th>
+//                             <th>Species</th>
+//                             <th>Last Updated</th>
+//                             <th>Actions</th>
+//                           </tr>
+//                         </thead>
+//                         <tbody>
+//                           {f.ponds.map((pond, index) => (
+//                             <tr key={pond.pondId}>
+//                               <td>{pond.pondNumber || index + 1}</td>
+//                               <td>{pond.pondId}</td>
+//                               <td>{pond.species || "Not specified"}</td>
+//                               <td>{timeAgo(pond.updatedAt || pond.createdAt, t)}</td>
+//                               <td>
+//                                 <button 
+//                                   className="btn btn-sm btn-primary"
+//                                   onClick={() => openEditPond(f._id, pond)}
+//                                   disabled={loading.updatePond}
+//                                 >
+//                                   {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
+//                                 </button>
+//                               </td>
+//                             </tr>
+//                           ))}
+//                         </tbody>
+//                       </table>
+//                     </div>
                     
-                    {/* Mobile Card View */}
-                    <div className="mobile-pond-view">
-                      {f.ponds.map((pond, index) => (
-                        <div key={pond.pondId} className="mobile-pond-card">
-                          <div className="mobile-pond-row">
-                            <span className="mobile-pond-label">Pond No.</span>
-                            <span className="mobile-pond-value">{pond.pondNumber || index + 1}</span>
-                          </div>
-                          <div className="mobile-pond-row">
-                            <span className="mobile-pond-label">Pond ID</span>
-                            <span className="mobile-pond-value">{pond.pondId}</span>
-                          </div>
-                          <div className="mobile-pond-row">
-                            <span className="mobile-pond-label">Species</span>
-                            <span className="mobile-pond-value">{pond.species || "Not specified"}</span>
-                          </div>
-                          <div className="mobile-pond-row">
-                            <span className="mobile-pond-label">Last Updated</span>
-                            <span className="mobile-pond-value">{timeAgo(pond.updatedAt || pond.createdAt, t)}</span>
-                          </div>
-                          <div className="mobile-pond-row">
-                            <span className="mobile-pond-label">Actions</span>
-                            <span className="mobile-pond-value">
-                              <button 
-                                className="btn btn-sm btn-primary"
-                                onClick={() => openEditPond(f._id, pond)}
-                                style={{ width: "100%", marginTop: "4px" }}
-                                disabled={loading.updatePond}
-                              >
-                                {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
-                              </button>
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+//                     {/* Mobile Card View */}
+//                     <div className="mobile-pond-view">
+//                       {f.ponds.map((pond, index) => (
+//                         <div key={pond.pondId} className="mobile-pond-card">
+//                           <div className="mobile-pond-row">
+//                             <span className="mobile-pond-label">Pond No.</span>
+//                             <span className="mobile-pond-value">{pond.pondNumber || index + 1}</span>
+//                           </div>
+//                           <div className="mobile-pond-row">
+//                             <span className="mobile-pond-label">Pond ID</span>
+//                             <span className="mobile-pond-value">{pond.pondId}</span>
+//                           </div>
+//                           <div className="mobile-pond-row">
+//                             <span className="mobile-pond-label">Species</span>
+//                             <span className="mobile-pond-value">{pond.species || "Not specified"}</span>
+//                           </div>
+//                           <div className="mobile-pond-row">
+//                             <span className="mobile-pond-label">Last Updated</span>
+//                             <span className="mobile-pond-value">{timeAgo(pond.updatedAt || pond.createdAt, t)}</span>
+//                           </div>
+//                           <div className="mobile-pond-row">
+//                             <span className="mobile-pond-label">Actions</span>
+//                             <span className="mobile-pond-value">
+//                               <button 
+//                                 className="btn btn-sm btn-primary"
+//                                 onClick={() => openEditPond(f._id, pond)}
+//                                 style={{ width: "100%", marginTop: "4px" }}
+//                                 disabled={loading.updatePond}
+//                               >
+//                                 {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
+//                               </button>
+//                             </span>
+//                           </div>
+//                         </div>
+//                       ))}
+//                     </div>
+//                   </div>
+//                 )}
 
-                {/* If no ponds, show Add Pond button */}
-                {(!f.ponds || f.ponds.length === 0) && (
-                  <div style={{ marginTop: 10 }}>
-                    <button 
-                      className="btn btn-sm btn-success"
-                      onClick={() => openAddPond(f._id)}
-                      disabled={loading.addPond}
-                    >
-                      {loading.addPond ? <ButtonLoader /> : "+ Add First Pond"}
-                    </button>
-                  </div>
-                )}
+//                 {/* If no ponds, show Add Pond button */}
+//                 {(!f.ponds || f.ponds.length === 0) && (
+//                   <div style={{ marginTop: 10 }}>
+//                     <button 
+//                       className="btn btn-sm btn-success"
+//                       onClick={() => openAddPond(f._id)}
+//                       disabled={loading.addPond}
+//                     >
+//                       {loading.addPond ? <ButtonLoader /> : "+ Add First Pond"}
+//                     </button>
+//                   </div>
+//                 )}
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  <button 
-                    className="btn btn-sm btn-outline-primary" 
-                    onClick={() => openEdit(f)}
-                    disabled={loading.updateFarmer}
-                  >
-                    {loading.updateFarmer ? <ButtonLoader /> : t('updateFarmer')}
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+//                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+//                   <button 
+//                     className="btn btn-sm btn-outline-primary" 
+//                     onClick={() => openEdit(f)}
+//                     disabled={loading.updateFarmer}
+//                   >
+//                     {loading.updateFarmer ? <ButtonLoader /> : t('updateFarmer')}
+//                   </button>
+//                 </div>
+//               </div>
+//             ))
+//           )}
+//         </div>
+//       </div>
 
-      {/* Farmer Modal Form */}
-      {showForm && (
-        <div className="form-modal">
-          <div className="form-box" style={{ width: "500px", maxHeight: "90vh", overflowY: "auto" }}>
-            <h5>{isUpdateMode ? "Update Farmer" : t('addFarmer')}</h5>
+//       {/* Farmer Modal Form */}
+//       {showForm && (
+//         <div className="form-modal">
+//           <div className="form-box" style={{ width: "500px", maxHeight: "90vh", overflowY: "auto" }}>
+//             <h5>{isUpdateMode ? "Update Farmer" : t('addFarmer')}</h5>
             
-            {/* ERROR MESSAGE */}
-            {farmerError && (
-              <div className="alert alert-danger" style={{ marginBottom: "15px" }}>
-                {farmerError}
-              </div>
-            )}
+//             {/* ERROR MESSAGE */}
+//             {farmerError && (
+//               <div className="alert alert-danger" style={{ marginBottom: "15px" }}>
+//                 {farmerError}
+//               </div>
+//             )}
             
-            <div style={{ padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
-              <h6>Farmer Details <span style={{ color: "red" }}>*</span></h6>
-              <div className="row g-2">
-                <div className="col-md-6">
-                  <input 
-                    className="form-control" 
-                    placeholder="Name *" 
-                    value={newFarmer.name} 
-                    onChange={e => setNewFarmer({ ...newFarmer, name: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    required
-                  />
-                </div>
-                <div className="col-md-6">
-                  <input 
-                    className="form-control" 
-                    placeholder="Contact Number *" 
-                    value={newFarmer.contact} 
-                    onChange={e => setNewFarmer({ ...newFarmer, contact: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    required
-                  />
-                </div>
+//             <div style={{ padding: 12, border: "1px solid #ddd", borderRadius: 8 }}>
+//               <h6>Farmer Details <span style={{ color: "red" }}>*</span></h6>
+//               <div className="row g-2">
+//                 <div className="col-md-6">
+//                   <input 
+//                     className="form-control" 
+//                     placeholder="Name *" 
+//                     value={newFarmer.name} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, name: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     required
+//                   />
+//                 </div>
+//                 <div className="col-md-6">
+//                   <input 
+//                     className="form-control" 
+//                     placeholder="Contact Number *" 
+//                     value={newFarmer.contact} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, contact: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     required
+//                   />
+//                 </div>
                 
-                <div className="col-md-3">
-                  <input 
-                    type="number" 
-                    className="form-control" 
-                    placeholder="Age *" 
-                    value={newFarmer.age} 
-                    onChange={e => setNewFarmer({ ...newFarmer, age: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    required
-                  />
-                </div>
+//                 <div className="col-md-3">
+//                   <input 
+//                     type="number" 
+//                     className="form-control" 
+//                     placeholder="Age *" 
+//                     value={newFarmer.age} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, age: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     required
+//                   />
+//                 </div>
 
-                <div className="col-md-3">
-                  <input 
-                    className="form-control" 
-                    placeholder="Gender *" 
-                    value={newFarmer.gender} 
-                    onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    required
-                  />
-                </div>
+//                 <div className="col-md-3">
+//                   <input 
+//                     className="form-control" 
+//                     placeholder="Gender *" 
+//                     value={newFarmer.gender} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, gender: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     required
+//                   />
+//                 </div>
 
-                <div className="col-md-3">
-                  <input 
-                    className="form-control" 
-                    placeholder="Aadhar * (12 digits)" 
-                    value={newFarmer.adhar} 
-                    onChange={e => setNewFarmer({ ...newFarmer, adhar: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    maxLength={12}
-                    pattern="\d{12}"
-                    title="Aadhar must be exactly 12 digits"
-                    required
-                  />
-                </div>
+//                 <div className="col-md-3">
+//                   <input 
+//                     className="form-control" 
+//                     placeholder="Aadhar * (12 digits)" 
+//                     value={newFarmer.adhar} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, adhar: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     maxLength={12}
+//                     pattern="\d{12}"
+//                     title="Aadhar must be exactly 12 digits"
+//                     required
+//                   />
+//                 </div>
 
-                <div className="col-md-3">
-                  <input 
-                    className="form-control" 
-                    placeholder="Family Members *" 
-                    value={newFarmer.familyMembers} 
-                    onChange={e => setNewFarmer({ ...newFarmer, familyMembers: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    required
-                  />
-                </div>
+//                 <div className="col-md-3">
+//                   <input 
+//                     className="form-control" 
+//                     placeholder="Family Members *" 
+//                     value={newFarmer.familyMembers} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, familyMembers: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     required
+//                   />
+//                 </div>
 
-                <div className="col-md-6">
-                  <input 
-                    className="form-control" 
-                    placeholder="Family Occupation *" 
-                    value={newFarmer.familyOccupation} 
-                    onChange={e => setNewFarmer({ ...newFarmer, familyOccupation: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    required
-                  />
-                </div>
+//                 <div className="col-md-6">
+//                   <input 
+//                     className="form-control" 
+//                     placeholder="Family Occupation *" 
+//                     value={newFarmer.familyOccupation} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, familyOccupation: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     required
+//                   />
+//                 </div>
 
-                <div className="col-md-6">
-                  <input 
-                    className="form-control" 
-                    placeholder="Village *" 
-                    value={newFarmer.village} 
-                    onChange={e => setNewFarmer({ ...newFarmer, village: e.target.value })}
-                    disabled={loading.addFarmer || loading.updateFarmer}
-                    required
-                  />
-                </div>
+//                 <div className="col-md-6">
+//                   <input 
+//                     className="form-control" 
+//                     placeholder="Village *" 
+//                     value={newFarmer.village} 
+//                     onChange={e => setNewFarmer({ ...newFarmer, village: e.target.value })}
+//                     disabled={loading.addFarmer || loading.updateFarmer}
+//                     required
+//                   />
+//                 </div>
 
-                <div className="col-md-12">
-                  <label>Farmer Photo (max 5MB)</label>
+//                 <div className="col-md-12">
+//                   <label>Farmer Photo (max 5MB)</label>
                   
-                  {/* Camera Preview for Farmer Photo */}
-                  {farmerPhotoMedia.capturing && activeMediaField === 'farmerPhoto' && (
-                    <div className="camera-preview">
-                      <video ref={farmerPhotoMedia.videoRef} autoPlay playsInline />
-                      <div className="camera-controls">
-                        <button 
-                          className="btn btn-success"
-                          onClick={() => handleCapturePhoto('farmerPhoto')}
-                          disabled={loading.addFarmer || loading.updateFarmer}
-                        >
-                          <Camera size={20} /> Capture Photo
-                        </button>
-                        <button 
-                          className="btn btn-danger"
-                          onClick={() => {
-                            farmerPhotoMedia.stopCamera();
-                            setActiveMediaField(null);
-                          }}
-                          disabled={loading.addFarmer || loading.updateFarmer}
-                        >
-                          <X size={20} /> Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
+//                   {/* Camera Preview for Farmer Photo */}
+//                   {farmerPhotoMedia.capturing && activeMediaField === 'farmerPhoto' && (
+//                     <div className="camera-preview">
+//                       <video ref={farmerPhotoMedia.videoRef} autoPlay playsInline />
+//                       <div className="camera-controls">
+//                         <button 
+//                           className="btn btn-success"
+//                           onClick={() => handleCapturePhoto('farmerPhoto')}
+//                           disabled={loading.addFarmer || loading.updateFarmer}
+//                         >
+//                           <Camera size={20} /> Capture Photo
+//                         </button>
+//                         <button 
+//                           className="btn btn-danger"
+//                           onClick={() => {
+//                             farmerPhotoMedia.stopCamera();
+//                             setActiveMediaField(null);
+//                           }}
+//                           disabled={loading.addFarmer || loading.updateFarmer}
+//                         >
+//                           <X size={20} /> Cancel
+//                         </button>
+//                       </div>
+//                     </div>
+//                   )}
 
-                  {/* Media Selection Buttons for Farmer Photo */}
-                  <div className="file-input-buttons">
-                    <button 
-                      type="button"
-                      className="btn btn-outline-primary btn-sm"
-                      onClick={() => handleCameraCapture('farmerPhoto', 'image')}
-                      disabled={loading.addFarmer || loading.updateFarmer || farmerPhotoMedia.capturing}
-                    >
-                      <Camera size={16} /> Camera
-                    </button>
-                    <button 
-                      type="button"
-                      className="btn btn-outline-secondary btn-sm"
-                      onClick={() => handleMediaSelection('farmerPhoto', 'image', false)}
-                      disabled={loading.addFarmer || loading.updateFarmer || farmerPhotoMedia.capturing}
-                    >
-                      <Image size={16} /> Gallery
-                    </button>
-                  </div>
+//                   {/* Media Selection Buttons for Farmer Photo */}
+//                   <div className="file-input-buttons">
+//                     <button 
+//                       type="button"
+//                       className="btn btn-outline-primary btn-sm"
+//                       onClick={() => handleCameraCapture('farmerPhoto', 'image')}
+//                       disabled={loading.addFarmer || loading.updateFarmer || farmerPhotoMedia.capturing}
+//                     >
+//                       <Camera size={16} /> Camera
+//                     </button>
+//                     <button 
+//                       type="button"
+//                       className="btn btn-outline-secondary btn-sm"
+//                       onClick={() => handleMediaSelection('farmerPhoto', 'image', false)}
+//                       disabled={loading.addFarmer || loading.updateFarmer || farmerPhotoMedia.capturing}
+//                     >
+//                       <Image size={16} /> Gallery
+//                     </button>
+//                   </div>
 
-                  {/* Selected File Preview */}
-                  {newFarmer.photo instanceof File && (
-                    <div className="selected-file-preview mt-2">
-                      <img
-                        src={URL.createObjectURL(newFarmer.photo)}
-                        alt="Selected"
-                        style={{ width: 80, height: 80, borderRadius: "8px", objectFit: "cover" }}
-                      />
-                      <span>{newFarmer.photo.name}</span>
-                      <button 
-                        type="button"
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => setNewFarmer({ ...newFarmer, photo: null })}
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  )}
+//                   {/* Selected File Preview */}
+//                   {newFarmer.photo instanceof File && (
+//                     <div className="selected-file-preview mt-2">
+//                       <img
+//                         src={URL.createObjectURL(newFarmer.photo)}
+//                         alt="Selected"
+//                         style={{ width: 80, height: 80, borderRadius: "8px", objectFit: "cover" }}
+//                       />
+//                       <span>{newFarmer.photo.name}</span>
+//                       <button 
+//                         type="button"
+//                         className="btn btn-sm btn-outline-danger"
+//                         onClick={() => setNewFarmer({ ...newFarmer, photo: null })}
+//                       >
+//                         <X size={14} />
+//                       </button>
+//                     </div>
+//                   )}
 
-                  {newFarmer.photoExisting && (
-                    <div style={{ marginTop: 6 }}>
-                      <img
-                        src={getImageUrl(newFarmer.photoExisting)}
-                        alt="Existing Farmer"
-                        style={{ width: 80, height: 80, borderRadius: "50%" }}
-                        onError={(e) => {
-                          e.target.src = "/profile.png";
-                          e.target.onerror = null;
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+//                   {newFarmer.photoExisting && (
+//                     <div style={{ marginTop: 6 }}>
+//                       <img
+//                         src={getImageUrl(newFarmer.photoExisting)}
+//                         alt="Existing Farmer"
+//                         style={{ width: 80, height: 80, borderRadius: "50%" }}
+//                         onError={(e) => {
+//                           e.target.src = "/profile.png";
+//                           e.target.onerror = null;
+//                         }}
+//                       />
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
 
-            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-              {isUpdateMode ? (
-                <>
-                  <button 
-                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-                    onClick={updateFarmer}
-                    disabled={loading.updateFarmer}
-                  >
-                    {loading.updateFarmer ? <ButtonLoader /> : "Update Farmer"}
-                  </button>
-                  <button 
-                    className="btn btn-secondary flex-grow-1" 
-                    onClick={() => { 
-                      setShowForm(false); 
-                      setEditingFarmerId(null); 
-                      setNewFarmer(emptyFarmer);
-                      setIsUpdateMode(false);
-                      setFarmerError("");
-                      farmerPhotoMedia.stopCamera();
-                    }}
-                    disabled={loading.updateFarmer}
-                  >
-                    {t('cancel')}
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button 
-                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-                    onClick={addFarmer}
-                    disabled={loading.addFarmer}
-                  >
-                    {loading.addFarmer ? <ButtonLoader /> : t('submit')}
-                  </button>
-                  <button 
-                    className="btn btn-secondary flex-grow-1" 
-                    onClick={() => { 
-                      setShowForm(false); 
-                      setNewFarmer(emptyFarmer);
-                      setFarmerError("");
-                      farmerPhotoMedia.stopCamera();
-                    }}
-                    disabled={loading.addFarmer}
-                  >
-                    {t('cancel')}
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+//             <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+//               {isUpdateMode ? (
+//                 <>
+//                   <button 
+//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+//                     onClick={updateFarmer}
+//                     disabled={loading.updateFarmer}
+//                   >
+//                     {loading.updateFarmer ? <ButtonLoader /> : "Update Farmer"}
+//                   </button>
+//                   <button 
+//                     className="btn btn-secondary flex-grow-1" 
+//                     onClick={() => { 
+//                       setShowForm(false); 
+//                       setEditingFarmerId(null); 
+//                       setNewFarmer(emptyFarmer);
+//                       setIsUpdateMode(false);
+//                       setFarmerError("");
+//                       farmerPhotoMedia.stopCamera();
+//                     }}
+//                     disabled={loading.updateFarmer}
+//                   >
+//                     {t('cancel')}
+//                   </button>
+//                 </>
+//               ) : (
+//                 <>
+//                   <button 
+//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+//                     onClick={addFarmer}
+//                     disabled={loading.addFarmer}
+//                   >
+//                     {loading.addFarmer ? <ButtonLoader /> : t('submit')}
+//                   </button>
+//                   <button 
+//                     className="btn btn-secondary flex-grow-1" 
+//                     onClick={() => { 
+//                       setShowForm(false); 
+//                       setNewFarmer(emptyFarmer);
+//                       setFarmerError("");
+//                       farmerPhotoMedia.stopCamera();
+//                     }}
+//                     disabled={loading.addFarmer}
+//                   >
+//                     {t('cancel')}
+//                   </button>
+//                 </>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       )}
 
-      {/* Pond Modal Form */}
-      {showPondForm && (
-        <div className="form-modal">
-          <div className="form-box" style={{ width: "850px", maxHeight: "90vh", overflowY: "auto" }}>
-            <h5>{editingPondId ? "Update Pond" : "Add New Pond"}</h5>
+//       {/* Pond Modal Form */}
+//       {showPondForm && (
+//         <div className="form-modal">
+//           <div className="form-box" style={{ width: "850px", maxHeight: "90vh", overflowY: "auto" }}>
+//             <h5>{editingPondId ? "Update Pond" : "Add New Pond"}</h5>
 
-            {/* POND ERROR MESSAGE */}
-            {pondError && (
-              <div className="alert alert-danger" style={{ marginBottom: "15px" }}>
-                {pondError}
-              </div>
-            )}
+//             {/* POND ERROR MESSAGE */}
+//             {pondError && (
+//               <div className="alert alert-danger" style={{ marginBottom: "15px" }}>
+//                 {pondError}
+//               </div>
+//             )}
 
-            {/* UPDATED MODAL FORM GRID */}
-            <div className="modal-form-grid">
+//             {/* UPDATED MODAL FORM GRID */}
+//             <div className="modal-form-grid">
               
-              {/* Pond Details */}
-              <div className="modal-section">
-                <h6>Pond Details <span style={{ color: "red" }}>*</span></h6>
-                <div className="row g-2">
-                  <div className="col-md-4">
-                    <input 
-                      className="form-control" 
-                      placeholder="Pond area (eg. 1 acre) *" 
-                      value={newPond.pondArea} 
-                      onChange={e => setNewPond({ ...newPond, pondArea: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-2">
-                    <select 
-                      className="form-control" 
-                      value={newPond.pondAreaUnit} 
-                      onChange={e => setNewPond({ ...newPond, pondAreaUnit: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option value="acre">acre</option>
-                      <option value="hectare">hectare</option>
-                      <option value="footsquare">footsquare</option>
-                    </select>
-                  </div>
-                  <div className="col-md-4">
-                    <input 
-                      className="form-control" 
-                      placeholder="Pond depth (ft) *" 
-                      value={newPond.pondDepth} 
-                      onChange={e => setNewPond({ ...newPond, pondDepth: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
+//               {/* Pond Details */}
+//               <div className="modal-section">
+//                 <h6>Pond Details <span style={{ color: "red" }}>*</span></h6>
+//                 <div className="row g-2">
+//                   <div className="col-md-4">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="Pond area (eg. 1 acre) *" 
+//                       value={newPond.pondArea} 
+//                       onChange={e => setNewPond({ ...newPond, pondArea: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
+//                   <div className="col-md-2">
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.pondAreaUnit} 
+//                       onChange={e => setNewPond({ ...newPond, pondAreaUnit: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option value="acre">acre</option>
+//                       <option value="hectare">hectare</option>
+//                       <option value="footsquare">footsquare</option>
+//                     </select>
+//                   </div>
+//                   <div className="col-md-4">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="Pond depth (ft) *" 
+//                       value={newPond.pondDepth} 
+//                       onChange={e => setNewPond({ ...newPond, pondDepth: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
 
-                  <div className="col-md-12">
-                    <label>Pond image (GPS) - max 10MB</label>
+//                   <div className="col-md-12">
+//                     <label>Pond image (GPS) - max 10MB</label>
                     
-                    {/* Camera Preview for Pond Image */}
-                    {pondImageMedia.capturing && activeMediaField === 'pondImage' && (
-                      <div className="camera-preview">
-                        <video ref={pondImageMedia.videoRef} autoPlay playsInline />
-                        <div className="camera-controls">
-                          <button 
-                            className="btn btn-success"
-                            onClick={() => handleCapturePhoto('pondImage')}
-                            disabled={loading.addPond || loading.updatePond}
-                          >
-                            <Camera size={20} /> Capture Photo
-                          </button>
-                          <button 
-                            className="btn btn-danger"
-                            onClick={() => {
-                              pondImageMedia.stopCamera();
-                              setActiveMediaField(null);
-                            }}
-                            disabled={loading.addPond || loading.updatePond}
-                          >
-                            <X size={20} /> Cancel
-                          </button>
-                        </div>
-                      </div>
-                    )}
+//                     {/* Camera Preview for Pond Image */}
+//                     {pondImageMedia.capturing && activeMediaField === 'pondImage' && (
+//                       <div className="camera-preview">
+//                         <video ref={pondImageMedia.videoRef} autoPlay playsInline />
+//                         <div className="camera-controls">
+//                           <button 
+//                             className="btn btn-success"
+//                             onClick={() => handleCapturePhoto('pondImage')}
+//                             disabled={loading.addPond || loading.updatePond}
+//                           >
+//                             <Camera size={20} /> Capture Photo
+//                           </button>
+//                           <button 
+//                             className="btn btn-danger"
+//                             onClick={() => {
+//                               pondImageMedia.stopCamera();
+//                               setActiveMediaField(null);
+//                             }}
+//                             disabled={loading.addPond || loading.updatePond}
+//                           >
+//                             <X size={20} /> Cancel
+//                           </button>
+//                         </div>
+//                       </div>
+//                     )}
 
-                    {/* Media Selection Buttons for Pond Image */}
-                    <div className="file-input-buttons">
-                      <button 
-                        type="button"
-                        className="btn btn-outline-primary btn-sm"
-                        onClick={() => handleCameraCapture('pondImage', 'image')}
-                        disabled={loading.addPond || loading.updatePond || pondImageMedia.capturing}
-                      >
-                        <Camera size={16} /> Camera
-                      </button>
-                      <button 
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                        onClick={() => handleMediaSelection('pondImage', 'image', false)}
-                        disabled={loading.addPond || loading.updatePond || pondImageMedia.capturing}
-                      >
-                        <Image size={16} /> Gallery
-                      </button>
-                    </div>
+//                     {/* Media Selection Buttons for Pond Image */}
+//                     <div className="file-input-buttons">
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-primary btn-sm"
+//                         onClick={() => handleCameraCapture('pondImage', 'image')}
+//                         disabled={loading.addPond || loading.updatePond || pondImageMedia.capturing}
+//                       >
+//                         <Camera size={16} /> Camera
+//                       </button>
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-secondary btn-sm"
+//                         onClick={() => handleMediaSelection('pondImage', 'image', false)}
+//                         disabled={loading.addPond || loading.updatePond || pondImageMedia.capturing}
+//                       >
+//                         <Image size={16} /> Gallery
+//                       </button>
+//                     </div>
 
-                    {/* Selected Pond Image Preview */}
-                    {newPond.pondImage instanceof File && (
-                      <div className="selected-file-preview mt-2">
-                        <img
-                          src={URL.createObjectURL(newPond.pondImage)}
-                          alt="Selected"
-                          style={{ width: 80, height: 80, borderRadius: "8px", objectFit: "cover" }}
-                        />
-                        <span>{newPond.pondImage.name}</span>
-                        <button 
-                          type="button"
-                          className="btn btn-sm btn-outline-danger"
-                          onClick={() => setNewPond({ ...newPond, pondImage: null })}
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    )}
+//                     {/* Selected Pond Image Preview */}
+//                     {newPond.pondImage instanceof File && (
+//                       <div className="selected-file-preview mt-2">
+//                         <img
+//                           src={URL.createObjectURL(newPond.pondImage)}
+//                           alt="Selected"
+//                           style={{ width: 80, height: 80, borderRadius: "8px", objectFit: "cover" }}
+//                         />
+//                         <span>{newPond.pondImage.name}</span>
+//                         <button 
+//                           type="button"
+//                           className="btn btn-sm btn-outline-danger"
+//                           onClick={() => setNewPond({ ...newPond, pondImage: null })}
+//                         >
+//                           <X size={14} />
+//                         </button>
+//                       </div>
+//                     )}
 
-                    {newPond.pondImageExisting && <div style={{ marginTop: 6 }}>
-                      <a target="_blank" rel="noreferrer" href={getImageUrl(newPond.pondImageExisting)}>
-                        Existing: {newPond.pondImageExisting.split('/').pop()}
-                      </a>
-                    </div>}
-                  </div>
+//                     {newPond.pondImageExisting && <div style={{ marginTop: 6 }}>
+//                       <a target="_blank" rel="noreferrer" href={getImageUrl(newPond.pondImageExisting)}>
+//                         Existing: {newPond.pondImageExisting.split('/').pop()}
+//                       </a>
+//                     </div>}
+//                   </div>
 
-                  <div className="col-md-12">
-                    <label>Upload Pond Picture/Video (up to 5, 100MB each)</label>
+//                   <div className="col-md-12">
+//                     <label>Upload Pond Picture/Video (up to 5, 100MB each)</label>
                     
-                    {/* Camera Preview for Pond Files */}
-                    {(pondFilesMedia.capturing && activeMediaField === 'pondFiles') && (
-                      <div className="camera-preview">
-                        <video ref={pondFilesMedia.videoRef} autoPlay playsInline />
-                        <div className="camera-controls">
-                          {pondFilesMedia.isVideo ? (
-                            <>
-                              <button 
-                                className="btn btn-success"
-                                onClick={() => handleCaptureVideo('pondFiles')}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <Video size={20} /> Start Recording
-                              </button>
-                              <button 
-                                className="btn btn-danger"
-                                onClick={() => {
-                                  pondFilesMedia.stopCamera();
-                                  setActiveMediaField(null);
-                                }}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <X size={20} /> Cancel
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button 
-                                className="btn btn-success"
-                                onClick={() => handleCapturePhoto('pondFiles')}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <Camera size={20} /> Capture Photo
-                              </button>
-                              <button 
-                                className="btn btn-danger"
-                                onClick={() => {
-                                  pondFilesMedia.stopCamera();
-                                  setActiveMediaField(null);
-                                }}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <X size={20} /> Cancel
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    )}
+//                     {/* Camera Preview for Pond Files */}
+//                     {(pondFilesMedia.capturing && activeMediaField === 'pondFiles') && (
+//                       <div className="camera-preview">
+//                         <video ref={pondFilesMedia.videoRef} autoPlay playsInline />
+//                         <div className="camera-controls">
+//                           {pondFilesMedia.isVideo ? (
+//                             <>
+//                               <button 
+//                                 className="btn btn-success"
+//                                 onClick={() => handleCaptureVideo('pondFiles')}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <Video size={20} /> Start Recording
+//                               </button>
+//                               <button 
+//                                 className="btn btn-danger"
+//                                 onClick={() => {
+//                                   pondFilesMedia.stopCamera();
+//                                   setActiveMediaField(null);
+//                                 }}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <X size={20} /> Cancel
+//                               </button>
+//                             </>
+//                           ) : (
+//                             <>
+//                               <button 
+//                                 className="btn btn-success"
+//                                 onClick={() => handleCapturePhoto('pondFiles')}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <Camera size={20} /> Capture Photo
+//                               </button>
+//                               <button 
+//                                 className="btn btn-danger"
+//                                 onClick={() => {
+//                                   pondFilesMedia.stopCamera();
+//                                   setActiveMediaField(null);
+//                                 }}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <X size={20} /> Cancel
+//                               </button>
+//                             </>
+//                           )}
+//                         </div>
+//                       </div>
+//                     )}
 
-                    {/* Media Selection Buttons for Pond Files */}
-                    <div className="file-input-buttons">
-                      <button 
-                        type="button"
-                        className="btn btn-outline-primary btn-sm"
-                        onClick={() => handleCameraCapture('pondFiles', 'image')}
-                        disabled={loading.addPond || loading.updatePond || pondFilesMedia.capturing}
-                      >
-                        <Camera size={16} /> Camera
-                      </button>
-                      <button 
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                        onClick={() => handleMediaSelection('pondFiles', 'image/*,video/*', true)}
-                        disabled={loading.addPond || loading.updatePond || pondFilesMedia.capturing}
-                      >
-                        <Image size={16} /> <Video size={16} /> Gallery
-                      </button>
-                      <button 
-                        type="button"
-                        className="btn btn-outline-info btn-sm"
-                        onClick={() => handleCameraCapture('pondFiles', 'video')}
-                        disabled={loading.addPond || loading.updatePond || pondFilesMedia.capturing}
-                      >
-                        <Video size={16} /> Record Video
-                      </button>
-                    </div>
+//                     {/* Media Selection Buttons for Pond Files */}
+//                     <div className="file-input-buttons">
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-primary btn-sm"
+//                         onClick={() => handleCameraCapture('pondFiles', 'image')}
+//                         disabled={loading.addPond || loading.updatePond || pondFilesMedia.capturing}
+//                       >
+//                         <Camera size={16} /> Camera
+//                       </button>
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-secondary btn-sm"
+//                         onClick={() => handleMediaSelection('pondFiles', 'image/*,video/*', true)}
+//                         disabled={loading.addPond || loading.updatePond || pondFilesMedia.capturing}
+//                       >
+//                         <Image size={16} /> <Video size={16} /> Gallery
+//                       </button>
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-info btn-sm"
+//                         onClick={() => handleCameraCapture('pondFiles', 'video')}
+//                         disabled={loading.addPond || loading.updatePond || pondFilesMedia.capturing}
+//                       >
+//                         <Video size={16} /> Record Video
+//                       </button>
+//                     </div>
 
-                    {/* Selected Pond Files Preview */}
-                    {newPond.pondFiles && newPond.pondFiles.length > 0 && (
-                      <div className="selected-files-preview mt-2">
-                        {newPond.pondFiles.map((file, index) => (
-                          <div key={index} className="selected-file-item">
-                            {file.type.startsWith('image/') ? (
-                              <Image size={16} />
-                            ) : file.type.startsWith('video/') ? (
-                              <Video size={16} />
-                            ) : (
-                              <File size={16} />
-                            )}
-                            <span>{file.name}</span>
-                            <button 
-                              type="button"
-                              className="btn btn-sm btn-outline-danger"
-                              onClick={() => {
-                                const newFiles = [...newPond.pondFiles];
-                                newFiles.splice(index, 1);
-                                setNewPond({ ...newPond, pondFiles: newFiles });
-                              }}
-                            >
-                              <X size={14} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+//                     {/* Selected Pond Files Preview */}
+//                     {newPond.pondFiles && newPond.pondFiles.length > 0 && (
+//                       <div className="selected-files-preview mt-2">
+//                         {newPond.pondFiles.map((file, index) => (
+//                           <div key={index} className="selected-file-item">
+//                             {file.type.startsWith('image/') ? (
+//                               <Image size={16} />
+//                             ) : file.type.startsWith('video/') ? (
+//                               <Video size={16} />
+//                             ) : (
+//                               <File size={16} />
+//                             )}
+//                             <span>{file.name}</span>
+//                             <button 
+//                               type="button"
+//                               className="btn btn-sm btn-outline-danger"
+//                               onClick={() => {
+//                                 const newFiles = [...newPond.pondFiles];
+//                                 newFiles.splice(index, 1);
+//                                 setNewPond({ ...newPond, pondFiles: newFiles });
+//                               }}
+//                             >
+//                               <X size={14} />
+//                             </button>
+//                           </div>
+//                         ))}
+//                       </div>
+//                     )}
 
-                    {renderExistingFiles(newPond.pondFilesExisting)}
-                  </div>
+//                     {renderExistingFiles(newPond.pondFilesExisting)}
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Overflow from somewhere in pond?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.overflow} 
-                      onChange={e => setNewPond({ ...newPond, overflow: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-6">
+//                     <label>Overflow from somewhere in pond?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.overflow} 
+//                       onChange={e => setNewPond({ ...newPond, overflow: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Pond receives proper Sunlight?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.receivesSunlight} 
-                      onChange={e => setNewPond({ ...newPond, receivesSunlight: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-6">
+//                     <label>Pond receives proper Sunlight?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.receivesSunlight} 
+//                       onChange={e => setNewPond({ ...newPond, receivesSunlight: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Trees present on banks?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.treesOnBanks} 
-                      onChange={e => setNewPond({ ...newPond, treesOnBanks: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-6">
+//                     <label>Trees present on banks?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.treesOnBanks} 
+//                       onChange={e => setNewPond({ ...newPond, treesOnBanks: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Neighbourhood</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.neighbourhood} 
-                      onChange={e => setNewPond({ ...newPond, neighbourhood: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Agriculture Farm</option>
-                      <option>Pond</option>
-                      <option>Road</option>
-                      <option>Residential Area</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-6">
+//                     <label>Neighbourhood</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.neighbourhood} 
+//                       onChange={e => setNewPond({ ...newPond, neighbourhood: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Agriculture Farm</option>
+//                       <option>Pond</option>
+//                       <option>Road</option>
+//                       <option>Residential Area</option>
+//                       <option>Other</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Does wastewater enter pond?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.wastewaterEnters} 
-                      onChange={e => setNewPond({ ...newPond, wastewaterEnters: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+//                   <div className="col-md-6">
+//                     <label>Does wastewater enter pond?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.wastewaterEnters} 
+//                       onChange={e => setNewPond({ ...newPond, wastewaterEnters: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
+//                 </div>
+//               </div>
 
-              {/* Species & Stocking */}
-              <div className="modal-section">
-                <h6>Species & Stocking <span style={{ color: "red" }}>*</span></h6>
-                <div className="row g-2">
-                  <div className="col-md-6">
-                    <input 
-                      className="form-control" 
-                      placeholder="Fish Species Cultured *" 
-                      value={newPond.species} 
-                      onChange={e => setNewPond({ ...newPond, species: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label>Date of Stocking *</label>
-                    <input 
-                      type="date" 
-                      className="form-control" 
-                      value={newPond.dateOfStocking} 
-                      onChange={e => setNewPond({ ...newPond, dateOfStocking: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
+//               {/* Species & Stocking */}
+//               <div className="modal-section">
+//                 <h6>Species & Stocking <span style={{ color: "red" }}>*</span></h6>
+//                 <div className="row g-2">
+//                   <div className="col-md-6">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="Fish Species Cultured *" 
+//                       value={newPond.species} 
+//                       onChange={e => setNewPond({ ...newPond, species: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
+//                   <div className="col-md-6">
+//                     <label>Date of Stocking *</label>
+//                     <input 
+//                       type="date" 
+//                       className="form-control" 
+//                       value={newPond.dateOfStocking} 
+//                       onChange={e => setNewPond({ ...newPond, dateOfStocking: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
 
-                  <div className="col-md-6">
-                    <input 
-                      type="number" 
-                      className="form-control" 
-                      placeholder="Quantity of Seed initially in Pond *" 
-                      value={newPond.qtySeedInitially} 
-                      onChange={e => setNewPond({ ...newPond, qtySeedInitially: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <input 
-                      className="form-control" 
-                      placeholder="Current Quantity of Fish in Pond *" 
-                      value={newPond.currentQty} 
-                      onChange={e => setNewPond({ ...newPond, currentQty: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
+//                   <div className="col-md-6">
+//                     <input 
+//                       type="number" 
+//                       className="form-control" 
+//                       placeholder="Quantity of Seed initially in Pond *" 
+//                       value={newPond.qtySeedInitially} 
+//                       onChange={e => setNewPond({ ...newPond, qtySeedInitially: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
+//                   <div className="col-md-6">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="Current Quantity of Fish in Pond *" 
+//                       value={newPond.currentQty} 
+//                       onChange={e => setNewPond({ ...newPond, currentQty: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Average size of fishes</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.avgSize} 
-                      onChange={e => setNewPond({ ...newPond, avgSize: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>&gt;200gram</option>
-                      <option>200-500 gram</option>
-                      <option>500-750 gram</option>
-                      <option>&lt;750gram</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+//                   <div className="col-md-6">
+//                     <label>Average size of fishes</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.avgSize} 
+//                       onChange={e => setNewPond({ ...newPond, avgSize: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>&gt;200gram</option>
+//                       <option>200-500 gram</option>
+//                       <option>500-750 gram</option>
+//                       <option>&lt;750gram</option>
+//                     </select>
+//                   </div>
+//                 </div>
+//               </div>
 
-              {/* Feed Details */}
-              <div className="modal-section">
-                <h6>Feed Details</h6>
-                <div className="row g-2">
-                  <div className="col-md-6">
-                    <label>Feed Type Used</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.feedType} 
-                      onChange={e => setNewPond({ ...newPond, feedType: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Market Feed</option>
-                      <option>Homemade Feed</option>
-                      <option>Both</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                  <div className="col-md-6">
-                    <input 
-                      className="form-control" 
-                      placeholder="If Other, mention" 
-                      value={newPond.feedOther} 
-                      onChange={e => setNewPond({ ...newPond, feedOther: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
+//               {/* Feed Details */}
+//               <div className="modal-section">
+//                 <h6>Feed Details</h6>
+//                 <div className="row g-2">
+//                   <div className="col-md-6">
+//                     <label>Feed Type Used</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.feedType} 
+//                       onChange={e => setNewPond({ ...newPond, feedType: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Market Feed</option>
+//                       <option>Homemade Feed</option>
+//                       <option>Both</option>
+//                       <option>Other</option>
+//                     </select>
+//                   </div>
+//                   <div className="col-md-6">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="If Other, mention" 
+//                       value={newPond.feedOther} 
+//                       onChange={e => setNewPond({ ...newPond, feedOther: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Feed frequency</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.feedFreq} 
-                      onChange={e => setNewPond({ ...newPond, feedFreq: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Once a day</option>
-                      <option>twice a day</option>
-                      <option>thrice a day</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-6">
+//                     <label>Feed frequency</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.feedFreq} 
+//                       onChange={e => setNewPond({ ...newPond, feedFreq: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Once a day</option>
+//                       <option>twice a day</option>
+//                       <option>thrice a day</option>
+//                       <option>Other</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-6">
-                    <input 
-                      className="form-control" 
-                      placeholder="Feed quantity given per day (in kg)" 
-                      value={newPond.feedQtyPerDay} 
-                      onChange={e => setNewPond({ ...newPond, feedQtyPerDay: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
+//                   <div className="col-md-6">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="Feed quantity given per day (in kg)" 
+//                       value={newPond.feedQtyPerDay} 
+//                       onChange={e => setNewPond({ ...newPond, feedQtyPerDay: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Approx time of feeding</label>
-                    <input 
-                      type="time" 
-                      className="form-control" 
-                      value={newPond.feedTime} 
-                      onChange={e => setNewPond({ ...newPond, feedTime: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
+//                   <div className="col-md-6">
+//                     <label>Approx time of feeding</label>
+//                     <input 
+//                       type="time" 
+//                       className="form-control" 
+//                       value={newPond.feedTime} 
+//                       onChange={e => setNewPond({ ...newPond, feedTime: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
 
-                  <div className="col-md-6">
-                    <input 
-                      className="form-control" 
-                      placeholder="Any recent changes in feed or feeding behaviour" 
-                      value={newPond.recentFeedChanges} 
-                      onChange={e => setNewPond({ ...newPond, recentFeedChanges: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
+//                   <div className="col-md-6">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="Any recent changes in feed or feeding behaviour" 
+//                       value={newPond.recentFeedChanges} 
+//                       onChange={e => setNewPond({ ...newPond, recentFeedChanges: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Do fish show reduced appetite?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.reducedAppetite} 
-                      onChange={e => setNewPond({ ...newPond, reducedAppetite: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+//                   <div className="col-md-6">
+//                     <label>Do fish show reduced appetite?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.reducedAppetite} 
+//                       onChange={e => setNewPond({ ...newPond, reducedAppetite: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
+//                 </div>
+//               </div>
 
-              {/* Water Quality */}
-              <div className="modal-section">
-                <h6>Water Quality <span style={{ color: "red" }}>*</span></h6>
-                <div className="row g-2">
-                  <div className="col-md-3">
-                    <input 
-                      className="form-control" 
-                      placeholder="Water Temp (°C) *" 
-                      value={newPond.waterTemperature} 
-                      onChange={e => setNewPond({ ...newPond, waterTemperature: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <input 
-                      className="form-control" 
-                      placeholder="pH measured *" 
-                      value={newPond.pH} 
-                      onChange={e => setNewPond({ ...newPond, pH: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <input 
-                      className="form-control" 
-                      placeholder="DO measured *" 
-                      value={newPond.DO} 
-                      onChange={e => setNewPond({ ...newPond, DO: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <label>Ammonia (NH₃) Level</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.ammoniaLevel} 
-                      onChange={e => setNewPond({ ...newPond, ammoniaLevel: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
-                    </select>
-                  </div>
+//               {/* Water Quality */}
+//               <div className="modal-section">
+//                 <h6>Water Quality <span style={{ color: "red" }}>*</span></h6>
+//                 <div className="row g-2">
+//                   <div className="col-md-3">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="Water Temp (°C) *" 
+//                       value={newPond.waterTemperature} 
+//                       onChange={e => setNewPond({ ...newPond, waterTemperature: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
+//                   <div className="col-md-3">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="pH measured *" 
+//                       value={newPond.pH} 
+//                       onChange={e => setNewPond({ ...newPond, pH: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
+//                   <div className="col-md-3">
+//                     <input 
+//                       className="form-control" 
+//                       placeholder="DO measured *" 
+//                       value={newPond.DO} 
+//                       onChange={e => setNewPond({ ...newPond, DO: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     />
+//                   </div>
+//                   <div className="col-md-3">
+//                     <label>Ammonia (NH₃) Level</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.ammoniaLevel} 
+//                       onChange={e => setNewPond({ ...newPond, ammoniaLevel: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-3">
-                    <label>Phytoplankton Levels</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.phytoplanktonLevel} 
-                      onChange={e => setNewPond({ ...newPond, phytoplanktonLevel: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-3">
+//                     <label>Phytoplankton Levels</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.phytoplanktonLevel} 
+//                       onChange={e => setNewPond({ ...newPond, phytoplanktonLevel: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Very Low</option><option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-3">
-                    <label>Water Hardness</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.waterHardness} 
-                      onChange={e => setNewPond({ ...newPond, waterHardness: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-3">
+//                     <label>Water Hardness</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.waterHardness} 
+//                       onChange={e => setNewPond({ ...newPond, waterHardness: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-3">
-                    <label>Any visible algae bloom?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.algaeBloom} 
-                      onChange={e => setNewPond({ ...newPond, algaeBloom: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option><option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-3">
+//                     <label>Any visible algae bloom?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.algaeBloom} 
+//                       onChange={e => setNewPond({ ...newPond, algaeBloom: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option><option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-3">
-                    <label>Pond Water Colour</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.pondWaterColor} 
-                      onChange={e => setNewPond({ ...newPond, pondWaterColor: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Light Green</option><option>Dark Green</option><option>Yellowish Green</option>
-                      <option>Brownish Green</option><option>Yellow</option><option>Muddy Brown</option>
-                      <option>Black</option><option>Other</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-3">
+//                     <label>Pond Water Colour</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.pondWaterColor} 
+//                       onChange={e => setNewPond({ ...newPond, pondWaterColor: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Light Green</option><option>Dark Green</option><option>Yellowish Green</option>
+//                       <option>Brownish Green</option><option>Yellow</option><option>Muddy Brown</option>
+//                       <option>Black</option><option>Other</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Source of Water *</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.sourceOfWater} 
-                      onChange={e => setNewPond({ ...newPond, sourceOfWater: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                      required
-                    >
-                      <option value="">Select Source</option>
-                      <option>Rainwater</option>
-                      <option>Pump</option>
-                      <option>River</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+//                   <div className="col-md-6">
+//                     <label>Source of Water *</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.sourceOfWater} 
+//                       onChange={e => setNewPond({ ...newPond, sourceOfWater: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                       required
+//                     >
+//                       <option value="">Select Source</option>
+//                       <option>Rainwater</option>
+//                       <option>Pump</option>
+//                       <option>River</option>
+//                       <option>Other</option>
+//                     </select>
+//                   </div>
+//                 </div>
+//               </div>
 
-              {/* Disease & Symptoms */}
-              <div className="modal-section">
-                <h6>Disease & Symptoms</h6>
-                <div className="row g-2">
-                  <div className="col-md-3">
-                    <label>Any disease symptoms?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.diseaseSymptoms} 
-                      onChange={e => setNewPond({ ...newPond, diseaseSymptoms: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option><option>No</option>
-                    </select>
-                  </div>
+//               {/* Disease & Symptoms */}
+//               <div className="modal-section">
+//                 <h6>Disease & Symptoms</h6>
+//                 <div className="row g-2">
+//                   <div className="col-md-3">
+//                     <label>Any disease symptoms?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.diseaseSymptoms} 
+//                       onChange={e => setNewPond({ ...newPond, diseaseSymptoms: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option><option>No</option>
+//                     </select>
+//                   </div>
 
-                  {/* UPDATED SYMPTOMS SECTION */}
-                  <div className="col-md-12">
-                    <label>Symptoms observed (check / or type)</label>
-                    <div className="symptoms-grid">
-                      {SYMPTOMS_LIST.map(s => (
-                        <label key={s} className="symptom-checkbox">
-                          <input 
-                            type="checkbox" 
-                            checked={newPond.symptoms?.includes(s)} 
-                            onChange={() => toggleSymptom(s)} 
-                            disabled={loading.addPond || loading.updatePond}
-                          /> 
-                          <span>{s}</span>
-                        </label>
-                      ))}
-                    </div>
-                    <div style={{ marginTop: 8 }}>
-                      <input 
-                        className="form-control" 
-                        placeholder="Or type symptoms comma separated" 
-                        value={newPond.symptomsObserved} 
-                        onChange={e => setNewPond({ ...newPond, symptomsObserved: e.target.value })}
-                        disabled={loading.addPond || loading.updatePond}
-                      />
-                    </div>
-                  </div>
+//                   {/* UPDATED SYMPTOMS SECTION */}
+//                   <div className="col-md-12">
+//                     <label>Symptoms observed (check / or type)</label>
+//                     <div className="symptoms-grid">
+//                       {SYMPTOMS_LIST.map(s => (
+//                         <label key={s} className="symptom-checkbox">
+//                           <input 
+//                             type="checkbox" 
+//                             checked={newPond.symptoms?.includes(s)} 
+//                             onChange={() => toggleSymptom(s)} 
+//                             disabled={loading.addPond || loading.updatePond}
+//                           /> 
+//                           <span>{s}</span>
+//                         </label>
+//                       ))}
+//                     </div>
+//                     <div style={{ marginTop: 8 }}>
+//                       <input 
+//                         className="form-control" 
+//                         placeholder="Or type symptoms comma separated" 
+//                         value={newPond.symptomsObserved} 
+//                         onChange={e => setNewPond({ ...newPond, symptomsObserved: e.target.value })}
+//                         disabled={loading.addPond || loading.updatePond}
+//                       />
+//                     </div>
+//                   </div>
 
-                  <div className="col-md-6">
-                    <input 
-                      type="number" 
-                      className="form-control" 
-                      placeholder="How many fish have died (cumulative)?" 
-                      value={newPond.fishDeaths} 
-                      onChange={e => setNewPond({ ...newPond, fishDeaths: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
+//                   <div className="col-md-6">
+//                     <input 
+//                       type="number" 
+//                       className="form-control" 
+//                       placeholder="How many fish have died (cumulative)?" 
+//                       value={newPond.fishDeaths} 
+//                       onChange={e => setNewPond({ ...newPond, fishDeaths: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
 
-                  <div className="col-md-6">
-                    <label>Are symptoms affecting all fish or only a few?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.symptomsAffect} 
-                      onChange={e => setNewPond({ ...newPond, symptomsAffect: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>All</option><option>Few</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-6">
+//                     <label>Are symptoms affecting all fish or only a few?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.symptomsAffect} 
+//                       onChange={e => setNewPond({ ...newPond, symptomsAffect: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>All</option><option>Few</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-12">
-                    <label>Upload fish images/videos (up to 5)</label>
+//                   <div className="col-md-12">
+//                     <label>Upload fish images/videos (up to 5)</label>
                     
-                    {/* Camera Preview for Fish Files */}
-                    {(fishFilesMedia.capturing && activeMediaField === 'fishFiles') && (
-                      <div className="camera-preview">
-                        <video ref={fishFilesMedia.videoRef} autoPlay playsInline />
-                        <div className="camera-controls">
-                          {fishFilesMedia.isVideo ? (
-                            <>
-                              <button 
-                                className="btn btn-success"
-                                onClick={() => handleCaptureVideo('fishFiles')}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <Video size={20} /> Start Recording
-                              </button>
-                              <button 
-                                className="btn btn-danger"
-                                onClick={() => {
-                                  fishFilesMedia.stopCamera();
-                                  setActiveMediaField(null);
-                                }}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <X size={20} /> Cancel
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button 
-                                className="btn btn-success"
-                                onClick={() => handleCapturePhoto('fishFiles')}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <Camera size={20} /> Capture Photo
-                              </button>
-                              <button 
-                                className="btn btn-danger"
-                                onClick={() => {
-                                  fishFilesMedia.stopCamera();
-                                  setActiveMediaField(null);
-                                }}
-                                disabled={loading.addPond || loading.updatePond}
-                              >
-                                <X size={20} /> Cancel
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    )}
+//                     {/* Camera Preview for Fish Files */}
+//                     {(fishFilesMedia.capturing && activeMediaField === 'fishFiles') && (
+//                       <div className="camera-preview">
+//                         <video ref={fishFilesMedia.videoRef} autoPlay playsInline />
+//                         <div className="camera-controls">
+//                           {fishFilesMedia.isVideo ? (
+//                             <>
+//                               <button 
+//                                 className="btn btn-success"
+//                                 onClick={() => handleCaptureVideo('fishFiles')}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <Video size={20} /> Start Recording
+//                               </button>
+//                               <button 
+//                                 className="btn btn-danger"
+//                                 onClick={() => {
+//                                   fishFilesMedia.stopCamera();
+//                                   setActiveMediaField(null);
+//                                 }}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <X size={20} /> Cancel
+//                               </button>
+//                             </>
+//                           ) : (
+//                             <>
+//                               <button 
+//                                 className="btn btn-success"
+//                                 onClick={() => handleCapturePhoto('fishFiles')}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <Camera size={20} /> Capture Photo
+//                               </button>
+//                               <button 
+//                                 className="btn btn-danger"
+//                                 onClick={() => {
+//                                   fishFilesMedia.stopCamera();
+//                                   setActiveMediaField(null);
+//                                 }}
+//                                 disabled={loading.addPond || loading.updatePond}
+//                               >
+//                                 <X size={20} /> Cancel
+//                               </button>
+//                             </>
+//                           )}
+//                         </div>
+//                       </div>
+//                     )}
 
-                    {/* Media Selection Buttons for Fish Files */}
-                    <div className="file-input-buttons">
-                      <button 
-                        type="button"
-                        className="btn btn-outline-primary btn-sm"
-                        onClick={() => handleCameraCapture('fishFiles', 'image')}
-                        disabled={loading.addPond || loading.updatePond || fishFilesMedia.capturing}
-                      >
-                        <Camera size={16} /> Camera
-                      </button>
-                      <button 
-                        type="button"
-                        className="btn btn-outline-secondary btn-sm"
-                        onClick={() => handleMediaSelection('fishFiles', 'image/*,video/*', true)}
-                        disabled={loading.addPond || loading.updatePond || fishFilesMedia.capturing}
-                      >
-                        <Image size={16} /> <Video size={16} /> Gallery
-                      </button>
-                      <button 
-                        type="button"
-                        className="btn btn-outline-info btn-sm"
-                        onClick={() => handleCameraCapture('fishFiles', 'video')}
-                        disabled={loading.addPond || loading.updatePond || fishFilesMedia.capturing}
-                      >
-                        <Video size={16} /> Record Video
-                      </button>
-                    </div>
+//                     {/* Media Selection Buttons for Fish Files */}
+//                     <div className="file-input-buttons">
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-primary btn-sm"
+//                         onClick={() => handleCameraCapture('fishFiles', 'image')}
+//                         disabled={loading.addPond || loading.updatePond || fishFilesMedia.capturing}
+//                       >
+//                         <Camera size={16} /> Camera
+//                       </button>
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-secondary btn-sm"
+//                         onClick={() => handleMediaSelection('fishFiles', 'image/*,video/*', true)}
+//                         disabled={loading.addPond || loading.updatePond || fishFilesMedia.capturing}
+//                       >
+//                         <Image size={16} /> <Video size={16} /> Gallery
+//                       </button>
+//                       <button 
+//                         type="button"
+//                         className="btn btn-outline-info btn-sm"
+//                         onClick={() => handleCameraCapture('fishFiles', 'video')}
+//                         disabled={loading.addPond || loading.updatePond || fishFilesMedia.capturing}
+//                       >
+//                         <Video size={16} /> Record Video
+//                       </button>
+//                     </div>
 
-                    {/* Selected Fish Files Preview */}
-                    {newPond.fishFiles && newPond.fishFiles.length > 0 && (
-                      <div className="selected-files-preview mt-2">
-                        {newPond.fishFiles.map((file, index) => (
-                          <div key={index} className="selected-file-item">
-                            {file.type.startsWith('image/') ? (
-                              <Image size={16} />
-                            ) : file.type.startsWith('video/') ? (
-                              <Video size={16} />
-                            ) : (
-                              <File size={16} />
-                            )}
-                            <span>{file.name}</span>
-                            <button 
-                              type="button"
-                              className="btn btn-sm btn-outline-danger"
-                              onClick={() => {
-                                const newFiles = [...newPond.fishFiles];
-                                newFiles.splice(index, 1);
-                                setNewPond({ ...newPond, fishFiles: newFiles });
-                              }}
-                            >
-                              <X size={14} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+//                     {/* Selected Fish Files Preview */}
+//                     {newPond.fishFiles && newPond.fishFiles.length > 0 && (
+//                       <div className="selected-files-preview mt-2">
+//                         {newPond.fishFiles.map((file, index) => (
+//                           <div key={index} className="selected-file-item">
+//                             {file.type.startsWith('image/') ? (
+//                               <Image size={16} />
+//                             ) : file.type.startsWith('video/') ? (
+//                               <Video size={16} />
+//                             ) : (
+//                               <File size={16} />
+//                             )}
+//                             <span>{file.name}</span>
+//                             <button 
+//                               type="button"
+//                               className="btn btn-sm btn-outline-danger"
+//                               onClick={() => {
+//                                 const newFiles = [...newPond.fishFiles];
+//                                 newFiles.splice(index, 1);
+//                                 setNewPond({ ...newPond, fishFiles: newFiles });
+//                               }}
+//                             >
+//                               <X size={14} />
+//                             </button>
+//                           </div>
+//                         ))}
+//                       </div>
+//                     )}
 
-                    {renderExistingFiles(newPond.fishFilesExisting)}
-                  </div>
-                </div>
-              </div>
+//                     {renderExistingFiles(newPond.fishFilesExisting)}
+//                   </div>
+//                 </div>
+//               </div>
 
-              {/* Observation & Misc */}
-              <div className="modal-section">
-                <h6>Observation & Misc</h6>
-                <div className="row g-2">
-                  <div className="col-md-4">
-                    <label>Date of Farm Observed</label>
-                    <input 
-                      type="date" 
-                      className="form-control" 
-                      value={newPond.farmObservedDate} 
-                      onChange={e => setNewPond({ ...newPond, farmObservedDate: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <label>Time of Farm Observed</label>
-                    <input 
-                      type="time" 
-                      className="form-control" 
-                      value={newPond.farmObservedTime} 
-                      onChange={e => setNewPond({ ...newPond, farmObservedTime: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
+//               {/* Observation & Misc */}
+//               <div className="modal-section">
+//                 <h6>Observation & Misc</h6>
+//                 <div className="row g-2">
+//                   <div className="col-md-4">
+//                     <label>Date of Farm Observed</label>
+//                     <input 
+//                       type="date" 
+//                       className="form-control" 
+//                       value={newPond.farmObservedDate} 
+//                       onChange={e => setNewPond({ ...newPond, farmObservedDate: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
+//                   <div className="col-md-4">
+//                     <label>Time of Farm Observed</label>
+//                     <input 
+//                       type="time" 
+//                       className="form-control" 
+//                       value={newPond.farmObservedTime} 
+//                       onChange={e => setNewPond({ ...newPond, farmObservedTime: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
 
-                  <div className="col-md-4">
-                    <label>Which species farmer cultured last time?</label>
-                    <input 
-                      className="form-control" 
-                      value={newPond.lastSpecies} 
-                      onChange={e => setNewPond({ ...newPond, lastSpecies: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    />
-                  </div>
+//                   <div className="col-md-4">
+//                     <label>Which species farmer cultured last time?</label>
+//                     <input 
+//                       className="form-control" 
+//                       value={newPond.lastSpecies} 
+//                       onChange={e => setNewPond({ ...newPond, lastSpecies: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     />
+//                   </div>
 
-                  <div className="col-md-4">
-                    <label>Does farmer completely harvest the last crop?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.lastHarvestComplete} 
-                      onChange={e => setNewPond({ ...newPond, lastHarvestComplete: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-4">
+//                     <label>Does farmer completely harvest the last crop?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.lastHarvestComplete} 
+//                       onChange={e => setNewPond({ ...newPond, lastHarvestComplete: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-4">
-                    <label>Any recent heavy rains or floods?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.recentRainFlood} 
-                      onChange={e => setNewPond({ ...newPond, recentRainFlood: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-4">
+//                     <label>Any recent heavy rains or floods?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.recentRainFlood} 
+//                       onChange={e => setNewPond({ ...newPond, recentRainFlood: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-4">
-                    <label>Any pesticide/chemical runoff near pond?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.pesticideRunoff} 
-                      onChange={e => setNewPond({ ...newPond, pesticideRunoff: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-4">
+//                     <label>Any pesticide/chemical runoff near pond?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.pesticideRunoff} 
+//                       onChange={e => setNewPond({ ...newPond, pesticideRunoff: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-4">
-                    <label>Any construction/activity near pond?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.constructionNear} 
-                      onChange={e => setNewPond({ ...newPond, constructionNear: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-4">
+//                     <label>Any construction/activity near pond?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.constructionNear} 
+//                       onChange={e => setNewPond({ ...newPond, constructionNear: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-4">
-                    <label>Any sudden temperature change recently?</label>
-                    <select 
-                      className="form-control" 
-                      value={newPond.suddenTempChange} 
-                      onChange={e => setNewPond({ ...newPond, suddenTempChange: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    >
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                  </div>
+//                   <div className="col-md-4">
+//                     <label>Any sudden temperature change recently?</label>
+//                     <select 
+//                       className="form-control" 
+//                       value={newPond.suddenTempChange} 
+//                       onChange={e => setNewPond({ ...newPond, suddenTempChange: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     >
+//                       <option>Yes</option>
+//                       <option>No</option>
+//                     </select>
+//                   </div>
 
-                  <div className="col-md-12">
-                    <label>Notes / Remarks</label>
-                    <textarea 
-                      className="form-control" 
-                      rows={3} 
-                      value={newPond.notes} 
-                      onChange={e => setNewPond({ ...newPond, notes: e.target.value })}
-                      disabled={loading.addPond || loading.updatePond}
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-            </div>
+//                   <div className="col-md-12">
+//                     <label>Notes / Remarks</label>
+//                     <textarea 
+//                       className="form-control" 
+//                       rows={3} 
+//                       value={newPond.notes} 
+//                       onChange={e => setNewPond({ ...newPond, notes: e.target.value })}
+//                       disabled={loading.addPond || loading.updatePond}
+//                     ></textarea>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
 
-            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-              {editingPondId ? (
-                <>
-                  <button 
-                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-                    onClick={updatePond}
-                    disabled={loading.updatePond}
-                  >
-                    {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
-                  </button>
-                  <button 
-                    className="btn btn-secondary flex-grow-1" 
-                    onClick={() => { 
-                      setShowPondForm(false); 
-                      setNewPond(emptyPond);
-                      setCurrentFarmerId(null);
-                      setEditingPondId(null);
-                      setPondError("");
-                      pondImageMedia.stopCamera();
-                      pondFilesMedia.stopCamera();
-                      fishFilesMedia.stopCamera();
-                    }}
-                    disabled={loading.updatePond}
-                  >
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button 
-                    className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
-                    onClick={addPond}
-                    disabled={loading.addPond}
-                  >
-                    {loading.addPond ? <ButtonLoader /> : "Add Pond"}
-                  </button>
-                  <button 
-                    className="btn btn-secondary flex-grow-1" 
-                    onClick={() => { 
-                      setShowPondForm(false); 
-                      setNewPond(emptyPond);
-                      setCurrentFarmerId(null);
-                      setPondError("");
-                      pondImageMedia.stopCamera();
-                      pondFilesMedia.stopCamera();
-                      fishFilesMedia.stopCamera();
-                    }}
-                    disabled={loading.addPond}
-                  >
-                    Cancel
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+//             <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+//               {editingPondId ? (
+//                 <>
+//                   <button 
+//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+//                     onClick={updatePond}
+//                     disabled={loading.updatePond}
+//                   >
+//                     {loading.updatePond ? <ButtonLoader /> : "Update Pond"}
+//                   </button>
+//                   <button 
+//                     className="btn btn-secondary flex-grow-1" 
+//                     onClick={() => { 
+//                       setShowPondForm(false); 
+//                       setNewPond(emptyPond);
+//                       setCurrentFarmerId(null);
+//                       setEditingPondId(null);
+//                       setPondError("");
+//                       pondImageMedia.stopCamera();
+//                       pondFilesMedia.stopCamera();
+//                       fishFilesMedia.stopCamera();
+//                     }}
+//                     disabled={loading.updatePond}
+//                   >
+//                     Cancel
+//                   </button>
+//                 </>
+//               ) : (
+//                 <>
+//                   <button 
+//                     className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2" 
+//                     onClick={addPond}
+//                     disabled={loading.addPond}
+//                   >
+//                     {loading.addPond ? <ButtonLoader /> : "Add Pond"}
+//                   </button>
+//                   <button 
+//                     className="btn btn-secondary flex-grow-1" 
+//                     onClick={() => { 
+//                       setShowPondForm(false); 
+//                       setNewPond(emptyPond);
+//                       setCurrentFarmerId(null);
+//                       setPondError("");
+//                       pondImageMedia.stopCamera();
+//                       pondFilesMedia.stopCamera();
+//                       fishFilesMedia.stopCamera();
+//                     }}
+//                     disabled={loading.addPond}
+//                   >
+//                     Cancel
+//                   </button>
+//                 </>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
 
-export default MainPage;
+// export default MainPage;

@@ -1878,10 +1878,10 @@ function Profile() {
           {/* ================= MOBILE LOGOUT BUTTON AT BOTTOM ================= */}
           {isMobile && (
             <div className="profile-form-group mobile-logout-container">
-              <h4>{t("session") || "Session"}</h4>
-              <p className="mobile-logout-text">
+              {/* <h4>{t("session") || "Session"}</h4> */}
+              {/* <p className="mobile-logout-text">
                 {t("logoutDescription") || "End your current session and logout from the application"}
-              </p>
+              </p> */}
               <button 
                 className="profile-btn-logout-mobile"
                 onClick={handleLogout}
