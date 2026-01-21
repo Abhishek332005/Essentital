@@ -175,6 +175,7 @@ const products = [
     id: "prod_001",
     name: "AQUEAMINA",
     unitType: "weight",
+     discountBadge: "35% OFF", 
     variants: [
     { label: "1kg", value: 1, unit: "kg", price: 195.5 },
     { label: "10kg", value: 10, unit: "kg", price: 1860 },
@@ -187,6 +188,7 @@ const products = [
     id: "prod_002",
     name: "BOTTOM SAFE",
     unitType: "weight",
+     discountBadge: "28% OFF", 
      variants: [
     { label: "1kg", value: 1, unit: "kg", price: 195.5 },
     { label: "10kg", value: 10, unit: "kg", price: 1860 },
@@ -199,6 +201,7 @@ const products = [
     id: "prod_003",
     name: "CALCI FISH",
     unitType: "volume",
+     discountBadge: "29% OFF", 
      variants: [
     { label: "5L", price: 945 }
   ],
@@ -209,6 +212,7 @@ const products = [
     id: "prod_004",
     name: "CLEAR POND",
     unitType: "volume",
+     discountBadge: "38% OFF", 
   variants: [
     { label: "250ml", value: 250, unit: "ml", price: 414 },
     { label: "1L", value: 1, unit: "L", price: 1439 }
@@ -220,6 +224,7 @@ const products = [
     id: "prod_005",
     name: "DO OXY PLUS",
     unitType: "weight",
+     discountBadge: "17% OFF", 
      variants: [
     { label: "1kg", price: 1050}
   ],
@@ -230,6 +235,7 @@ const products = [
     id: "prod_006",
     name: "EAZY CHUN",
     unitType: "weight",
+     discountBadge: "27% OFF", 
      variants: [
     { label: "1kg", price: 275}
   ],
@@ -240,6 +246,7 @@ const products = [
     id: "prod_007",
     name: "LIV ZYM",
     unitType: "volume",
+     discountBadge: "25% OFF", 
      variants: [
     { label: "5L", price: 979}
   ],
@@ -250,6 +257,7 @@ const products = [
     id: "prod_008",
     name: "LIV ACTIVE GEL",
     unitType: "volume",
+     discountBadge: "14% OFF", 
      variants: [
     { label: "5L", price: 1249},
     { label: "20L", price: 4649}
@@ -261,6 +269,7 @@ const products = [
     id: "prod_009",
     name: "MEDISAN",
      unitType: "volume",
+      discountBadge: "38% OFF", 
      variants: [
     { label: "250ml", price: 330},
     { label: "1L", price: 990}
@@ -272,6 +281,7 @@ const products = [
     id: "prod_010",
     name: "PHYTO PRO FS",
     unitType: "weight",
+     discountBadge: "6% OFF", 
      variants: [
     { label: "1kg", price: 1889},
    
@@ -283,6 +293,7 @@ const products = [
     id: "prod_011",
     name: "PREVENT 80",
     unitType: "volume",
+     discountBadge: "23% OFF", 
      variants: [
     { label: "0.5L", price: 649},
     { label: "1L", price: 1449},
@@ -295,6 +306,7 @@ const products = [
     id: "prod_012",
     name: "RENO FAST",
     unitType: "volume",
+     discountBadge: "29% OFF", 
      variants: [
     { label: "250ml", price: 749},
     { label: "1L", price: 2889}
@@ -306,6 +318,7 @@ const products = [
     id: "prod_013",
     name: "ROT GUARD",
     unitType: "weight",
+     discountBadge: "43% OFF", 
      variants: [
     { label: "100gm", price: 379},
     
@@ -317,6 +330,7 @@ const products = [
     id: "prod_014",
     name: "SANI FISH",
     unitType: "volume",
+     discountBadge: "23% OFF", 
      variants: [
     { label: "250ml", price: 1539},
     
@@ -328,6 +342,7 @@ const products = [
     id: "prod_015",
     name: "VITEAMIN FS",
      unitType: "weight",
+      discountBadge: "51% OFF", 
      variants: [
     { label: "1kg", price: 219},
     
@@ -339,6 +354,7 @@ const products = [
     id: "prod_016",
     name: "WATER SOFT",
     unitType: "weight",
+     discountBadge: "25% OFF", 
      variants: [
     { label: "0.5kg", price: 299},
     { label: "5kg", price: 2389}
@@ -350,6 +366,7 @@ const products = [
     id: "prod_017",
     name: "YEAST EA",
    unitType: "weight",
+    discountBadge: "24% OFF", 
      variants: [
     { label: "1kg", price: 319},
     
@@ -361,6 +378,7 @@ const products = [
     id: "prod_018",
     name: "ZEA - G",
     unitType: "weight",
+     discountBadge: "6% OFF", 
      variants: [
     { label: "10kg", price: 1549},
     { label: "20kg", price: 3099}
@@ -372,6 +390,7 @@ const products = [
     id: "prod_019",
     name: "ZEAPOND",
      unitType: "weight",
+      discountBadge: "18% OFF", 
      variants: [
     { label: "5kg", price: 409},
     { label: "25kg", price: 2409}
