@@ -279,6 +279,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from "react";
 // import { useParams, useNavigate } from "react-router-dom";
 // import products from "../data/products";
@@ -394,32 +405,49 @@
 //     }
 //   };
 
+//   // NEW FUNCTION (clear search)
+//   const clearSearch = () => {
+//     setSearchTerm("");
+//     setFilteredProducts(products);
+//   };
+
 //   return (
 //     <div className="dealer-shop-container">
 //       <div className="fixed-header">
 //         <h2>🛒 Dealer Shopping</h2>
 
 //         <div className="header-controls">
+//           {/* REPLACED SEARCH JSX */}
 //           <div className="search-container">
-//             <input
-//               type="text"
-//               placeholder="Search products by name..."
-//               className="search-input"
-//               value={searchTerm}
-//               onChange={(e) => setSearchTerm(e.target.value)}
-//               onKeyDown={handleKeyPress}
-//             />
-//             <button className="search-btn" onClick={handleSearch}>
+//             <div className="search-input-wrapper">
+//               <input
+//                 type="text"
+//                 placeholder="Search products by name..."
+//                 className="search-input"
+//                 value={searchTerm}
+//                 onChange={(e) => setSearchTerm(e.target.value)}
+//                 onKeyDown={handleKeyPress}
+//               />
+
+//               {/* ❌ Clear button inside input */}
+//               {searchTerm.trim() !== "" && (
+//                 <span className="clear-search" onClick={clearSearch}>
+//                   ❌
+//                 </span>
+//               )}
+//             </div>
+
+//             <button className="shop-search-btn" onClick={handleSearch}>
 //               🔍 Search
 //             </button>
 //           </div>
 
 //           <div className="header-buttons">
-//             <button className="history-btn" onClick={viewHistory}>
+//             <button className="shop-history-btn" onClick={viewHistory}>
 //               📋 History
 //             </button>
 
-//             <button className="view-cart-btn" onClick={viewCart}>
+//             <button className=" abc-view-cart-btn" onClick={viewCart}>
 //               🛍️ View Cart ({cart.length} items)
 //             </button>
 //           </div>
@@ -454,12 +482,7 @@
 //           ) : (
 //             <div className="no-results">
 //               <h3>No products found</h3>
-//               <button
-//                 onClick={() => {
-//                   setSearchTerm("");
-//                   setFilteredProducts(products);
-//                 }}
-//               >
+//               <button onClick={clearSearch}>
 //                 Clear Search
 //               </button>
 //             </div>
@@ -471,9 +494,6 @@
 // };
 
 // export default DealerShop;
-
-
-
 
 
 
@@ -527,23 +547,31 @@ const DealerShop = () => {
     { label: "20kg", kg: 20 },
   ];
 
-  const getBasePrice = (priceString) => {
-    if (!priceString) return 0;
-    return parseFloat(priceString.split("-")[0].trim());
+  // NEW: Helper function to get price by weight
+  const getPriceByWeight = (product, weight = "1kg") => {
+    return product.prices?.[weight] || 0;
   };
 
-  const calculatePrice = (basePrice, weight) => {
-    const option = weightOptions.find((w) => w.label === weight);
-    return option ? basePrice * option.kg : basePrice;
+  // NEW: Function to get formatted price string
+  const getFormattedPrice = (product) => {
+    const price1kg = getPriceByWeight(product, "1kg");
+    const price10kg = getPriceByWeight(product, "10kg");
+    const price20kg = getPriceByWeight(product, "20kg");
+    
+    if (price1kg && price10kg && price20kg) {
+      return `₹${price1kg} - ₹${price10kg} - ₹${price20kg}`;
+    } else if (price1kg) {
+      return `₹${price1kg}`;
+    }
+    return "Price not available";
   };
 
-  // 🛒 Add to cart
+  // 🛒 Add to cart with new price logic
   const addToCart = (product) => {
     setAddingId(product.id);
 
     setTimeout(() => {
-      const basePrice = getBasePrice(product.price);
-      const price = calculatePrice(basePrice, "1kg");
+      const price = getPriceByWeight(product, "1kg");
 
       const existingItem = cart.find(
         (item) => item.id === product.id && item.weight === "1kg"
@@ -562,7 +590,7 @@ const DealerShop = () => {
           {
             id: product.id,
             name: product.name,
-            basePrice,
+            basePrice: price,
             price,
             quantity: 1,
             weight: "1kg",
@@ -584,7 +612,7 @@ const DealerShop = () => {
   const viewCart = () => navigate(`/cart/${dealerId}`);
   const viewHistory = () => navigate(`/history/${dealerId}`);
 
-  // 🔍 SEARCH LOGIC (MAIN FIX)
+  // 🔍 SEARCH LOGIC
   const handleSearch = () => {
     const trimmedSearch = searchTerm.trim().toLowerCase();
 
@@ -607,7 +635,7 @@ const DealerShop = () => {
     }
   };
 
-  // NEW FUNCTION (clear search)
+  // Clear search
   const clearSearch = () => {
     setSearchTerm("");
     setFilteredProducts(products);
@@ -619,7 +647,6 @@ const DealerShop = () => {
         <h2>🛒 Dealer Shopping</h2>
 
         <div className="header-controls">
-          {/* REPLACED SEARCH JSX */}
           <div className="search-container">
             <div className="search-input-wrapper">
               <input
@@ -631,7 +658,6 @@ const DealerShop = () => {
                 onKeyDown={handleKeyPress}
               />
 
-              {/* ❌ Clear button inside input */}
               {searchTerm.trim() !== "" && (
                 <span className="clear-search" onClick={clearSearch}>
                   ❌
@@ -649,7 +675,7 @@ const DealerShop = () => {
               📋 History
             </button>
 
-            <button className=" abc-view-cart-btn" onClick={viewCart}>
+            <button className="abc-view-cart-btn" onClick={viewCart}>
               🛍️ View Cart ({cart.length} items)
             </button>
           </div>
@@ -660,13 +686,11 @@ const DealerShop = () => {
         <div className="products-grid">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => {
-              const basePrice = getBasePrice(product.price);
-
               return (
                 <div key={product.id} className="product-card">
                   <img src={product.image} alt={product.name} />
                   <h6>{product.name}</h6>
-                  <p>₹ {product.price}</p>
+                  <p>{getFormattedPrice(product)}</p>
 
                   <button
                     onClick={() => addToCart(product)}
@@ -696,10 +720,6 @@ const DealerShop = () => {
 };
 
 export default DealerShop;
-
-
-
-
 
 
 

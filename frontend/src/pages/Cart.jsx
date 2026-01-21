@@ -988,6 +988,279 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import { useNavigate, useParams } from "react-router-dom";
+// import api from "../utils/api";
+// import "./Cart.css";
+
+// const Cart = () => {
+//   const { dealerId } = useParams();
+//   const navigate = useNavigate();
+
+//   const [cart, setCart] = useState(() => {
+//     const savedCart = localStorage.getItem(`dealerCart_${dealerId}`);
+//     return savedCart ? JSON.parse(savedCart) : [];
+//   });
+
+//   const weightOptions = [
+//     { label: "1kg", kg: 1 },
+//     { label: "10kg", kg: 10 },
+//     { label: "20kg", kg: 20 }
+//   ];
+
+//   useEffect(() => {
+//     localStorage.setItem(`dealerCart_${dealerId}`, JSON.stringify(cart));
+//   }, [cart, dealerId]);
+
+//   const removeFromCart = (index) => {
+//     const updatedCart = cart.filter((_, i) => i !== index);
+//     setCart(updatedCart);
+//   };
+
+//   const updateWeight = (index, newWeight) => {
+//     const updatedCart = [...cart];
+//     const item = updatedCart[index];
+
+//     const weightOption = weightOptions.find(w => w.label === newWeight);
+//     const newPrice = item.basePrice * (weightOption?.kg || 1);
+
+//     updatedCart[index] = {
+//       ...item,
+//       weight: newWeight,
+//       weightKg: weightOption?.kg || 1,
+//       price: newPrice
+//     };
+
+//     setCart(updatedCart);
+//   };
+
+//   const updateQuantity = (index, delta) => {
+//     const updatedCart = [...cart];
+//     const item = updatedCart[index];
+
+//     const newQuantity = Math.max(1, item.quantity + delta);
+
+//     updatedCart[index] = {
+//       ...item,
+//       quantity: newQuantity
+//     };
+
+//     setCart(updatedCart);
+//   };
+
+//   const total = cart.reduce((sum, item) => {
+//     return sum + item.price * item.quantity;
+//   }, 0);
+
+//   const placeOrder = async () => {
+//     if (cart.length === 0) return alert("Cart empty");
+
+//     try {
+//       const orderItems = cart.map(item => ({
+//         productId: item.id,
+//         name: item.name,
+//         price: item.price,
+//         qty: item.quantity,
+//         weight: item.weight || "1kg",
+//         weightKg: item.weightKg || 1
+//       }));
+
+//       await api.post("/api/orders", {
+//         dealerId,
+//         items: orderItems,
+//         totalAmount: Number(total.toFixed(2))
+//       });
+
+//       alert("Order placed successfully!");
+//       setCart([]);
+//       localStorage.removeItem(`dealerCart_${dealerId}`);
+//     } catch (error) {
+//       console.error("Order error:", error);
+//       alert("Order placement failed");
+//     }
+//   };
+
+//   const goToShop = () => {
+//     navigate(`/dealer-shop/${dealerId}`);
+//   };
+
+//   return (
+//     <div className="cart-page-container">
+//       <div className="cart-page-header">
+//         <h1>🛒 Your Shopping Cart</h1>
+//         <div className="header-actions">
+//           <button className="back-to-shop-btn" onClick={goToShop}>
+//             ← Back to Shop
+//           </button>
+//           <span className="cart-count">{cart.length} items</span>
+//         </div>
+//       </div>
+
+//       <div className="cart-page-content">
+//         <div className="cart-items-section">
+//           {cart.length === 0 ? (
+//             <div className="empty-cart-message">
+//               <div className="empty-cart-icon">🛒</div>
+//               <h3>Your cart is empty</h3>
+//               <p>Add products from the shop to get started</p>
+//               <button className="shop-now-btn" onClick={goToShop}>
+//                 Shop Now
+//               </button>
+//             </div>
+//           ) : (
+//             <>
+//               <div className="cart-items-list">
+//                 {cart.map((item, index) => (
+//                   <div key={`${item.id}-${index}`} className="cart-item-card">
+//                     <div className="cart-item-header">
+//                       <div className="item-info">
+//                         <h4 className="item-name">{item.name}</h4>
+//                         <p className="item-base-price">
+//                           Base: ₹{item.basePrice}/kg
+//                         </p>
+//                       </div>
+//                       <button
+//                         className="remove-btn"
+//                         onClick={() => removeFromCart(index)}
+//                       >
+//                         ✕ Remove
+//                       </button>
+//                     </div>
+
+//                     <div className="cart-weight-selector">
+//                       <label>Select Weight:</label>
+//                       <div className="weight-buttons">
+//                         {weightOptions.map(weightObj => (
+//                           <button
+//                             key={weightObj.label}
+//                             className={`cart-weight-btn ${
+//                               item.weight === weightObj.label ? "active" : ""
+//                             }`}
+//                             onClick={() =>
+//                               updateWeight(index, weightObj.label)
+//                             }
+//                           >
+//                             {weightObj.label}
+//                           </button>
+//                         ))}
+//                       </div>
+//                     </div>
+
+//                     <div className="quantity-controls">
+//                       <span className="qty-label">Quantity:</span>
+//                       <div className="qty-buttons">
+//                         <button
+//                           className="qty-btn minus"
+//                           onClick={() => updateQuantity(index, -1)}
+//                         >
+//                           −
+//                         </button>
+//                         <span className="qty-value">{item.quantity}</span>
+//                         <button
+//                           className="qty-btn plus"
+//                           onClick={() => updateQuantity(index, 1)}
+//                         >
+//                           +
+//                         </button>
+//                       </div>
+//                     </div>
+
+//                     <div className="price-display">
+//                       <div className="price-row">
+//                         <span>Price per {item.weight || "1kg"}:</span>
+//                         <span className="price-value">
+//                           ₹ {item.price.toFixed(2)}
+//                         </span>
+//                       </div>
+//                       <div className="price-row total-row">
+//                         <span>Total for this item:</span>
+//                         <span className="total-value">
+//                           ₹ {(item.price * item.quantity).toFixed(2)}
+//                         </span>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 ))}
+//               </div>
+
+//               <div className="cart-actions">
+//                 <button
+//                   className="clear-cart-btn"
+//                   onClick={() => {
+//                     if (window.confirm("Are you sure you want to clear all items from cart?")) {
+//                       setCart([]);
+//                       localStorage.removeItem(`dealerCart_${dealerId}`);
+//                     }
+//                   }}
+//                 >
+//                   Clear All Items
+//                 </button>
+//               </div>
+//             </>
+//           )}
+//         </div>
+
+//         {cart.length > 0 && (
+//           <div className="order-summary-section">
+//             <div className="order-summary-card">
+//               <h3>Order Summary</h3>
+
+//               <div className="summary-items">
+//                 {cart.map((item, index) => (
+//                   <div key={`${item.id}-${index}`} className="summary-item">
+//                     <div className="summary-item-name">
+//                       {item.name} ({item.weight || "1kg"})
+//                     </div>
+//                     <div className="summary-item-qty">× {item.quantity}</div>
+//                     <div className="summary-item-price">
+//                       ₹ {(item.price * item.quantity).toFixed(2)}
+//                     </div>
+//                   </div>
+//                 ))}
+//               </div>
+
+//               <div className="summary-total">
+//                 <div className="total-row">
+//                   <span>Total Amount:</span>
+//                   <span className="grand-total-amount">
+//                     ₹ {total.toFixed(2)}
+//                   </span>
+//                 </div>
+//               </div>
+
+//               <button className="place-order-btn" onClick={placeOrder}>
+//                 Place Order
+//               </button>
+
+//               <button
+//                 className="continue-shopping-btn"
+//                 onClick={goToShop}
+//               >
+//                 Continue Shopping
+//               </button>
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Cart;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../utils/api";
@@ -1021,13 +1294,11 @@ const Cart = () => {
     const updatedCart = [...cart];
     const item = updatedCart[index];
 
-    const weightOption = weightOptions.find(w => w.label === newWeight);
-    const newPrice = item.basePrice * (weightOption?.kg || 1);
+    const newPrice = item.prices?.[newWeight] || 0;
 
     updatedCart[index] = {
       ...item,
       weight: newWeight,
-      weightKg: weightOption?.kg || 1,
       price: newPrice
     };
 
@@ -1062,7 +1333,7 @@ const Cart = () => {
         price: item.price,
         qty: item.quantity,
         weight: item.weight || "1kg",
-        weightKg: item.weightKg || 1
+        weightKg: weightOptions.find(w => w.label === item.weight)?.kg || 1
       }));
 
       await api.post("/api/orders", {
@@ -1115,9 +1386,11 @@ const Cart = () => {
                     <div className="cart-item-header">
                       <div className="item-info">
                         <h4 className="item-name">{item.name}</h4>
-                        <p className="item-base-price">
-                          Base: ₹{item.basePrice}/kg
-                        </p>
+                        {item.prices && (
+                          <p className="item-base-price">
+                            Base: ₹{item.prices["1kg"] || 0}/kg
+                          </p>
+                        )}
                       </div>
                       <button
                         className="remove-btn"
@@ -1247,17 +1520,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
