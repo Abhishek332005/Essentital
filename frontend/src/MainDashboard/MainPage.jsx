@@ -4843,6 +4843,490 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import api, { getImageUrl } from "../utils/api";
+// import { Link } from "react-router-dom";
+// import { useTranslation } from "react-i18next";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "./mainPage.css";
+
+// // Import Lucide icons
+// import { Menu, X, Home, User, HelpCircle, ShoppingBag, Users, Loader2 } from "lucide-react";
+
+// function timeAgo(dateStr, t) {
+//   if (!dateStr) return t('notUpdated');
+//   const now = new Date();
+//   const d = new Date(dateStr);
+//   const diffMs = now - d;
+//   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+//   if (days === 0) return t('today');
+//   if (days === 1) return t('oneDayAgo');
+//   return t('daysAgo', { count: days });
+// }
+
+// const SYMPTOMS_LIST = [
+//   "Erratic swimming", 
+//   "Loss of appetite",
+//   "Gasping at surface",
+//   "Lesions or ulcers",
+//   "Fin rot",
+//   "Fish Lice",
+//   "Discoloration or white patches",
+//   "Scale loss",
+//   "Swollen abdomen",
+//   "Fungal/cotton-like growth",
+//   "Flared gills",
+//   "Mucus secretion",
+//   "Blood spots",
+//   "Other"
+// ];
+
+// // ✅ FIXED: Helper function for farmer image
+// const getFarmerImage = (farmer) => {
+//   if (!farmer || !farmer.photo) return "/profile.png";
+//   return getImageUrl(farmer.photo);
+// };
+
+// function MainPage() {
+//   const { t, i18n } = useTranslation();
+//   const username = localStorage.getItem("username") || "User";
+//   const photo = localStorage.getItem("photo") || "/profile.png";
+//   const userId = localStorage.getItem("userId");
+
+//   const [farmers, setFarmers] = useState([]);
+//   const [showForm, setShowForm] = useState(false);
+//   const [showPondForm, setShowPondForm] = useState(false);
+//   const [editingFarmerId, setEditingFarmerId] = useState(null);
+//   const [editingPondId, setEditingPondId] = useState(null);
+//   const [currentFarmerId, setCurrentFarmerId] = useState(null);
+//   const [welcomeMsg, setWelcomeMsg] = useState("");
+//   const [isUpdateMode, setIsUpdateMode] = useState(false);
+  
+//   // Loading states
+//   const [loading, setLoading] = useState({
+//     fetchFarmers: false,
+//     addFarmer: false,
+//     updateFarmer: false,
+//     addPond: false,
+//     updatePond: false,
+//     deleteFarmer: false,
+//     deletePond: false,
+//     search: false
+//   });
+  
+//   // Mobile sidebar states
+//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+//   const [isMobile, setIsMobile] = useState(false);
+
+//   // ✅ 1️⃣ Farmer form empty state - PHOTO FIELD ADDED
+//   const emptyFarmer = {
+//     name: "", contact: "", age: "", gender: "", village: "",
+//     pondCount: "", adhar: "", familyMembers: "", familyOccupation: "",
+//     photo: null,              // ✅ ADD THIS
+//     photoExisting: ""         // ✅ UPDATE MODE ke liye
+//   };
+
+//   // Pond form empty state
+//   const emptyPond = {
+//     // Pond Details
+//     pondArea: "", pondAreaUnit: "acre", pondDepth: "", pondImage: null,
+//     overflow: "No", receivesSunlight: "Yes", treesOnBanks: "No",
+//     neighbourhood: "Agriculture Farm", wastewaterEnters: "No",
+//     // Species & files
+//     species: "",
+//     pondFiles: [],
+//     fishFiles: [],
+//     // Stocking & quantities
+//     dateOfStocking: "", qtySeedInitially: "", currentQty: "", avgSize: ">200gram",
+//     // Feed
+//     feedType: "Market Feed", feedOther: "", feedFreq: "Once a day", 
+//     feedQtyPerDay: "", feedTime: "6:00 am-10:00am",
+//     recentFeedChanges: "", reducedAppetite: "No",
+//     // Water quality
+//     waterTemperature: "", pH: "", DO: "", ammoniaLevel: "Medium", 
+//     phytoplanktonLevel: "Medium", waterHardness: "1",
+//     algaeBloom: "No", pondWaterColor: "Light Green", sourceOfWater: "Rainwater",
+//     // Disease / symptoms
+//     diseaseSymptoms: "No", symptomsObserved: "", symptoms: [],
+//     symptomsAffect: "All",
+//     fishDeaths: "",
+//     // Observation
+//     farmObservedDate: "", farmObservedTime: "",
+//     // misc
+//     notes: "",
+//     lastSpecies: "", lastHarvestComplete: "Yes", recentRainFlood: "No",
+//     pesticideRunoff: "No", constructionNear: "No", suddenTempChange: "No"
+//   };
+
+//   const [newFarmer, setNewFarmer] = useState(emptyFarmer);
+//   const [newPond, setNewPond] = useState(emptyPond);
+
+//   // Check if mobile view
+//   useEffect(() => {
+//     const checkMobile = () => {
+//       setIsMobile(window.innerWidth <= 991);
+//     };
+    
+//     checkMobile();
+//     window.addEventListener('resize', checkMobile);
+    
+//     return () => window.removeEventListener('resize', checkMobile);
+//   }, []);
+
+//   // Close sidebar when clicking outside on mobile
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (isMobile && isSidebarOpen && 
+//           !event.target.closest('.sidebar') && 
+//           !event.target.closest('.mobile-menu-toggle')) {
+//         setIsSidebarOpen(false);
+//       }
+//     };
+
+//     document.addEventListener('click', handleClickOutside);
+//     return () => document.removeEventListener('click', handleClickOutside);
+//   }, [isMobile, isSidebarOpen]);
+
+//   // Fetch data
+//   useEffect(() => {
+//     if (!userId) return console.error("UserId not found in localStorage");
+//     fetchFarmers();
+//     const savedLang = localStorage.getItem("lang");
+//     if (savedLang) i18n.changeLanguage(savedLang);
+//   }, []);
+
+//   // Close sidebar when route changes
+//   useEffect(() => {
+//     setIsSidebarOpen(false);
+//   }, [window.location.pathname]);
+
+//   const changeLanguage = (lang) => {
+//     i18n.changeLanguage(lang);
+//     localStorage.setItem("lang", lang);
+//   };
+
+//   const fetchFarmers = async () => {
+//     try {
+//       setLoading(prev => ({ ...prev, fetchFarmers: true }));
+//       const res = await api.get(`/api/farmers/all?userId=${userId}&includeShared=false`);
+      
+//       // ✅ FIXED: Sirf direct data set karo, koi normalize mat karo
+//       setFarmers(res.data || []);
+//     } catch (err) {
+//       console.log("Fetch Farmers Error:", err);
+//     } finally {
+//       setLoading(prev => ({ ...prev, fetchFarmers: false }));
+//     }
+//   };
+
+//   // ✅ 3️⃣ Add Farmer API me photo FormData me bhejo
+//   const addFarmer = async () => {
+//     if (!newFarmer.name || !newFarmer.contact) return alert("Name and contact required");
+    
+//     const formData = new FormData();
+    
+//     // ✅ FIX: photo alag se handle karo
+//     for (let key in newFarmer) {
+//       if (key === "photo" || key === "photoExisting") continue;
+//       formData.append(key, newFarmer[key] ?? "");
+//     }
+    
+//     formData.append("userId", userId);
+    
+//     // ✅ IMPORTANT: photo file ko alag se append karo (CHECK File instance)
+//     if (newFarmer.photo instanceof File) {
+//       formData.append("photo", newFarmer.photo);
+//     }
+
+//     try {
+//       setLoading(prev => ({ ...prev, addFarmer: true }));
+//       const res = await api.post(`/api/farmers/add`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
+//       setFarmers([...farmers, res.data]);
+//       setShowForm(false);
+//       setNewFarmer(emptyFarmer);
+//     } catch (err) {
+//       console.error("Add Farmer Error:", err);
+//       alert("Server error. See console.");
+//     } finally {
+//       setLoading(prev => ({ ...prev, addFarmer: false }));
+//     }
+//   };
+
+//   // ✅ 4️⃣ Update Farmer API me bhi photo bhejo
+//   const updateFarmer = async () => {
+//     if (!editingFarmerId) return;
+    
+//     const formData = new FormData();
+    
+//     // ✅ FIX: photo alag se handle karo
+//     for (let key in newFarmer) {
+//       if (key === "photo" || key === "photoExisting") continue;
+//       formData.append(key, newFarmer[key] ?? "");
+//     }
+    
+//     formData.append("userId", userId);
+    
+//     // ✅ IMPORTANT: photo file ko alag se append karo (CHECK File instance)
+//     if (newFarmer.photo instanceof File) {
+//       formData.append("photo", newFarmer.photo);
+//     }
+
+//     try {
+//       setLoading(prev => ({ ...prev, updateFarmer: true }));
+//       const res = await api.put(`/api/farmers/update/${editingFarmerId}`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
+      
+//       // ✅ STEP 4: Update Farmer ke baad photo safe rakho
+//       setFarmers(farmers.map(f =>
+//         f._id === res.data._id
+//           ? { ...res.data, photo: res.data.photo || f.photo }
+//           : f
+//       ));
+      
+//       setShowForm(false);
+//       setEditingFarmerId(null);
+//       setNewFarmer(emptyFarmer);
+//       setIsUpdateMode(false);
+//     } catch (err) {
+//       console.error("Update Farmer Error:", err);
+//       alert("Server error. See console.");
+//     } finally {
+//       setLoading(prev => ({ ...prev, updateFarmer: false }));
+//     }
+//   };
+
+//   // Add Pond to Farmer
+//   const addPond = async () => {
+//     if (!currentFarmerId) return alert("Farmer ID missing");
+    
+//     const formData = new FormData();
+//     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
+//       ? newPond.symptoms.join(", ")
+//       : (newPond.symptomsObserved || "");
+
+//     const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
+//     for (let key in newPond) {
+//       if (skipFiles.includes(key)) continue;
+//       formData.append(key, newPond[key] ?? "");
+//     }
+//     formData.set("symptomsObserved", symptomsStr);
+
+//     if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+//     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
+//       newPond.pondFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("pondFiles", f);
+//       });
+//     }
+//     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
+//       newPond.fishFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("fishFiles", f);
+//       });
+//     }
+
+//     try {
+//       setLoading(prev => ({ ...prev, addPond: true }));
+//       const res = await api.post(`/api/farmers/add-pond/${currentFarmerId}`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
+      
+//       // Update local state
+//       setFarmers(farmers.map(f => 
+//         f._id === currentFarmerId ? res.data.farmer : f
+//       ));
+//       setShowPondForm(false);
+//       setNewPond(emptyPond);
+//       setCurrentFarmerId(null);
+//     } catch (err) {
+//       console.error("Add Pond Error:", err);
+//       alert("Server error. See console.");
+//     } finally {
+//       setLoading(prev => ({ ...prev, addPond: false }));
+//     }
+//   };
+
+//   // Update Pond
+//   const updatePond = async () => {
+//     if (!currentFarmerId || !editingPondId) return;
+    
+//     const formData = new FormData();
+//     const symptomsStr = (newPond.symptoms && newPond.symptoms.length > 0)
+//       ? newPond.symptoms.join(", ")
+//       : (newPond.symptomsObserved || "");
+
+//     const skipFiles = ["pondFiles", "fishFiles", "pondImage", "symptoms"];
+//     for (let key in newPond) {
+//       if (skipFiles.includes(key)) continue;
+//       formData.append(key, newPond[key] ?? "");
+//     }
+//     formData.set("symptomsObserved", symptomsStr);
+
+//     if (newPond.pondImage instanceof File) formData.append("pondImage", newPond.pondImage);
+//     if (newPond.pondFiles && newPond.pondFiles.length > 0) {
+//       newPond.pondFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("pondFiles", f);
+//       });
+//     }
+//     if (newPond.fishFiles && newPond.fishFiles.length > 0) {
+//       newPond.fishFiles.forEach((f) => {
+//         if (f instanceof File) formData.append("fishFiles", f);
+//       });
+//     }
+
+//     try {
+//       setLoading(prev => ({ ...prev, updatePond: true }));
+//       const res = await api.put(`/api/farmers/update-pond/${currentFarmerId}/${editingPondId}`, formData, {
+//         headers: { "Content-Type": "multipart/form-data" }
+//       });
+      
+//       // Update local state
+//       setFarmers(farmers.map(f => 
+//         f._id === currentFarmerId ? res.data.farmer : f
+//       ));
+//       setShowPondForm(false);
+//       setNewPond(emptyPond);
+//       setCurrentFarmerId(null);
+//       setEditingPondId(null);
+//     } catch (err) {
+//       console.error("Update Pond Error:", err);
+//       alert("Server error. See console.");
+//     } finally {
+//       setLoading(prev => ({ ...prev, updatePond: false }));
+//     }
+//   };
+
+//   // ✅ 5️⃣ Edit Farmer open karte waqt existing photo set karo
+//   const openEdit = (farmer) => {
+//     setIsUpdateMode(true);
+//     const pre = { ...emptyFarmer };
+//     Object.keys(pre).forEach(k => {
+//       if (farmer[k] !== undefined && farmer[k] !== null) {
+//         pre[k] = farmer[k];
+//       }
+//     });
+
+//     // ✅ FIX: photo null rakho, photoExisting me existing photo
+//     pre.photo = null;
+//     pre.photoExisting = farmer.photo || ""; // ✅ ADD THIS
+
+//     setNewFarmer(pre);
+//     setEditingFarmerId(farmer._id);
+//     setShowForm(true);
+//   };
+
+//   // Open Add Pond Form
+//   const openAddPond = (farmerId) => {
+//     setCurrentFarmerId(farmerId);
+//     setEditingPondId(null);
+//     setNewPond(emptyPond);
+//     setShowPondForm(true);
+//   };
+
+//   // Open Edit Pond Form
+//   const openEditPond = (farmerId, pond) => {
+//     setCurrentFarmerId(farmerId);
+//     setEditingPondId(pond.pondId);
+    
+//     const pre = { ...emptyPond };
+//     Object.keys(pre).forEach(k => {
+//       if (pond[k] !== undefined && pond[k] !== null) {
+//         pre[k] = pond[k];
+//       }
+//     });
+
+//     // Handle symptoms
+//     if (typeof pond.symptomsObserved === "string" && pond.symptomsObserved.trim() !== "") {
+//       pre.symptoms = pond.symptomsObserved.split(",").map(s => s.trim()).filter(Boolean);
+//       pre.symptomsObserved = pond.symptomsObserved;
+//     }
+
+//     // ✅ FIX: files null rakho, existing alag se
+//     pre.pondFiles = [];
+//     pre.fishFiles = [];
+//     pre.pondImage = null;
+    
+//     pre.pondFilesExisting = pond.pondFiles || [];
+//     pre.fishFilesExisting = pond.fishFiles || [];
+//     pre.pondImageExisting = pond.pondImage || "";
+
+//     setNewPond(pre);
+//     setShowPondForm(true);
+//   };
+
+//   const toggleSymptom = (s) => {
+//     const arr = newPond.symptoms ? [...newPond.symptoms] : [];
+//     const idx = arr.indexOf(s);
+//     if (idx === -1) arr.push(s); else arr.splice(idx, 1);
+//     setNewPond({ ...newPond, symptoms: arr, symptomsObserved: arr.join(", ") });
+//   };
+
+//   useEffect(() => {
+//     const isFirstLogin = localStorage.getItem("isFirstLogin") === "true";
+
+//     const message = isFirstLogin
+//       ? `Welcome, ${username}`
+//       : `Welcome Back, ${username}`;
+
+//     setWelcomeMsg(message);
+
+//     if (isFirstLogin) {
+//       localStorage.setItem("isFirstLogin", "false");
+//     }
+//   }, [username]);
+
+//   const renderExistingFiles = (list) => {
+//     if (!list || list.length === 0) return null;
+//     return (
+//       <div style={{ marginTop: 6 }}>
+//         {list.map((fn, i) => (
+//           <div key={i}>
+//             <a target="_blank" rel="noreferrer" href={getImageUrl(fn)}>
+//               {fn.split('/').pop()}
+//             </a>
+//           </div>
+//         ))}
+//       </div>
+//     );
+//   };
+
+//   const totalFarmers = farmers.length;
+//   const totalPonds = farmers.reduce((sum, f) => sum + Number(f.pondCount || 0), 0);
+
+//   const [searchId, setSearchId] = useState("");
+
+//   const handleSearch = async () => {
+//     if (!searchId) {
+//       await fetchFarmers();
+//       return;
+//     }
+
+//     setLoading(prev => ({ ...prev, search: true }));
+//     try {
+//       const filtered = farmers.filter(f =>
+//         f.farmerId.toLowerCase().includes(searchId.toLowerCase())
+//       );
+
+//       if (filtered.length > 0) {
+//         const remaining = farmers.filter(f => !filtered.includes(f));
+//         setFarmers([...filtered, ...remaining]);
+//       } else {
+//         await fetchFarmers();
+//       }
+//     } finally {
+//       setLoading(prev => ({ ...prev, search: false }));
+//     }
+//   };
+
+//   // Loader component for buttons
+//   const ButtonLoader = () => (
+//     <Loader2 className="spin-loader" size={16} />
+//   );
+
+
+
+
 import React, { useState, useEffect } from "react";
 import api, { getImageUrl } from "../utils/api";
 import { Link } from "react-router-dom";
@@ -6021,7 +6505,7 @@ function MainPage() {
                     />
                   </div>
 
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     <input 
                       type="number" 
                       className="form-control" 
@@ -6039,7 +6523,32 @@ function MainPage() {
                       onChange={e => setNewPond({ ...newPond, currentQty: e.target.value })}
                       disabled={loading.addPond || loading.updatePond}
                     />
-                  </div>
+                  </div> */}
+
+
+<div className="col-md-6">
+  <input 
+    type="text"
+    className="form-control" 
+    placeholder="Quantity of Seed initially in Pond (eg: 1100 or 13kg)" 
+    value={newPond.qtySeedInitially} 
+    onChange={e => setNewPond({ ...newPond, qtySeedInitially: e.target.value })}
+    disabled={loading.addPond || loading.updatePond}
+  />
+</div>
+<div className="col-md-6">
+  <input 
+    type="text"
+    className="form-control" 
+    placeholder="Current Quantity of Fish in Pond (eg: 900 or 12kg)" 
+    value={newPond.currentQty} 
+    onChange={e => setNewPond({ ...newPond, currentQty: e.target.value })}
+    disabled={loading.addPond || loading.updatePond}
+  />
+</div>
+
+
+
 
                   <div className="col-md-6">
                     <label>Average size of fishes</label>
