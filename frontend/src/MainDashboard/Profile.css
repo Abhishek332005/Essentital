@@ -870,3 +870,25 @@ body {
 .profile-content-area {
   transition: all 0.3s ease;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.profile-sidebar {
+  overflow-y: auto;
+  height: 100vh;
+  overscroll-behavior: contain; /* ⛔ stop scroll chaining */
+}
