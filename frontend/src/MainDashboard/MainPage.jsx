@@ -7808,7 +7808,7 @@ function MainPage() {
                 /> */}
 
 
-              <img
+              {/* <img
   src={f.photo ? getImageUrl(f.photo) : "/profile.png"}
   alt={f.name}
   className="profile-pic"
@@ -7818,7 +7818,22 @@ function MainPage() {
     e.target.src = "/profile.png";
     e.target.onerror = null;
   }}
+/> */}
+
+
+<img
+  src={f.photo ? getImageUrl(`/api/images/${f.photo}`) : "/profile.png"}
+  alt={f.name}
+  className="profile-pic"
+  loading="lazy"
+  onError={(e) => {
+    console.log("Image failed to load:", f.photo); // Debug ke liye
+    e.target.src = "/profile.png";               // Default profile agar fail ho
+    e.target.onerror = null;
+  }}
 />
+
+
 
 
 
