@@ -509,6 +509,216 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import products from "../data/products";
+// import "./DealerShop.css";
+
+// const DealerShop = () => {
+//   const { dealerId } = useParams();
+//   const navigate = useNavigate();
+
+//   // Cart state
+//   const [cart, setCart] = useState(() => {
+//     const savedCart = localStorage.getItem(`dealerCart_${dealerId}`);
+//     return savedCart ? JSON.parse(savedCart) : [];
+//   });
+
+//   const [showFullDesc, setShowFullDesc] = useState({});
+//   const [addingId, setAddingId] = useState(null);
+//   const [addedId, setAddedId] = useState(null);
+
+//   // 🔍 Search states
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [filteredProducts, setFilteredProducts] = useState(products);
+
+//   // Save cart
+//   useEffect(() => {
+//     localStorage.setItem(`dealerCart_${dealerId}`, JSON.stringify(cart));
+//   }, [cart, dealerId]);
+
+//   // NEW: Function to get formatted price string
+//   const getFormattedPrice = (product) => {
+//     const price1kg = product.prices?.["1kg"] || 0;
+//     const price10kg = product.prices?.["10kg"] || 0;
+//     const price20kg = product.prices?.["20kg"] || 0;
+    
+//     if (price1kg && price10kg && price20kg) {
+//       return `₹${price1kg} - ₹${price10kg} - ₹${price20kg}`;
+//     } else if (price1kg) {
+//       return `₹${price1kg}`;
+//     }
+//     return "Price not available";
+//   };
+
+//   // 🛒 Add to cart with new price logic
+//   const addToCart = (product) => {
+//     setAddingId(product.id);
+
+//     setTimeout(() => {
+//       const weight = "1kg";
+//       const price = product.prices[weight];
+
+//       const existingItem = cart.find(
+//         (item) => item.id === product.id && item.weight === weight
+//       );
+
+//       let updatedCart;
+
+//       if (existingItem) {
+//         updatedCart = cart.map((item) =>
+//           item.id === product.id && item.weight === weight
+//             ? { ...item, quantity: item.quantity + 1 }
+//             : item
+//         );
+//       } else {
+//         updatedCart = [
+//           ...cart,
+//           {
+//             id: product.id,
+//             name: product.name,
+//             prices: product.prices,   // ✅ MOST IMPORTANT LINE
+//             weight: weight,
+//             price: price,
+//             quantity: 1,
+//           },
+//         ];
+//       }
+
+//       setCart(updatedCart);
+//       setAddingId(null);
+//       setAddedId(product.id);
+
+//       setTimeout(() => setAddedId(null), 2000);
+//     }, 300);
+//   };
+
+//   const toggleDesc = (id) =>
+//     setShowFullDesc((prev) => ({ ...prev, [id]: !prev[id] }));
+
+//   const viewCart = () => navigate(`/cart/${dealerId}`);
+//   const viewHistory = () => navigate(`/history/${dealerId}`);
+
+//   // 🔍 SEARCH LOGIC
+//   const handleSearch = () => {
+//     const trimmedSearch = searchTerm.trim().toLowerCase();
+
+//     if (trimmedSearch === "") {
+//       setFilteredProducts(products);
+//       return;
+//     }
+
+//     const filtered = products.filter((product) =>
+//       product.name.toLowerCase().includes(trimmedSearch)
+//     );
+
+//     setFilteredProducts(filtered);
+//   };
+
+//   // ⌨️ Enter key support
+//   const handleKeyPress = (e) => {
+//     if (e.key === "Enter") {
+//       handleSearch();
+//     }
+//   };
+
+//   // Clear search
+//   const clearSearch = () => {
+//     setSearchTerm("");
+//     setFilteredProducts(products);
+//   };
+
+//   return (
+//     <div className="dealer-shop-container">
+//       <div className="fixed-header">
+//         <h2>🛒 Dealer Shopping</h2>
+
+//         <div className="header-controls">
+//           <div className="search-container">
+//             <div className="search-input-wrapper">
+//               <input
+//                 type="text"
+//                 placeholder="Search products by name..."
+//                 className="search-input"
+//                 value={searchTerm}
+//                 onChange={(e) => setSearchTerm(e.target.value)}
+//                 onKeyDown={handleKeyPress}
+//               />
+
+//               {searchTerm.trim() !== "" && (
+//                 <span className="clear-search" onClick={clearSearch}>
+//                   ❌
+//                 </span>
+//               )}
+//             </div>
+
+//             <button className="shop-search-btn" onClick={handleSearch}>
+//               🔍 Search
+//             </button>
+//           </div>
+
+//           <div className="header-buttons">
+//             <button className="shop-history-btn" onClick={viewHistory}>
+//               📋 History
+//             </button>
+
+//             <button className="abc-view-cart-btn" onClick={viewCart}>
+//               🛍️ View Cart ({cart.length} items)
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="products-container">
+//         <div className="products-grid">
+//           {filteredProducts.length > 0 ? (
+//             filteredProducts.map((product) => {
+//               return (
+//                 <div key={product.id} className="product-card">
+//                   <img src={product.image} alt={product.name} />
+//                   <h6>{product.name}</h6>
+//                   <p>{getFormattedPrice(product)}</p>
+
+//                   <button
+//                     onClick={() => addToCart(product)}
+//                     disabled={addingId === product.id}
+//                   >
+//                     {addingId === product.id
+//                       ? "Adding..."
+//                       : addedId === product.id
+//                       ? "✅ Added"
+//                       : "Add to Cart"}
+//                   </button>
+//                 </div>
+//               );
+//             })
+//           ) : (
+//             <div className="no-results">
+//               <h3>No products found</h3>
+//               <button onClick={clearSearch}>
+//                 Clear Search
+//               </button>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default DealerShop;
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import products from "../data/products";
@@ -537,37 +747,36 @@ const DealerShop = () => {
     localStorage.setItem(`dealerCart_${dealerId}`, JSON.stringify(cart));
   }, [cart, dealerId]);
 
-  // NEW: Function to get formatted price string
+  // ✅ CHANGE 1: Updated getFormattedPrice function (variants based)
   const getFormattedPrice = (product) => {
-    const price1kg = product.prices?.["1kg"] || 0;
-    const price10kg = product.prices?.["10kg"] || 0;
-    const price20kg = product.prices?.["20kg"] || 0;
-    
-    if (price1kg && price10kg && price20kg) {
-      return `₹${price1kg} - ₹${price10kg} - ₹${price20kg}`;
-    } else if (price1kg) {
-      return `₹${price1kg}`;
+    if (!product.variants || product.variants.length === 0) {
+      return "Price not available";
     }
-    return "Price not available";
+
+    return product.variants
+      .map(v => `₹${v.price} (${v.label})`)
+      .join(" | ");
   };
 
-  // 🛒 Add to cart with new price logic
+  // ✅ CHANGE 2: Updated addToCart function (variants logic)
   const addToCart = (product) => {
     setAddingId(product.id);
 
     setTimeout(() => {
-      const weight = "1kg";
-      const price = product.prices[weight];
+      const defaultVariant = product.variants[0]; // 👈 first variant
 
       const existingItem = cart.find(
-        (item) => item.id === product.id && item.weight === weight
+        (item) =>
+          item.id === product.id &&
+          item.variantLabel === defaultVariant.label
       );
 
       let updatedCart;
 
       if (existingItem) {
         updatedCart = cart.map((item) =>
-          item.id === product.id && item.weight === weight
+          item.id === product.id &&
+          item.variantLabel === defaultVariant.label
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -577,9 +786,9 @@ const DealerShop = () => {
           {
             id: product.id,
             name: product.name,
-            prices: product.prices,   // ✅ MOST IMPORTANT LINE
-            weight: weight,
-            price: price,
+            variants: product.variants,   // ✅ SAVE ALL VARIANTS
+            variantLabel: defaultVariant.label,
+            price: defaultVariant.price,
             quantity: 1,
           },
         ];
@@ -588,7 +797,6 @@ const DealerShop = () => {
       setCart(updatedCart);
       setAddingId(null);
       setAddedId(product.id);
-
       setTimeout(() => setAddedId(null), 2000);
     }, 300);
   };
