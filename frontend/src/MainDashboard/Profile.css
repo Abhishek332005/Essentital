@@ -886,9 +886,3 @@ body {
 
 
 
-
-.profile-sidebar {
-  overflow-y: auto;
-  height: 100vh;
-  overscroll-behavior: contain; /* ⛔ stop scroll chaining */
-}
